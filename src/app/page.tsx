@@ -1,113 +1,161 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useEffect, useRef, useState } from 'react';
+import Matter from 'matter-js';
+
+type Ball = {
+  id: number;
+  size: number;
+  position: { x: number; y: number };
+};
+
+const BASE_SPEED = .5;
+const BALL_MARGIN = 10;
+
+const App = () => {
+  const [balls, setBalls] = useState<Ball[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const engineRef = useRef<Matter.Engine | null>(null);
+  const ballsRef = useRef<Ball[]>([]);
+
+  const initialize = () => {
+    if (!containerRef.current) return;
+
+    const engine = Matter.Engine.create();
+    engineRef.current = engine;
+    engine.gravity.y = 0;
+
+    const containerWidth = containerRef.current.clientWidth;
+    const containerHeight = containerRef.current.clientHeight;
+
+    const wallOptions = { isStatic: true };
+    const walls = [
+      Matter.Bodies.rectangle(containerWidth / 2, 0, containerWidth, 1, wallOptions),
+      Matter.Bodies.rectangle(containerWidth / 2, containerHeight, containerWidth, 1, wallOptions),
+      Matter.Bodies.rectangle(0, containerHeight / 2, 1, containerHeight, wallOptions),
+      Matter.Bodies.rectangle(containerWidth, containerHeight / 2, 1, containerHeight, wallOptions)
+    ];
+
+    Matter.World.add(engine.world, walls);
+
+    // Create balls
+    const newBalls: Ball[] = [];
+    for (let i = 0; i < 10; i++) {
+      const size = 30;
+      const ball = Matter.Bodies.circle(
+        (Math.random() * (containerWidth - BALL_MARGIN)) + (BALL_MARGIN / 2),
+        (Math.random() * (containerHeight - BALL_MARGIN)) + (BALL_MARGIN / 2),
+        size,
+        {
+          restitution: 1,
+          friction: 0,
+          frictionAir: 0,
+          mass: 1,
+        }
+      );
+      
+      Matter.World.add(engine.world, ball);
+
+      const direction = Math.random() * Math.PI * 2;
+
+      Matter.Body.setVelocity(ball, {
+        x: Math.sin(direction) * BASE_SPEED,
+        y: Math.cos(direction) * BASE_SPEED
+      });
+
+      newBalls.push({
+        id: ball.id,
+        size: size * 2,
+        position: ball.position,
+      });
+    }
+
+    // Add collision detection
+    Matter.Events.on(engine, 'collisionStart', (event) => {
+      const pairs = event.pairs;
+      for (let i = 0; i < pairs.length; i++) {
+        const pair = pairs[i];
+        const randomAngle = (Math.random() - 0.5) * Math.PI;
+        const velocityA = Matter.Vector.rotate(pair.bodyA.velocity, randomAngle);
+        const velocityB = Matter.Vector.rotate(pair.bodyB.velocity, randomAngle);
+        Matter.Body.setVelocity(pair.bodyA, {
+          x: velocityA.x * -1,
+          y: velocityA.y * -1
+        });
+        Matter.Body.setVelocity(pair.bodyB, {
+          x: velocityB.x * -1,
+          y: velocityB.y * -1
+        });
+      }
+    });
+
+    ballsRef.current = newBalls;
+    setBalls(newBalls);
+    Matter.Runner.run(engine);
+    animate();
+  }
+
+  // Set up animation loop
+  const animate = () => {
+    if (!engineRef.current || !ballsRef.current.length) {
+      requestAnimationFrame(animate);
+      return;
+    }
+
+    Matter.Engine.update(engineRef.current);
+
+    const updatedBalls = ballsRef.current.map(ball => {
+      const body = engineRef.current?.world.bodies.find(b => b.id === ball.id);
+      if (!body) return ball 
+
+      const SPEED_MULTIPLIER = BASE_SPEED / body.speed
+
+      Matter.Body.setVelocity(body, {
+        x: body.velocity.x * SPEED_MULTIPLIER,
+        y: body.velocity.y * SPEED_MULTIPLIER
+      });
+
+      return {
+        ...ball,
+        position: body.position,
+      };
+    });
+
+    ballsRef.current = updatedBalls;
+    setBalls(updatedBalls);
+    requestAnimationFrame(animate);
+  };
+
+  useEffect(() => {    
+    initialize();
+
+    return () => {
+      if(!engineRef.current) return;
+
+      Matter.Engine.clear(engineRef.current);
+    };
+  }, []);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className='flex justify-center items-center w-full h-screen'>
+      <div ref={containerRef} className="relative overflow-hidden bg-orange-200 w-full aspect-square max-w-[90vh]">
+        {balls.map((ball) => (
+          <div
+            key={ball.id}
+            className="absolute bg-red-500 rounded-full flex justify-center items-center"
+            style={{
+              width: `${ball.size}px`,
+              height: `${ball.size}px`,
+              top: `${ball.position.y - ball.size / 2}px`,
+              left: `${ball.position.x - ball.size / 2}px`,
+            }}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+            {ball.id}
+          </div>
+        ))}
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
-}
+};
+
+export default App;
