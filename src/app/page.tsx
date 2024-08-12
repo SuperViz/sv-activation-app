@@ -18,6 +18,39 @@ const App = () => {
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
 
+  const createBall = () => {
+    const containerWidth = containerRef.current!.clientWidth;
+    const containerHeight = containerRef.current!.clientHeight;
+
+    const size = 30;
+    const ball = Matter.Bodies.circle(
+      (Math.random() * (containerWidth - BALL_MARGIN)) + (BALL_MARGIN / 2),
+      (Math.random() * (containerHeight - BALL_MARGIN)) + (BALL_MARGIN / 2),
+      size,
+      {
+        restitution: 1,
+        friction: 0,
+        frictionAir: 0,
+        mass: 1,
+      }
+    );
+      
+    Matter.World.add(engineRef.current!.world, ball);
+
+    const direction = Math.random() * Math.PI * 2;
+
+    Matter.Body.setVelocity(ball, {
+      x: Math.sin(direction) * BASE_SPEED,
+      y: Math.cos(direction) * BASE_SPEED
+    });
+
+    return {
+      id: ball.id,
+      size: size * 2,
+      position: ball.position,
+    };
+  }
+
   const initialize = () => {
     if (!containerRef.current) return;
 
@@ -41,33 +74,7 @@ const App = () => {
     // Create balls
     const newBalls: Ball[] = [];
     for (let i = 0; i < 10; i++) {
-      const size = 30;
-      const ball = Matter.Bodies.circle(
-        (Math.random() * (containerWidth - BALL_MARGIN)) + (BALL_MARGIN / 2),
-        (Math.random() * (containerHeight - BALL_MARGIN)) + (BALL_MARGIN / 2),
-        size,
-        {
-          restitution: 1,
-          friction: 0,
-          frictionAir: 0,
-          mass: 1,
-        }
-      );
-      
-      Matter.World.add(engine.world, ball);
-
-      const direction = Math.random() * Math.PI * 2;
-
-      Matter.Body.setVelocity(ball, {
-        x: Math.sin(direction) * BASE_SPEED,
-        y: Math.cos(direction) * BASE_SPEED
-      });
-
-      newBalls.push({
-        id: ball.id,
-        size: size * 2,
-        position: ball.position,
-      });
+      newBalls.push(createBall());
     }
 
     // Add collision detection
