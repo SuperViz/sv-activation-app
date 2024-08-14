@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Matter from 'matter-js';
+import Image from "next/image";
+import atariImg from '../../public/atari-bg.png'
 
 type Ball = {
   id: number;
@@ -144,8 +146,23 @@ const App = () => {
   }, []);
 
   return (
-    <div className='flex justify-center items-center w-full h-screen'>
-      <div ref={containerRef} className="relative overflow-hidden bg-orange-200 w-full aspect-square max-w-[90vh]">
+    <div className='grid grid-cols-12 gap-14 w-full h-screen px-12 py-10'>
+      <div className="col-start-1 col-end-5 relative flex flex-col justify-between z-10">
+        <div>
+          <Image src="./logo-sm.svg" width={109} height={80} alt="Logo Superviz"/>
+          <h1 className="mt-6 text-8xl font-black">
+            Ganhe um LEGO<span className="text-3xl align-top">®</span>
+            Atari<span className="text-3xl align-top">®</span>
+          </h1>
+        </div>
+        <div className="text-3xl mr-16 mb-10">
+          <p>Participe de qualquer ativação e ganhe pontos para concorrer.</p>
+          <p className="font-black">Quanto mais ativações, mais chances de ganhar.</p>
+          <p className="mt-5">🕹️ Boa sorte!</p>
+        </div>
+      </div>
+      <Image src={atariImg} alt="Imagem de um Lego Atari" className="z-0 absolute top-0 left-0" />
+      <div ref={containerRef} className="col-start-5 col-end-12 relative overflow-hidden bg-orange-200 w-full aspect-square max-w-[90vh]">
         {balls.map((ball) => (
           <div
             key={ball.id}
