@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Matter from 'matter-js';
 import Image from "next/image";
-import atariImg from '../../public/atari-bg.png'
+import fenderImg from '../../public/fender-lego.png'
 import qrcode from '../../public/blob-para-qrcode.png'
 
 type Ball = {
@@ -164,9 +164,9 @@ const App = () => {
       <div className="col-start-1 col-span-4 relative flex flex-col justify-between z-10">
         <div>
           <Image src="./logo-sm.svg" width={109} height={80} alt="Logo Superviz"/>
-          <h1 className="mt-6 text-8xl font-black">
-            Ganhe um LEGO<span className="text-3xl align-top">®</span>
-            Atari<span className="text-3xl align-top">®</span>
+          <h1 className="mt-6 text-7xl font-black">
+            Ganhe um LEGO<span className="text-3xl align-top">® </span>
+            da Fender<span className="text-3xl align-top">®</span>
           </h1>
         </div>
         <div className="text-3xl mr-16 mb-10">
@@ -175,11 +175,11 @@ const App = () => {
           <p className="mt-5">🕹️ Boa sorte!</p>
         </div>
       </div>
-      <Image src={atariImg} alt="Imagem de um Lego Atari"  className="z-0 absolute top-0 left-0" />
+      <Image src={fenderImg} alt="Imagem de um Lego Atari"  className="z-0 absolute top-0 left-0" />
       <div className="col-start-5 col-span-12 bg-[#C9C4D114] rounded-[40px] p-10 flex flex-col">
         <div className="flex justify-between">
           <div>
-            <p className="font-black text-5xl">Veja quem já garantiu pontos e está concorrendo</p>
+            <p className="font-black text-4xl">Veja quem já garantiu pontos e está concorrendo</p>
             <p className="text-2xl mt-1.5">Aponte a câmera para o QR code pra participar</p>
           </div>
           <div>
