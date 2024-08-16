@@ -5,6 +5,7 @@ import Matter from 'matter-js';
 import Image from "next/image";
 import fenderImg from '../../public/fender-lego.png'
 import qrcode from '../../public/blob-para-qrcode.png'
+import Activations from "@/components/Activations";
 
 type Ball = {
   id: number;
@@ -136,19 +137,6 @@ const App = () => {
     requestAnimationFrame(animate);
   };
   
-  const activationCircle = (color: string) => {
-    return (
-      <div className="pinpoint">
-        <div className="content"></div>
-        <div className="pinpoint-ring">
-          <svg viewBox="0 0 36 36">
-            <circle className="circle" r="16" cx="18" cy="18" fill="transparent" stroke={`#${color}`}></circle>
-          </svg>
-        </div>
-      </div>
-    )
-  }
-
   useEffect(() => {
     initialize();
 
@@ -187,32 +175,7 @@ const App = () => {
           </div>
         </div>
         <div className="grid grid-cols-12 gap-9 mt-9 grow">
-          <div className="col-start-1 col-span-4 p-8 bg-[#7e7a88]/10 rounded-2xl h-fit">
-            <p className="text-xl">Ativações</p>
-            <div className="mt-6 flex align-center">
-              <span className="mr-3 activations">
-                {activationCircle('957AFF')}
-              </span>
-              <span className="text-2xl font-black">Experimente nosso <span
-                className="text-[#957AFF]">Jogo</span></span>
-            </div>
-            <div className="mt-6 flex align-center">
-            <span className="mr-3 activations">{activationCircle('0077FF')}</span>
-              <span className="text-2xl font-black">Junte-se ao nosso <span
-                className="text-[#0077FF]">Discord</span></span>
-            </div>
-            <div className="mt-6 flex align-center">
-              <span className="mr-3 activations">{activationCircle('DB6583')}</span>
-              <span className="text-2xl font-black">Cadastre na nossa <span className="text-[#DB6583]">Newsletter</span></span>
-            </div>
-            <div className="mt-6 flex align-center">
-              <span className="mr-3 activations">{activationCircle('56E29E')}</span>
-              <span className="text-2xl font-black">Inscreva-se no <span className="text-[#56E29E]">Hackathon</span>
-                <br/>
-                <span className="text-lg">E concorra a <span className="text-[#56E29E]">$5.000</span></span>
-              </span>
-            </div>
-          </div>
+          <Activations />
           <div ref={containerRef} className="col-start-5 col-span-12 bg-orange-200 relative overflow-hidden w-full">
             {balls.map((ball) => (
               <div
