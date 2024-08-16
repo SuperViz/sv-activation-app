@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Matter from 'matter-js';
 import Image from "next/image";
 import atariImg from '../../public/atari-bg.png'
+import qrcode from '../../public/blob-para-qrcode.png'
 
 type Ball = {
   id: number;
@@ -134,12 +135,25 @@ const App = () => {
     setBalls(updatedBalls);
     requestAnimationFrame(animate);
   };
+  
+  const activationCircle = (color: string) => {
+    return (
+      <div className="pinpoint">
+        <div className="content"></div>
+        <div className="pinpoint-ring">
+          <svg viewBox="0 0 36 36">
+            <circle className="circle" r="16" cx="18" cy="18" fill="transparent" stroke={`#${color}`}></circle>
+          </svg>
+        </div>
+      </div>
+    )
+  }
 
-  useEffect(() => {    
+  useEffect(() => {
     initialize();
 
     return () => {
-      if(!engineRef.current) return;
+      if (!engineRef.current) return;
 
       Matter.Engine.clear(engineRef.current);
     };
@@ -147,7 +161,7 @@ const App = () => {
 
   return (
     <div className='grid grid-cols-12 gap-14 w-full h-screen px-12 py-10'>
-      <div className="col-start-1 col-end-5 relative flex flex-col justify-between z-10">
+      <div className="col-start-1 col-span-4 relative flex flex-col justify-between z-10">
         <div>
           <Image src="./logo-sm.svg" width={109} height={80} alt="Logo Superviz"/>
           <h1 className="mt-6 text-8xl font-black">
@@ -161,22 +175,81 @@ const App = () => {
           <p className="mt-5">🕹️ Boa sorte!</p>
         </div>
       </div>
-      <Image src={atariImg} alt="Imagem de um Lego Atari" className="z-0 absolute top-0 left-0" />
-      <div ref={containerRef} className="col-start-5 col-end-12 relative overflow-hidden bg-orange-200 w-full aspect-square max-w-[90vh]">
-        {balls.map((ball) => (
-          <div
-            key={ball.id}
-            className="absolute bg-red-500 rounded-full flex justify-center items-center"
-            style={{
-              width: `${ball.size}px`,
-              height: `${ball.size}px`,
-              top: `${ball.position.y - ball.size / 2}px`,
-              left: `${ball.position.x - ball.size / 2}px`,
-            }}
-          >
-            {ball.id}
+      <Image src={atariImg} alt="Imagem de um Lego Atari"  className="z-0 absolute top-0 left-0" />
+      <div className="col-start-5 col-span-12 bg-[#C9C4D114] rounded-[40px] p-10 flex flex-col">
+        <div className="flex justify-between">
+          <div>
+            <p className="font-black text-5xl">Veja quem já garantiu pontos e está concorrendo</p>
+            <p className="text-2xl mt-1.5">Aponte a câmera para o QR code pra participar</p>
           </div>
-        ))}
+          <div>
+            <Image src={qrcode} width={107} height={107} alt="QR Code para ativação"/>
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-9 mt-9 grow">
+          <div className="col-start-1 col-span-4 p-8 bg-[#7e7a88]/10 rounded-2xl h-fit">
+            <p className="text-xl">Ativações</p>
+            <div className="mt-6 flex align-center">
+              <span className="mr-3 activations">
+                {activationCircle('957AFF')}
+              </span>
+              <span className="text-2xl font-black">Experimente nosso <span
+                className="text-[#957AFF]">Jogo</span></span>
+            </div>
+            <div className="mt-6 flex align-center">
+            <span className="mr-3 activations">{activationCircle('0077FF')}</span>
+              <span className="text-2xl font-black">Junte-se ao nosso <span
+                className="text-[#0077FF]">Discord</span></span>
+            </div>
+            <div className="mt-6 flex align-center">
+              <span className="mr-3 activations">{activationCircle('DB6583')}</span>
+              <span className="text-2xl font-black">Cadastre na nossa <span className="text-[#DB6583]">Newsletter</span></span>
+            </div>
+            <div className="mt-6 flex align-center">
+              <span className="mr-3 activations">{activationCircle('56E29E')}</span>
+              <span className="text-2xl font-black">Inscreva-se no <span className="text-[#56E29E]">Hackathon</span>
+                <br/>
+                <span className="text-lg">E concorra a <span className="text-[#56E29E]">$5.000</span></span>
+              </span>
+            </div>
+          </div>
+          <div ref={containerRef} className="col-start-5 col-span-12 bg-orange-200 relative overflow-hidden w-full">
+            {balls.map((ball) => (
+              <div
+                key={ball.id}
+                className="absolute bg-red-500 rounded-full flex justify-center items-center"
+                style={{
+                  width: `${ball.size}px`,
+                  height: `${ball.size}px`,
+                  top: `${ball.position.y - ball.size / 2}px`,
+                  left: `${ball.position.x - ball.size / 2}px`,
+                }}
+              >
+                {ball.id}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex justify-between mt-9">
+          <div className="flex items-center">
+            <span>Online agora:</span>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
+            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>...</span></div>
+          </div>
+          <div className="flex gap-3 items-center">
+            <Image src="./sync-logo.svg" width={25} height={20} alt="Logo Superviz"/>
+            <span>Sincronização de dados por </span>
+            <Image src="./logo-md.svg" width={80} height={15} alt="Logo Superviz"/>
+          </div>
+        </div>  
       </div>
     </div>
   );
