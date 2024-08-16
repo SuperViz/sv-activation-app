@@ -78,7 +78,7 @@ export default function Activations() {
       <p className="text-xl">Ativações</p>
       {activations.map((act) => {
         return (
-          <div className="mt-6 flex align-center">
+          <div className="mt-6 flex align-center" key={act.activationWord}>
             {activation(act)}
           </div>
         )

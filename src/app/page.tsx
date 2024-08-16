@@ -6,12 +6,19 @@ import Image from "next/image";
 import fenderImg from '../../public/fender-lego.png'
 import qrcode from '../../public/blob-para-qrcode.png'
 import Activations from "@/components/Activations";
+import OnlineNow from "@/components/OnlineNow";
 
 type Ball = {
   id: number;
   size: number;
   position: { x: number; y: number };
 };
+
+export interface IUser {
+  name: string
+  activations: string[]
+  isOnline: boolean
+}
 
 const BASE_SPEED = .5;
 const BALL_MARGIN = 10;
@@ -21,6 +28,64 @@ const App = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
+  const users = [
+    {
+      name: 'Rhaenyra',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Corlys',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Daemon',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Rhaenys',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Alicent',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Danaeris',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Aemond',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Addam',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Hugh',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Jacaerys',
+      activations: [],
+      isOnline: true,
+    },
+    {
+      name: 'Aegon',
+      activations: [],
+      isOnline: true,
+    },
+    
+  ]
 
   const createBall = () => {
     const containerWidth = containerRef.current!.clientWidth;
@@ -196,16 +261,7 @@ const App = () => {
         <div className="flex justify-between mt-9">
           <div className="flex items-center">
             <span>Online agora:</span>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>I</span></div>
-            <div className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center"><span>...</span></div>
+            <OnlineNow users={users.filter(user => user.isOnline)} />
           </div>
           <div className="flex gap-3 items-center">
             <Image src="./sync-logo.svg" width={25} height={20} alt="Logo Superviz"/>
