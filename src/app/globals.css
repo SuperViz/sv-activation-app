@@ -39,9 +39,23 @@ html, body {
         .circle{
           stroke-dashoffset: 0;
           stroke-dasharray:300;
-          stroke-width:3.5;
+          stroke-width:  3.5;
         }
       }
+    }
+  }
+  
+  .spin {
+    transform-origin: center;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 }

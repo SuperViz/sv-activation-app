@@ -1,5 +1,6 @@
 import React from "react";
-import {IUser} from "@/app/page";           
+import User from "@/components/User";
+import {IUser} from "../../../types";           
 
 interface IOnlineNowProps {
   users: IUser[]
@@ -7,18 +8,12 @@ interface IOnlineNowProps {
 
 export default function OnlineNow({ users }: IOnlineNowProps) {
   let firstUsers: IUser[]
-  const usersLetters: string[] = []
   const hasMoreThanTenUsersOnline = users.length > 10
   
   if (hasMoreThanTenUsersOnline) {
     firstUsers = users.slice(0,9)
   } else {
     firstUsers = users
-  }
-  
-  for (const user of firstUsers) {
-    const firstLetter = user.name.at(0) ?? 'U'
-    usersLetters.push(firstLetter.toUpperCase())
   }
   
   const otherUsers = (
@@ -30,16 +25,13 @@ export default function OnlineNow({ users }: IOnlineNowProps) {
     </div>
   )
 
-  const userCircle = (letter: string) => (
-    <div
-      className="ml-3 bg-white h-9 w-9 rounded-full text-[#26242A] text-lg font-black flex items-center justify-center">
-      <span>{letter}</span>
-    </div>
-  )
-
   return (
     <>
-      {usersLetters.map(user => userCircle(user))}
+      {firstUsers.map(user => (
+        <span className="ml-3" key={user.name}>
+          <User user={user} withActivations={false} withUsername={false}/>
+        </span>
+      ))}
       {hasMoreThanTenUsersOnline ? (
         <>
           {otherUsers}

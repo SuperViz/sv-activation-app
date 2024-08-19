@@ -1,216 +1,16 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import Matter from 'matter-js';
+import React from 'react';
 import Image from "next/image";
 import fenderImg from '../../public/fender-lego.png'
 import qrcode from '../../public/blob-para-qrcode.png'
 import Activations from "@/components/Activations";
 import OnlineNow from "@/components/OnlineNow";
+import UsersDashboard from "@/components/UsersDashboard";
+import {activations, users} from "@/data/activationsData";
 
-type Ball = {
-  id: number;
-  size: number;
-  position: { x: number; y: number };
-};
+export default function App() {
 
-export interface IUser {
-  name: string
-  activations: string[]
-  isOnline: boolean
-}
-
-const BASE_SPEED = .5;
-const BALL_MARGIN = 10;
-
-const App = () => {
-  const [balls, setBalls] = useState<Ball[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const engineRef = useRef<Matter.Engine | null>(null);
-  const ballsRef = useRef<Ball[]>([]);
-  const users = [
-    {
-      name: 'Rhaenyra',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Corlys',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Daemon',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Rhaenys',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Alicent',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Danaeris',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Aemond',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Addam',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Hugh',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Jacaerys',
-      activations: [],
-      isOnline: true,
-    },
-    {
-      name: 'Aegon',
-      activations: [],
-      isOnline: true,
-    },
-    
-  ]
-
-  const createBall = () => {
-    const containerWidth = containerRef.current!.clientWidth;
-    const containerHeight = containerRef.current!.clientHeight;
-
-    const size = 30;
-    const ball = Matter.Bodies.circle(
-      (Math.random() * (containerWidth - BALL_MARGIN)) + (BALL_MARGIN / 2),
-      (Math.random() * (containerHeight - BALL_MARGIN)) + (BALL_MARGIN / 2),
-      size,
-      {
-        restitution: 1,
-        friction: 0,
-        frictionAir: 0,
-        mass: 1,
-      }
-    );
-      
-    Matter.World.add(engineRef.current!.world, ball);
-
-    const direction = Math.random() * Math.PI * 2;
-
-    Matter.Body.setVelocity(ball, {
-      x: Math.sin(direction) * BASE_SPEED,
-      y: Math.cos(direction) * BASE_SPEED
-    });
-
-    return {
-      id: ball.id,
-      size: size * 2,
-      position: ball.position,
-    };
-  }
-
-  const initialize = () => {
-    if (!containerRef.current) return;
-
-    const engine = Matter.Engine.create();
-    engineRef.current = engine;
-    engine.gravity.y = 0;
-
-    const containerWidth = containerRef.current.clientWidth;
-    const containerHeight = containerRef.current.clientHeight;
-
-    const wallOptions = { isStatic: true };
-    const walls = [
-      Matter.Bodies.rectangle(containerWidth / 2, 0, containerWidth, 1, wallOptions),
-      Matter.Bodies.rectangle(containerWidth / 2, containerHeight, containerWidth, 1, wallOptions),
-      Matter.Bodies.rectangle(0, containerHeight / 2, 1, containerHeight, wallOptions),
-      Matter.Bodies.rectangle(containerWidth, containerHeight / 2, 1, containerHeight, wallOptions)
-    ];
-
-    Matter.World.add(engine.world, walls);
-
-    // Create balls
-    const newBalls: Ball[] = [];
-    for (let i = 0; i < 10; i++) {
-      newBalls.push(createBall());
-    }
-
-    // Add collision detection
-    Matter.Events.on(engine, 'collisionStart', (event) => {
-      const pairs = event.pairs;
-      for (let i = 0; i < pairs.length; i++) {
-        const pair = pairs[i];
-        const randomAngle = (Math.random() - 0.5) * Math.PI;
-        const velocityA = Matter.Vector.rotate(pair.bodyA.velocity, randomAngle);
-        const velocityB = Matter.Vector.rotate(pair.bodyB.velocity, randomAngle);
-        Matter.Body.setVelocity(pair.bodyA, {
-          x: velocityA.x * -1,
-          y: velocityA.y * -1
-        });
-        Matter.Body.setVelocity(pair.bodyB, {
-          x: velocityB.x * -1,
-          y: velocityB.y * -1
-        });
-      }
-    });
-
-    ballsRef.current = newBalls;
-    setBalls(newBalls);
-    Matter.Runner.run(engine);
-    animate();
-  }
-
-  // Set up animation loop
-  const animate = () => {
-    if (!engineRef.current || !ballsRef.current.length) {
-      requestAnimationFrame(animate);
-      return;
-    }
-
-    Matter.Engine.update(engineRef.current);
-
-    const updatedBalls = ballsRef.current.map(ball => {
-      const body = engineRef.current?.world.bodies.find(b => b.id === ball.id);
-      if (!body) return ball 
-
-      const SPEED_MULTIPLIER = BASE_SPEED / body.speed
-
-      Matter.Body.setVelocity(body, {
-        x: body.velocity.x * SPEED_MULTIPLIER,
-        y: body.velocity.y * SPEED_MULTIPLIER
-      });
-
-      return {
-        ...ball,
-        position: body.position,
-      };
-    });
-
-    ballsRef.current = updatedBalls;
-    setBalls(updatedBalls);
-    requestAnimationFrame(animate);
-  };
-  
-  useEffect(() => {
-    initialize();
-
-    return () => {
-      if (!engineRef.current) return;
-
-      Matter.Engine.clear(engineRef.current);
-    };
-  }, []);
 
   return (
     <div className='grid grid-cols-12 gap-14 w-full h-screen px-12 py-10'>
@@ -228,7 +28,7 @@ const App = () => {
           <p className="mt-5">🕹️ Boa sorte!</p>
         </div>
       </div>
-      <Image src={fenderImg} alt="Imagem de um Lego Atari"  className="z-0 absolute top-0 left-0" />
+      <Image src={fenderImg} alt="Imagem de um Lego da Fender"  className="z-0 absolute top-0 left-0" />
       <div className="col-start-5 col-span-12 bg-[#C9C4D114] rounded-[40px] p-10 flex flex-col">
         <div className="flex justify-between">
           <div>
@@ -240,23 +40,8 @@ const App = () => {
           </div>
         </div>
         <div className="grid grid-cols-12 gap-9 mt-9 grow">
-          <Activations />
-          <div ref={containerRef} className="col-start-5 col-span-12 bg-orange-200 relative overflow-hidden w-full">
-            {balls.map((ball) => (
-              <div
-                key={ball.id}
-                className="absolute bg-red-500 rounded-full flex justify-center items-center"
-                style={{
-                  width: `${ball.size}px`,
-                  height: `${ball.size}px`,
-                  top: `${ball.position.y - ball.size / 2}px`,
-                  left: `${ball.position.x - ball.size / 2}px`,
-                }}
-              >
-                {ball.id}
-              </div>
-            ))}
-          </div>
+          <Activations activations={activations} />
+          <UsersDashboard users={users} />
         </div>
         <div className="flex justify-between mt-9">
           <div className="flex items-center">
@@ -264,14 +49,12 @@ const App = () => {
             <OnlineNow users={users.filter(user => user.isOnline)} />
           </div>
           <div className="flex gap-3 items-center">
-            <Image src="./sync-logo.svg" width={25} height={20} alt="Logo Superviz"/>
+            <Image src="./sync-logo.svg" width={25} height={20} alt="ícone de sincronização"/>
             <span>Sincronização de dados por </span>
-            <Image src="./logo-md.svg" width={80} height={15} alt="Logo Superviz"/>
+            <Image src="./logo-md.svg" width={80} height={15} alt="Superviz"/>
           </div>
         </div>  
       </div>
     </div>
   );
 };
-
-export default App;
