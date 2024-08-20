@@ -9,23 +9,27 @@ export enum ActivationEnum {
 
 export const activations: IActivation[] = [
     {
-      description: 'Experimente nosso',
-      activationWord: 'Jogo',
-      color: ActivationEnum.GAME
+      description: 'Cadastre na nossa',
+      activationWord: 'Newsletter',
+      link: 'teste',
+      color: ActivationEnum.NEWSLETTER
     },
     {
       description: 'Junte-se ao nosso',
       activationWord: 'Discord',
+      link: 'teste',
       color: ActivationEnum.DISCORD
     },
     {
-      description: 'Cadastre na nossa',
-      activationWord: 'Newsletter',
-      color: ActivationEnum.NEWSLETTER
+      description: 'Experimente nosso',
+      activationWord: 'Jogo',
+      link: 'teste',
+      color: ActivationEnum.GAME
     },
     {
       description: 'Inscreva-se no',
       activationWord: 'Hackathon',
+      link: 'teste',
       color: ActivationEnum.HACKATHON,
       subtext: {
         description: 'E concorra a',
