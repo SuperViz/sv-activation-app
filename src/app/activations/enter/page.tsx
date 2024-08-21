@@ -28,7 +28,7 @@ export default function Enter() {
     }
   }, {})
   
-  const [ formData, setFormData ] = React.useState<object>(initialValues)
+  const [ formData, setFormData ] = React.useState<Record<string, string>>(initialValues)
   
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement> ) => {
     const fieldName = event.target.getAttribute('id') as string
@@ -66,7 +66,7 @@ export default function Enter() {
               label={question.question}
               id={question.id}
               onChange={handleChangeInput}
-              value={formData[question.id]}
+              value={formData[question.id] as string}
               type={question.type}
             />
           </div>

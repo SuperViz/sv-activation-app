@@ -53,9 +53,9 @@ function UserActivations({ user }: { user: IUser}) {
     <div className="flex items-center justify-center">
       <svg viewBox={`0 0 90 90`}>
       {Object.keys(ActivationEnum).map((activation) => (
-        <defs>
-          <linearGradient id={`gradientRing-${ActivationEnum[activation]}`} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="30%" style={{stopColor: `#${ActivationEnum[activation]}`, stopOpacity: 1}}/>
+        <defs key={activation}>
+          <linearGradient id={`gradientRing-${ActivationEnum[activation as keyof typeof ActivationEnum]}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="30%" style={{stopColor: `#${ActivationEnum[activation as keyof typeof ActivationEnum]}`, stopOpacity: 1}}/>
             <stop offset="90%" style={{stopColor: 'transparent', stopOpacity: 1}}/>
           </linearGradient>
         </defs>
