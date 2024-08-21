@@ -17,7 +17,7 @@ export const activations: IActivation[] = [
     {
       description: 'Junte-se ao nosso',
       activationWord: 'Discord',
-      link: 'teste',
+      link: 'https://discord.com/invite/Zb2arax9nn',
       color: ActivationEnum.DISCORD
     },
     {

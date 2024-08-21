@@ -6,7 +6,6 @@ interface ILinkProps {
 }
 export default function CardLink({ activation }: ILinkProps) {
   
-  
   return (
     <Link
       href={activation.link}
@@ -17,8 +16,7 @@ export default function CardLink({ activation }: ILinkProps) {
       {activation.subtext && (
         <p className="mt-1 text-white text-base font-bold">{`${activation.subtext.description} `}
         <span className="text-base font-bold" style={{color: `#${activation.color}`}}>{activation.subtext.activationWord}</span></p>
+      )}
+    </Link>
   )
-}
-</Link>
-)
 }

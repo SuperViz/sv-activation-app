@@ -162,7 +162,7 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
             left: `${ball.position.x - ball.size / 2}px`,
           }}
         >
-          <User user={ball.user} withActivations={true} withUsername={true}/>
+          <User user={ball.user} withActivations={true} withUsername={true} withStar={true} />
         </div>
       ))}
     </div>

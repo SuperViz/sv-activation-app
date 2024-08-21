@@ -9,7 +9,6 @@ interface IInputProps {
 }
 export default function Input({ label, id, onChange, value, type = 'text' }: IInputProps) {
   
-  
   return (
     <div className="w-full">
       <label htmlFor={id} className="font-black text-white text-4xl text-center flex flex-col justify-center items-center w-full mb-5">

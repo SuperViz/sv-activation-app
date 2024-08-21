@@ -9,7 +9,7 @@ interface IUserProps {
   withStar?: boolean
 }
 
-export default function User({ user, withActivations, withUsername, withStar = true }: IUserProps) {
+export default function User({ user, withActivations, withUsername, withStar = false }: IUserProps) {
   const firstLetter = user.name.at(0) ?? 'U'
   const activationsNumber = user.activations.length
   const usernameMargin = 8 - (4 - activationsNumber) * 7
@@ -18,6 +18,7 @@ export default function User({ user, withActivations, withUsername, withStar = t
   if (!withActivations) {
     return (
       <div className={user.isOnline ? '' : 'opacity-20'} >
+        {userHasStar && withStar && <p className="mb-1">⭐️</p>}
         <UserBase letter={firstLetter.toUpperCase()} />
         {withUsername && <p className="mt-2">{user.name}</p>}
       </div>
@@ -48,16 +49,9 @@ function UserBase({letter}: { letter: string }) {
 }
 
 function UserActivations({ user }: { user: IUser}) {
-  const activationsRings = (activation: IUserActivation, radius: number) => {
-    return (
-      <circle key={`${user.name}-${activation.color}`} className={activation.isCompleted ? '' : 'spin'} cx="45" cy="45" r={radius} fill="none"
-              stroke={`${activation.isCompleted ? `#${activation.color}` : `url(#gradientRing-${activation.color})`}`} strokeWidth="5"/>
-    )
-  }
-
   return (
     <div className="flex items-center justify-center">
-    <svg viewBox={`0 0 90 90`}>
+      <svg viewBox={`0 0 90 90`}>
       {Object.keys(ActivationEnum).map((activation) => (
         <defs>
           <linearGradient id={`gradientRing-${ActivationEnum[activation]}`} x1="0%" y1="0%" x2="100%" y2="100%">
@@ -69,14 +63,17 @@ function UserActivations({ user }: { user: IUser}) {
       {user.activations.map((activation, index) => {
         const radius = 21 + index * 7
           return (
-            <>
-              {activationsRings(activation, radius)}
-            </>
+            <ActivationsRings activation={activation} radius={radius} username={user.name} />
           )
         })}
       </svg>
-
     </div>
   )
+}
 
+function ActivationsRings({username, activation, radius}: {username: string, activation: IUserActivation, radius: number}) {
+  return (
+    <circle key={`${username}-${activation.color}`} className={activation.isCompleted ? '' : 'spin'} cx="45" cy="45" r={radius} fill="none"
+            stroke={`${activation.isCompleted ? `#${activation.color}` : `url(#gradientRing-${activation.color})`}`} strokeWidth="5"/>
+  )
 }
