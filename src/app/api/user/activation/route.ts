@@ -33,6 +33,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
+    const list = await db.activation.findMany({
+      where: { 
+        userId: user.id,
+      }
+    })
+    
+    if(list.some((activation) => activation.name === name)) {
+      return NextResponse.json({
+        message: 'Activation already exists',
+      }, {
+        status: 409,
+        statusText: 'Conflict'
+      })
+    }
+
     const activation = await db.activation.create({
       data: { 
         name,
@@ -41,7 +56,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     })
 
-    return NextResponse.json({ message: 'Activation created', data: { user, activation } }, { status: 201 })
+    return NextResponse.json(
+      { 
+        message: 'Activation created', 
+        data: [...list, activation]
+      }, 
+      { 
+        status: 201 
+      })
   } catch (error) {
     console.log(error)
 
