@@ -63,7 +63,7 @@ function UserActivations({ user }: { user: IUser}) {
       {user.activations.map((activation, index) => {
         const radius = 21 + index * 7
           return (
-            <ActivationsRings activation={activation} radius={radius} username={user.name} />
+            <ActivationsRings key={index} activation={activation} radius={radius} username={user.name} />
           )
         })}
       </svg>
