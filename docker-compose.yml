@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: activation-app
+      POSTGRES_USER: superviz
+      POSTGRES_PASSWORD: uyg@xvp5WGD8wvd7pea
+    ports:
+      - "5432:5432"
