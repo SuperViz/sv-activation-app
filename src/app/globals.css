@@ -15,8 +15,8 @@ html, body {
 @layer components {
   .activations {
     .pinpoint{
-      width: 40px;
-      height: 40px;
+      width: 70px;
+      height: 70px;
       position: relative;
 
       .content{
@@ -39,7 +39,7 @@ html, body {
         .circle{
           stroke-dashoffset: 0;
           stroke-dasharray:300;
-          stroke-width:  3.5;
+          stroke-width:  7;
         }
       }
     }

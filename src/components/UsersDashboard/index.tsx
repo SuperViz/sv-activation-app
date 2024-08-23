@@ -27,7 +27,7 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
 
-    const size = 16 + user.activations.length * 9.5;
+    const size = 36 + user.activations.length * 15;
     const ball = Matter.Bodies.circle(
       (Math.random() * (containerWidth - BALL_MARGIN)) + (BALL_MARGIN / 2),
       (Math.random() * (containerHeight - BALL_MARGIN)) + (BALL_MARGIN / 2),
@@ -150,7 +150,7 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
   }, []);
   
   return (
-    <div ref={containerRef} className="col-start-5 col-span-12 relative overflow-hidden w-full">
+    <div ref={containerRef} className="relative overflow-hidden w-full h-full">
       {balls.map((ball) => (
         <div
           key={ball.id}
