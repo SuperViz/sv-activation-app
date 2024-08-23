@@ -8,9 +8,9 @@ interface IActivationsProps {
 export default function Activations({ activations }: IActivationsProps) {
   function Activation({activation}: { activation: IActivation }) {
     return (
-      <div className="mt-6 flex align-center" key={activation.activationWord}>
+      <div className="mt-6 tv:mt-[3.125rem] flex items-center" key={activation.activationWord}>
         <Circle color={activation.color} />
-        <span className="text-2xl font-black">
+        <span className="text-2xl tv:text-[3rem] tv:leading-[4rem] font-black">
         {`${activation.description} `}
           <ActivationWord text={activation.activationWord} color={activation.color}/>
           {activation.subtext && <ActivationSubtext subtext={activation.subtext} color={activation.color} /> }
@@ -21,12 +21,12 @@ export default function Activations({ activations }: IActivationsProps) {
 
   function Circle({ color }: { color: string}) {
     return (
-      <span className="mr-3 activations">
+      <span className="mr-3 tv:mr-[1.625rem] activations">
       <div className="pinpoint">
         <div className="content"></div>
         <div className="pinpoint-ring">
-          <svg viewBox="0 0 36 36">
-            <circle className="circle" r="16" cx="18" cy="18" fill="#ffffff1a" stroke={`#${color}`}></circle>
+          <svg viewBox="0 0 78 78">
+            <circle className="circle" r="33" cx="39" cy="39" fill="#ffffff1a" stroke={`#${color}`}></circle>
           </svg>
         </div>
       </div>
@@ -38,7 +38,7 @@ export default function Activations({ activations }: IActivationsProps) {
     return (
       <>
         <br/>
-        <span className="text-lg">{`${subtext.description} `}
+        <span className="text-lg tv:text-[2.25rem] tv:leading-[2.65rem]">{`${subtext.description} `}
           <ActivationWord text={subtext.activationWord} color={color} />
       </span>
       </>
@@ -52,8 +52,8 @@ export default function Activations({ activations }: IActivationsProps) {
   }
   
   return (
-    <div className="col-start-1 col-span-4 p-8 bg-[#7e7a88]/10 rounded-2xl h-fit">
-      <p className="text-xl">Ativações</p>
+    <div className="p-8 bg-[#7e7a88]/10 rounded-2xl h-fit tv:p-[4rem]">
+      <p className="text-xl tv:text-[2.75rem] tv:leading-[3.2rem]">Ativações</p>
       {activations.map((act) => (
         <Activation key={act.color} activation={act} />
       ))}
