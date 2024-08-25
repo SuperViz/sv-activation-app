@@ -3,11 +3,10 @@
 import React from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import {useRouter} from "next/navigation";
+import {createUser} from "@/app/activations/enter/createUser";
 
 export default function Enter() {
   const [ step, setStep ] = React.useState<number>(0)
-  const router = useRouter()
   const questions = [
     {
       id: 'email',
@@ -51,11 +50,7 @@ export default function Enter() {
   
   const handleNext = () => {
     setStep((prevStep) => prevStep + 1)
-  }
-  
-  const handleSubmit = () => {
-    console.log(formData)
-    router.push('/activations')
+    setValidField(false)
   }
   
   return (
@@ -84,7 +79,7 @@ export default function Enter() {
       {step < (questions.length - 1) ? (
         <Button text="Próximo" onClick={handleNext} type="button" disabled={!validField}/>
         ) : (
-        <Button text="Começar" onClick={handleSubmit} type="button"/>  
+        <Button text="Começar" onClick={() => createUser(formData)} type="button" disabled={!validField} />  
       )}
     </form>
   )
