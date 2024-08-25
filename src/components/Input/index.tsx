@@ -15,8 +15,10 @@ export default function Input({ label, id, onChange, value, type = 'text' }: IIn
         {label}
       </label>
       <input 
+        required
         type={type}
-        id={id} 
+        id={id}
+        name={id}
         className="py-6 px-4 text-lg text-white text-center rounded-2xl bg-[#C9C4D114] w-full"
         onChange={(event) => onChange(event)}
         value={value}

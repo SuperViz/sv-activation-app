@@ -1,6 +1,6 @@
 import React from "react";
 import {IUser, IUserActivation} from "../../../types";
-import {ActivationEnum} from "@/data/activationsData";
+import {ActivationColor} from "@/data/activationsData";
 
 interface IUserProps {
   user: IUser
@@ -13,7 +13,7 @@ export default function User({ user, withActivations, withUsername, withStar = f
   const firstLetter = user.name.at(0) ?? 'U'
   const activationsNumber = user.activations.length
   const usernameMargin = 8 - (4 - activationsNumber) * 15
-  const userHasStar = activationsNumber === Object.keys(ActivationEnum).length && user.activations.every(activation => activation.isCompleted)
+  const userHasStar = activationsNumber === Object.keys(ActivationColor).length && user.activations.every(activation => activation.isCompleted)
   
   if (!withActivations) {
     return (
@@ -52,10 +52,10 @@ function UserActivations({ user }: { user: IUser}) {
   return (
     <div className="flex items-center justify-center">
       <svg viewBox={`0 0 200 200`}>
-      {Object.keys(ActivationEnum).map((activation) => (
+      {Object.keys(ActivationColor).map((activation) => (
         <defs key={activation}>
-          <linearGradient id={`gradientRing-${ActivationEnum[activation as keyof typeof ActivationEnum]}`} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="30%" style={{stopColor: `#${ActivationEnum[activation as keyof typeof ActivationEnum]}`, stopOpacity: 1}}/>
+          <linearGradient id={`gradientRing-${ActivationColor[activation as keyof typeof ActivationColor]}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="30%" style={{stopColor: `#${ActivationColor[activation as keyof typeof ActivationColor]}`, stopOpacity: 1}}/>
             <stop offset="90%" style={{stopColor: 'transparent', stopOpacity: 1}}/>
           </linearGradient>
         </defs>

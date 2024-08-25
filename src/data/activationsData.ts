@@ -1,6 +1,6 @@
 import {IActivation, IUser} from "../../types";
 
-export enum ActivationEnum {
+export enum ActivationColor {
   GAME = '957AFF',
   DISCORD = '0077FF',
   NEWSLETTER = 'DB6583',
@@ -11,26 +11,26 @@ export const activations: IActivation[] = [
     {
       description: 'Cadastre na nossa',
       activationWord: 'Newsletter',
-      link: 'teste',
-      color: ActivationEnum.NEWSLETTER
+      link: 'https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah',
+      color: ActivationColor.NEWSLETTER
     },
     {
       description: 'Junte-se ao nosso',
       activationWord: 'Discord',
       link: 'https://discord.com/invite/Zb2arax9nn',
-      color: ActivationEnum.DISCORD
+      color: ActivationColor.DISCORD
     },
     {
       description: 'Experimente nosso',
       activationWord: 'Jogo',
-      link: 'teste',
-      color: ActivationEnum.GAME
+      link: '/onboarding-game',
+      color: ActivationColor.GAME
     },
     {
       description: 'Inscreva-se no',
       activationWord: 'Hackathon',
-      link: 'teste',
-      color: ActivationEnum.HACKATHON,
+      link: 'https://47xzvrbdgjk.typeform.com/to/cqzci1gD',
+      color: ActivationColor.HACKATHON,
       subtext: {
         description: 'E concorra a',
         activationWord: '$5.000',
@@ -44,19 +44,19 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.NEWSLETTER,
+        color: ActivationColor.NEWSLETTER,
       },
     ],
     isOnline: true,
@@ -66,15 +66,15 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.NEWSLETTER,
+        color: ActivationColor.NEWSLETTER,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
     ],
     isOnline: true,
@@ -84,19 +84,19 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.NEWSLETTER,
+        color: ActivationColor.NEWSLETTER,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
     ],
     isOnline: true,
@@ -106,15 +106,15 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
     ],
     isOnline: true,
@@ -134,15 +134,15 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
     ],
     isOnline: true,
@@ -152,15 +152,15 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.NEWSLETTER,
+        color: ActivationColor.NEWSLETTER,
       },
     ],
     isOnline: true,
@@ -170,19 +170,19 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.NEWSLETTER,
+        color: ActivationColor.NEWSLETTER,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
     ],
     isOnline: true,
@@ -192,11 +192,11 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
     ],
     isOnline: true,
@@ -206,7 +206,7 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: false,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
     ],
     isOnline: true,
@@ -216,11 +216,11 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
     ],
     isOnline: true,
@@ -230,7 +230,7 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: false,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
     ],
     isOnline: false,
@@ -240,7 +240,7 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
     ],
     isOnline: false,
@@ -250,7 +250,7 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
     ],
     isOnline: false,
@@ -265,15 +265,15 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
     ],
     isOnline: false,
@@ -283,15 +283,15 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
     ],
     isOnline: true,
@@ -301,15 +301,15 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.NEWSLETTER,
+        color: ActivationColor.NEWSLETTER,
       },
     ],
     isOnline: true,
@@ -319,19 +319,19 @@ export const users: IUser[] = [
     activations: [
       {
         isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        color: ActivationColor.HACKATHON,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        color: ActivationColor.DISCORD,
       },
       {
         isCompleted: true,
-        color: ActivationEnum.GAME,
+        color: ActivationColor.GAME,
       },
       {
         isCompleted: false,
-        color: ActivationEnum.NEWSLETTER,
+        color: ActivationColor.NEWSLETTER,
       },
     ],
     isOnline: false,
