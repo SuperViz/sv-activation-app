@@ -1,0 +1,12 @@
+### Publish Event
+# @name Publish Event
+POST {{baseUri}}/realtime/{{room}}/{{channel}}/publish
+apiKey: {{token}}
+Content-Type: application/json
+
+{
+"name": "activation",
+"data": {
+   "dados": "deu certo!"
+   }
+}

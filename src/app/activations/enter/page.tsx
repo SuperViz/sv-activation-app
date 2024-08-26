@@ -4,9 +4,11 @@ import React from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import {createUser} from "@/app/activations/enter/createUser";
+import {useRouter} from "next/navigation";
 
 export default function Enter() {
   const [ step, setStep ] = React.useState<number>(0)
+  const router = useRouter()
   const questions = [
     {
       id: 'email',
@@ -53,6 +55,15 @@ export default function Enter() {
     setValidField(false)
   }
   
+  const handleSubmit = async () => {
+    await createUser(formData)
+      .catch((error) => {
+        console.error('Erro interno', error)
+      })
+    
+    router.push('/activations')
+  }
+  
   return (
     <form className="w-full h-full relative overflow-hidden flex flex-col justify-end">
       {questions.map((question, index) => {
@@ -79,7 +90,7 @@ export default function Enter() {
       {step < (questions.length - 1) ? (
         <Button text="Próximo" onClick={handleNext} type="button" disabled={!validField}/>
         ) : (
-        <Button text="Começar" onClick={() => createUser(formData)} type="button" disabled={!validField} />  
+        <Button text="Começar" onClick={handleSubmit} type="button" disabled={!validField} />  
       )}
     </form>
   )

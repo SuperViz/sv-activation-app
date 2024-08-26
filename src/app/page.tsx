@@ -6,7 +6,9 @@ import fenderImg from '../../public/fender-lego.png'
 import Button from "@/components/Button";
 
 export default function App() {
-
+  //TODO: Caso tenha um usuário salvo, redirecionar para a página de ativações
+  
+  
   return (
     <div className='flex flex-col w-full h-screen px-8 py-6'>
       <div className="relative flex flex-col justify-between z-10 h-full">

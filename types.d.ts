@@ -1,6 +1,5 @@
 import {ActivationEnum} from "@/app/page";
 
-
 interface IActivation {
   description: string
   activationWord: string
@@ -13,12 +12,17 @@ interface IActivation {
 }
 
 interface IUser {
+  id: string
   name: string
+  discordUser: string
+  email: string
   activations: IUserActivation[]
   isOnline: boolean
 }
 
 interface IUserActivation {
-  isCompleted: boolean,
-  color: ActivationEnum,
+  id: string
+  name: ActivationTypes
+  completed: boolean
+  color: ActivationEnum
 }

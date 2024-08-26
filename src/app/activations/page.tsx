@@ -1,25 +1,45 @@
-import Image from "next/image";
-import Button from "@/components/Button";
-import fenderImg from "../../../public/fender-lego.png";
+'use client'
+
 import React from "react";
-import {activations, users} from "@/data/activationsData";
-import CardLink from "@/components/CardLink";
-import User from "@/components/User";
+import {Realtime, SuperVizRoomProvider} from "@superviz/react-sdk";
+import UserPageContent from "@/app/activations/UserPageContent";
+import {IUser} from "../../../types";
+
+const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
+const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
 export default function Activations() {
-
-
-  return (
-    <>
-      <div className="my-5 pb-5 w-screen border-b border-[#ffffff1a]">
-        <User user={users[0]} withActivations={true} withUsername={true} withStar={false} />
-      </div>
-      <p className="w-full text-center font-normal text-lg">Escolha uma ativação para participar</p>
-      {activations.map(activation => (
-        <div key={activation.color} className="w-full">
-          <CardLink activation={activation} />
-        </div>
-      ))}
-    </>
+  const [ user, setUser ] = React.useState<IUser>()
+  
+  React.useEffect(() => {
+    if(window) {
+      const userData = localStorage.getItem(USERDATA_KEY) as string
+      //TODO: caso não tenha um usuário salvo, direcionar para a página de formulário
+      
+      setUser(JSON.parse(userData))
+    }
+  }, [])
+  
+  
+  return user !== undefined ? (
+    <SuperVizRoomProvider
+      developerKey={DEVELOPER_KEY}
+      group={{
+        id: "dashboardGroup",
+        name: "Dashboard",
+      }}
+      participant={{
+        id: user.id,
+        name: user.name,
+      }}
+      roomId="superviz_dashboard"
+    >
+      <Realtime />
+      <UserPageContent user={user} />
+    </SuperVizRoomProvider>
+  ) : 
+  (
+    <></>
   )
+    
 }
