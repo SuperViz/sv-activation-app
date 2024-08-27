@@ -1,10 +1,10 @@
-import {ActivationEnum} from "@/app/page";
+import { ActivationEnum } from "@/app/page";
 
 interface IActivation {
   description: string
   activationWord: string
   color: ActivationEnum
-  link: string                
+  link: string
   subtext?: {
     description: string
     activationWord: string
