@@ -1,7 +1,8 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { DragEventHandler, useEffect, useState } from 'react';
 import { IElement, IElementOnBoard } from '../../../types.game';
 import { Element, ElementOnBoard } from '@/components/Game';
+import { DragDropContext } from 'react-beautiful-dnd';
 import './game.scss';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -63,7 +64,15 @@ export default function Jogo() {
     setElementsOnBoard(newElements);
   }
 
-  function handleMouseMove(event: React.MouseEvent<HTMLElement>) {
+  function handleDragElement(element: IElementOnBoard, event: DragEventHandler<HTMLDivElement>) {
+    console.log('handleDragElement', element);
+    // get position of thhe drag
+    console.log('position', event);
+    console.log(typeof event);
+
+  }
+
+  function handleMouseMove(event: any) {
     console.log('handleMouseMove');
     if (draggingElement) {
       setElementsOnBoard(elementsOnBoard.map(el => {
@@ -81,6 +90,8 @@ export default function Jogo() {
     }
   }
 
+
+
   useEffect(() => {
     getSavedElements();
   }, []);
@@ -94,7 +105,8 @@ export default function Jogo() {
             element={element}
             itemDragged={addDraggableElement}
             onContextMenu={removeElementFromBoard}
-            setCurrentHoverElement={setCurrentHoverElement} />
+            setCurrentHoverElement={setCurrentHoverElement}
+            handleDragElement={handleDragElement} />
         )}
       </main>
       <aside>

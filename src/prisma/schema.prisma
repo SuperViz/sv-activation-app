@@ -33,6 +33,17 @@ model Activation {
   @@map("activations")
 }
 
+model Element {
+  id        String   @id
+  name      String
+  emoji     String
+  elementA  String 
+  elementB  String 
+  userId    String
+
+  @@map("elements")
+}
+
 enum ActivationTypes {
   GAME
   DISCORD

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const body = await request.text()
     const parsedBody = validateRequestBody<z.infer<typeof CreateUserDTO>>(CreateUserDTO, body)
 
-    if(!parsedBody?.success) { 
+    if (!parsedBody?.success) {
       return parsedBody.response
     }
 
@@ -29,12 +29,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     console.log(error)
 
-    if(error instanceof PrismaClientKnownRequestError) {
-      return NextResponse.json({ message: 'User email already exists' }, { status: 409, statusText: 'Conflict'})
+    if (error instanceof PrismaClientKnownRequestError) {
+      return NextResponse.json({ message: 'User email already exists' }, { status: 409, statusText: 'Conflict' })
     }
 
     return NextResponse.json({}, {
-      status: 500, 
+      status: 500,
       statusText: 'Internal Server Error'
     })
   }
@@ -45,21 +45,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const params = Object.fromEntries(request.nextUrl.searchParams)
     const validationResponse = GetUserDTO.safeParse(params)
 
-    if(!validationResponse.success) {
+    if (!validationResponse.success) {
       const { errors } = validationResponse.error
 
       return NextResponse.json(
         {
-          message: 'Bad request', 
+          message: 'Bad request',
           errors,
-        }, 
+        },
         {
           status: 400,
           statusText: 'Bad Request'
         }
       )
     }
-    
+
     const { email } = validationResponse.data
 
     const user = await db.user.findUnique({
@@ -78,12 +78,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    return NextResponse.json({ message: 'Success', data: { user }}, { status: 200 })
+    return NextResponse.json({ message: 'Success', data: { user } }, { status: 200 })
   } catch (error) {
     console.log(error)
 
     return NextResponse.json({}, {
-      status: 500, 
+      status: 500,
       statusText: 'Internal Server Error'
     })
   }

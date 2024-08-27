@@ -1,20 +1,21 @@
 import { IElement, IElementOnBoard } from '../../../types.game';
-import { useState } from 'react';
+import { DragEventHandler, useState } from 'react';
 
 export interface IElementOnBoardProps {
 	element: IElementOnBoard;
 	itemDragged: (element: IElementOnBoard) => void;
 	onContextMenu: (element: IElement) => void;
 	setCurrentHoverElement: (element: IElementOnBoard | null) => void;
+	handleDragElement: (element: IElementOnBoard, event: any) => void;
 }
 
-export function ElementOnBoard({ element, itemDragged, onContextMenu, setCurrentHoverElement }: IElementOnBoardProps) {
+export function ElementOnBoard({ element, itemDragged, onContextMenu, setCurrentHoverElement, handleDragElement }: IElementOnBoardProps) {
 	const [loading, setLoading] = useState(false);
 
 	const classList: string[] = ["element", "moveable", "dragging"];
 	if (loading) classList.push("loading");
 
-	const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+	const handleMouseDown = (event: any) => {
 		classList.push("dragging");
 		itemDragged(element);
 	};
@@ -38,6 +39,13 @@ export function ElementOnBoard({ element, itemDragged, onContextMenu, setCurrent
 		setCurrentHoverElement(null);
 	}
 
+	const handleDrag = (event: any
+
+	) => {
+		if (loading) return;
+		handleDragElement(element, event);
+	}
+
 	return (
 		<div className={classList.join(" ")}
 			id={element.id}
@@ -46,10 +54,13 @@ export function ElementOnBoard({ element, itemDragged, onContextMenu, setCurrent
 				top: element.position.y,
 				left: element.position.x
 			}}
-			onMouseDown={handleMouseDown}
-			onContextMenu={handleContextMenu}
-			onMouseEnter={handleMouseEnter}
-			onMouseLeave={handleMouseLeave}>
+		// onMouseDown={handleMouseDown}
+		// // onDrag={handleDrag}
+		// onTouchStart={handleMouseDown}
+		// onContextMenu={handleContextMenu}
+		// onMouseEnter={handleMouseEnter}
+		// onMouseLeave={handleMouseLeave}
+		>
 			<span>{element.emoji}</span>
 			<span>{element.name}</span>
 		</div>
