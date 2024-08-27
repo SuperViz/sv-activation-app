@@ -5,11 +5,13 @@ import { validateRequestBody } from "@/lib/zod/validate-body";
 import { z } from "zod";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
+
   try {
     const body = await request.text()
     const parsedBody = validateRequestBody<z.infer<typeof CreateActivationDTO>>(CreateActivationDTO, body)
 
-    if(!parsedBody?.success) { 
+    if (!parsedBody?.success) {
       return parsedBody.response
     }
 
@@ -21,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     })
 
-    if(!user) {
+    if (!user) {
       return NextResponse.json(
         {
           message: 'User not found',
@@ -34,12 +36,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const list = await db.activation.findMany({
-      where: { 
+      where: {
         userId: user.id,
       }
     })
-    
-    if(list.some((activation) => activation.name === name)) {
+
+    if (list.some((activation) => activation.name === name)) {
       return NextResponse.json({
         message: 'Activation already exists',
       }, {
@@ -49,26 +51,40 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const activation = await db.activation.create({
-      data: { 
+      data: {
         name,
         completed: false,
         userId: user.id,
       }
     })
 
+    await fetch('https://nodeapi.superviz.com/realtime/superviz_dashboard/default/publish', {
+      method: 'POST',
+      headers: {
+        'apiKey': DEVELOPER_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'activation',
+        data: {
+          activation,
+        }
+      })
+    })
+
     return NextResponse.json(
-      { 
-        message: 'Activation created', 
+      {
+        message: 'Activation created',
         data: [...list, activation]
-      }, 
-      { 
-        status: 201 
+      },
+      {
+        status: 201
       })
   } catch (error) {
     console.log(error)
 
     return NextResponse.json({}, {
-      status: 500, 
+      status: 500,
       statusText: 'Internal Server Error'
     })
   }
