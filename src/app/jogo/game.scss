@@ -2,11 +2,19 @@
 	display: flex;
 	flex-direction: column;
 
-	main {
-		height: 70vh;
+	.element {
+		border: 1px solid #666;
+		border-radius: 6px;
+		background: #111;
+		padding: .8rem 1rem .6rem;
+		display: block;
+		width: fit-content;
+		height: fit-content;
 
-		.element {
-			margin: .5rem;
+		span:first-of-type {
+			width: 1em;
+			height: 1em;
+			margin-left: .5rem;
 		}
 	}
 
@@ -19,32 +27,17 @@
 		gap: .5rem;
 	}
 
-	.temp {
-		//position: absolute;
+	main {
+		height: 70vh;
+
+		.element {
+			margin: .5rem;
+			// position: fixed;
+			// z-index: 10;
+		}
 	}
 
-	.element {
-		border: 1px solid #666;
-		border-radius: 6px;
-		background: #111;
-		padding: .8rem 1rem .6rem;
-		display: block;
-		width: fit-content;
-		height: fit-content;
-
-		&.moveable {
-			// position: absolute;
-		}
-
-		&.dragging {
-			z-index: 10;
-			// pointer-events: none;
-		}
-
-		span:first-of-type {
-			width: 1em;
-			height: 1em;
-			margin-left: .5rem;
-		}
+	.temp {
+		// position: fixed;
 	}
 }

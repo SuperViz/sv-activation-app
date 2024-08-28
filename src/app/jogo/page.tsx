@@ -93,7 +93,57 @@ export default function Jogo() {
 
       if (!elementA || !elementB) return;
       combineElements(elementA, elementB);
+    } else {
+
+      const { draggableId } = result;
+      const draggedElement = document.getElementById(draggableId)?.parentElement;
+      // console.log(draggedElement);
+      // console.log(draggedElement?.getBoundingClientRect());
     }
+  }
+
+  const getPosition = (id: string) => {
+    const draggedElement = document.getElementById(id)?.parentElement;
+    console.log(draggedElement?.getBoundingClientRect());
+    const position = {
+      x: draggedElement?.getBoundingClientRect().left,
+      y: draggedElement?.getBoundingClientRect().top
+    }
+    elementsOnBoard.map((element) => {
+      if (element.id === id) {
+        // element.style = {
+        //   position: 'fixed',
+        //   boxSizing: 'border-box',
+        //   height: 0,
+        //   width: 0,
+        //   transform: `translate(${position.x}px, ${position.y}px)`,
+        // }
+        element.position.x = position.x;
+        element.position.y = position.y;
+      }
+    });
+
+    console.log(elementsOnBoard);
+  }
+
+  const renderElement = (element: IElementOnBoard, index: number, provided: any) => {
+    // const elementStyle = {
+    //   top: element.position.y,
+    //   left: element.position.x
+    // };
+    return (
+      <div className='temp'
+        onPointerUpCapture={() => getPosition(element.id)}
+        ref={provided.innerRef}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+      // style={element.style}
+      >
+        <ElementOnBoard
+          element={element}
+          onContextMenu={removeElementFromBoard} />
+      </div>
+    )
   }
 
   resetServerContext();
@@ -111,13 +161,7 @@ export default function Jogo() {
               <div className="elements" {...provided.droppableProps} ref={provided.innerRef} >
                 {elementsOnBoard.map((element, index) =>
                   <Draggable key={element.id} index={index} draggableId={element.id}>
-                    {(provided: any) => (
-                      <div className='temp' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                        <ElementOnBoard
-                          element={element}
-                          onContextMenu={removeElementFromBoard} />
-                      </div>
-                    )}
+                    {(provided: any) => renderElement(element, index, provided)}
                   </Draggable>
                 )}
                 {provided.placeholder}

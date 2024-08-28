@@ -13,4 +13,5 @@ export interface IElementOnBoard {
 		x: number;
 		y: number;
 	}
+	style?: React.CSSProperties;
 }

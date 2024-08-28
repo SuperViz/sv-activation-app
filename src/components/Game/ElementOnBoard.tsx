@@ -9,7 +9,9 @@ export interface IElementOnBoardProps {
 export function ElementOnBoard({ element, onContextMenu }: IElementOnBoardProps) {
 	const [loading, setLoading] = useState(false);
 
-	const classList: string[] = ["element", "moveable", "dragging"];
+
+
+	const classList: string[] = ["element", "dragging"];
 	if (loading) classList.push("loading");
 
 	const handleContextMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -22,13 +24,15 @@ export function ElementOnBoard({ element, onContextMenu }: IElementOnBoardProps)
 	}
 
 	return (
+
 		<div className={classList.join(" ")}
 			id={element.id}
 			data-element={element.name}
 			onContextMenu={handleContextMenu}
+			onDoubleClick={handleContextMenu}
 		// style={{
-		// 	top: element.position.y,
-		// 	left: element.position.x
+		// 	left: element.position.x,
+		// 	top: element.position.y
 		// }}
 		>
 			<span>{element.emoji}</span>
