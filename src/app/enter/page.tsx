@@ -3,7 +3,7 @@
 import React from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import {createUser} from "@/app/activations/enter/createUser";
+import {createUser} from "@/app/services/createUser";
 import {useRouter} from "next/navigation";
 
 export default function Enter() {
@@ -19,11 +19,6 @@ export default function Enter() {
       id: 'name',
       type: 'text',
       question: 'Qual seu nome completo?',
-    },
-    {
-      id: 'discordUser',
-      type: 'text',
-      question: 'Qual seu usuário no Discord?',
     },
   ]
   
@@ -61,7 +56,7 @@ export default function Enter() {
         console.error('Erro interno', error)
       })
     
-    router.push('/activations')
+    router.push('/userPage')
   }
   
   return (
