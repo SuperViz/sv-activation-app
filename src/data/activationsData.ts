@@ -1,4 +1,5 @@
 import {IActivation, IUser} from "../../types";
+import {ActivationType} from "@/global/global.types";
 
 export enum ActivationColor {
   GAME = '957AFF',
@@ -9,24 +10,28 @@ export enum ActivationColor {
 
 export const activations: IActivation[] = [
     {
+      id: ActivationType.NEWSLETTER,
       description: 'Cadastre na nossa',
       activationWord: 'Newsletter',
       link: 'https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah',
       color: ActivationColor.NEWSLETTER
     },
     {
+      id: ActivationType.DISCORD,
       description: 'Junte-se ao nosso',
       activationWord: 'Discord',
       link: 'https://discord.com/invite/Zb2arax9nn',
       color: ActivationColor.DISCORD
     },
     {
-      description: 'Experimente nosso',
-      activationWord: 'Jogo',
+      id: ActivationType.GAME,
+      description: 'Ganhe pontos no',
+      activationWord: 'Super Game',
       link: '/onboarding-game',
       color: ActivationColor.GAME
     },
     {
+      id: ActivationType.HACKATHON,
       description: 'Inscreva-se no',
       activationWord: 'Hackathon',
       link: 'https://47xzvrbdgjk.typeform.com/to/cqzci1gD',
@@ -40,62 +45,74 @@ export const activations: IActivation[] = [
 
 export const users: IUser[] = [
   {
+    id: '111',
     name: 'Rhaenyra',
+    email: 'Rhaenyra@Rhaenyra.com',
+    isOnline: true,
     activations: [
       {
-        isCompleted: true,
+        id: ActivationType.HACKATHON,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        id: ActivationType.DISCORD,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: true,
+        id: ActivationType.GAME,
+        completed: false,
+        quantity: 2,
         color: ActivationColor.GAME,
       },
       {
-        isCompleted: true,
+        id: ActivationType.NEWSLETTER,
+        completed: true,
         color: ActivationColor.NEWSLETTER,
       },
     ],
-    isOnline: true,
   },
   {
+    id: '222',
     name: 'Corlys',
+    email: 'Corlys@Corlys.com',
+    isOnline: true,
     activations: [
       {
-        isCompleted: true,
+        id: ActivationType.NEWSLETTER,
+        completed: true,
         color: ActivationColor.NEWSLETTER,
       },
       {
-        isCompleted: true,
+        id: ActivationType.DISCORD,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: false,
+        id: ActivationType.HACKATHON,
+        completed: false,
         color: ActivationColor.HACKATHON,
       },
     ],
-    isOnline: true,
   },
   {
     name: 'Daemon',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.NEWSLETTER,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.GAME,
       },
     ],
@@ -105,15 +122,15 @@ export const users: IUser[] = [
     name: 'Rhaenys',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.GAME,
       },
     ],
@@ -133,15 +150,15 @@ export const users: IUser[] = [
     name: 'Aemond',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.GAME,
       },
     ],
@@ -151,15 +168,15 @@ export const users: IUser[] = [
     name: 'Addam',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.NEWSLETTER,
       },
     ],
@@ -169,19 +186,19 @@ export const users: IUser[] = [
     name: 'Hugh',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.NEWSLETTER,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.GAME,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
     ],
@@ -191,11 +208,11 @@ export const users: IUser[] = [
     name: 'Jacaerys',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.GAME,
       },
     ],
@@ -205,7 +222,7 @@ export const users: IUser[] = [
     name: 'Aegon',
     activations: [
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.HACKATHON,
       },
     ],
@@ -215,11 +232,11 @@ export const users: IUser[] = [
     name: 'Vermax',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.DISCORD,
       },
     ],
@@ -229,7 +246,7 @@ export const users: IUser[] = [
     name: 'Vhagar',
     activations: [
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.HACKATHON,
       },
     ],
@@ -239,7 +256,7 @@ export const users: IUser[] = [
     name: 'Alyn',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.GAME,
       },
     ],
@@ -249,7 +266,7 @@ export const users: IUser[] = [
     name: 'Otto',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
     ],
@@ -264,15 +281,15 @@ export const users: IUser[] = [
     name: 'Seasmoke',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.GAME,
       },
     ],
@@ -282,15 +299,15 @@ export const users: IUser[] = [
     name: 'Criston',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.GAME,
       },
     ],
@@ -300,15 +317,15 @@ export const users: IUser[] = [
     name: 'Rickard',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.GAME,
       },
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.NEWSLETTER,
       },
     ],
@@ -318,19 +335,19 @@ export const users: IUser[] = [
     name: 'Caraxes',
     activations: [
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: true,
+        completed: true,
         color: ActivationColor.GAME,
       },
       {
-        isCompleted: false,
+        completed: false,
         color: ActivationColor.NEWSLETTER,
       },
     ],

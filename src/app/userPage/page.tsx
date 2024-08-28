@@ -2,21 +2,29 @@
 
 import React from "react";
 import {Realtime, SuperVizRoomProvider} from "@superviz/react-sdk";
-import UserPageContent from "@/app/activations/UserPageContent";
+import UserPageContent from "@/app/userPage/UserPageContent";
 import {IUser} from "../../../types";
+import {useRouter} from "next/navigation";
+import {users} from "@/data/activationsData";
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
 const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
 export default function Activations() {
   const [ user, setUser ] = React.useState<IUser>()
+  const router = useRouter()
   
   React.useEffect(() => {
     if(window) {
-      const userData = localStorage.getItem(USERDATA_KEY) as string
-      //TODO: caso não tenha um usuário salvo, direcionar para a página de formulário
+      // const userData = users[0]
+      const userData = localStorage.getItem(USERDATA_KEY)
       
-      setUser(JSON.parse(userData))
+      if(userData == null) {
+        router.push('/activations/enter')
+      } else {
+        // setUser(userData)
+        setUser(JSON.parse(userData))
+      }
     }
   }, [])
   
