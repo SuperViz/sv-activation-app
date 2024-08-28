@@ -19,6 +19,10 @@
 		gap: .5rem;
 	}
 
+	.temp {
+		//position: absolute;
+	}
+
 	.element {
 		border: 1px solid #666;
 		border-radius: 6px;
@@ -29,12 +33,12 @@
 		height: fit-content;
 
 		&.moveable {
-			position: absolute;
+			// position: absolute;
 		}
 
 		&.dragging {
 			z-index: 10;
-			pointer-events: none;
+			// pointer-events: none;
 		}
 
 		span:first-of-type {

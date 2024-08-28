@@ -1,16 +1,14 @@
 'use client';
-import React, { DragEventHandler, useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import React, { useEffect, useState } from 'react';
 import { IElement, IElementOnBoard } from '../../../types.game';
 import { Element, ElementOnBoard } from '@/components/Game';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
 import './game.scss';
-import { v4 as uuidv4 } from 'uuid';
 
 export default function Jogo() {
   const [elements, setElements] = useState<IElement[]>([]);
   const [elementsOnBoard, setElementsOnBoard] = useState<IElementOnBoard[]>([]);
-  const [draggingElement, setDraggingElement] = useState<IElementOnBoard | null>();
-  const [currentHoverElement, setCurrentHoverElement] = useState<IElementOnBoard | null>();
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -41,6 +39,36 @@ export default function Jogo() {
     }
   }
 
+  const saveNewElements = (elementsToSave: IElement[]) => {
+    // TODO: salvar no localStorage
+    // localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
+  }
+
+  const combineElements = (elementA: IElementOnBoard, elementB: IElementOnBoard) => {
+    const newElements = elementsOnBoard.filter(el => el.id !== elementA?.id && el.id !== elementB?.id);
+
+    // TODO: buscar na API a combinação dos elementos
+    const newElement = {
+      emoji: '👀',
+      name: 'test',
+      id: uuidv4(),
+      position: {
+        x: 0,
+        y: 0
+      }
+    }
+    newElements.push(newElement);
+
+    setElementsOnBoard(newElements);
+    const newElementsList = [...elements, {
+      emoji: '👀',
+      name: 'test',
+      id: uuidv4()
+    }]
+    setElements(newElementsList);
+    saveNewElements(newElementsList);
+  }
+
   function addElementToBoard(element: IElement) {
     const newElement = {
       ...element,
@@ -51,12 +79,6 @@ export default function Jogo() {
       }
     }
     setElementsOnBoard([...elementsOnBoard, newElement]);
-
-    setDraggingElement(newElement);
-  }
-
-  function addDraggableElement(element: IElementOnBoard) {
-    setDraggingElement(element);
   }
 
   function removeElementFromBoard(element: IElement) {
@@ -64,33 +86,17 @@ export default function Jogo() {
     setElementsOnBoard(newElements);
   }
 
-  function handleDragElement(element: IElementOnBoard, event: DragEventHandler<HTMLDivElement>) {
-    console.log('handleDragElement', element);
-    // get position of thhe drag
-    console.log('position', event);
-    console.log(typeof event);
+  function onDragEnd(result: any) {
+    if (result.combine) {
+      const elementA = elementsOnBoard.find(el => el.id === result.draggableId);
+      const elementB = elementsOnBoard.find(el => el.id === result.combine.draggableId);
 
-  }
-
-  function handleMouseMove(event: any) {
-    console.log('handleMouseMove');
-    if (draggingElement) {
-      setElementsOnBoard(elementsOnBoard.map(el => {
-        if (el.id === draggingElement.id) {
-          return {
-            ...el,
-            position: {
-              x: event.clientX - 50,
-              y: event.clientY - 50
-            }
-          }
-        }
-        return el;
-      }));
+      if (!elementA || !elementB) return;
+      combineElements(elementA, elementB);
     }
   }
 
-
+  resetServerContext();
 
   useEffect(() => {
     getSavedElements();
@@ -98,16 +104,27 @@ export default function Jogo() {
 
   return (
     <div className='game'>
-      <main onMouseMove={handleMouseMove}>
-        {elementsOnBoard.map((element, index) =>
-          <ElementOnBoard
-            key={index}
-            element={element}
-            itemDragged={addDraggableElement}
-            onContextMenu={removeElementFromBoard}
-            setCurrentHoverElement={setCurrentHoverElement}
-            handleDragElement={handleDragElement} />
-        )}
+      <main>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="elements" isCombineEnabled>
+            {(provided: any) => (
+              <div className="elements" {...provided.droppableProps} ref={provided.innerRef} >
+                {elementsOnBoard.map((element, index) =>
+                  <Draggable key={element.id} index={index} draggableId={element.id}>
+                    {(provided: any) => (
+                      <div className='temp' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <ElementOnBoard
+                          element={element}
+                          onContextMenu={removeElementFromBoard} />
+                      </div>
+                    )}
+                  </Draggable>
+                )}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </main>
       <aside>
         {elements.map((element, index) =>
