@@ -1,12 +1,10 @@
-.game {
-	display: flex;
-	flex-direction: column;
-
+div.game {
 	.element {
 		border: 1px solid #666;
 		border-radius: 6px;
 		background: #111;
 		padding: .8rem 1rem .6rem;
+		margin: .5rem .3rem;
 		display: block;
 		width: fit-content;
 		height: fit-content;
@@ -16,28 +14,5 @@
 			height: 1em;
 			margin-left: .5rem;
 		}
-	}
-
-	aside {
-		margin-top: auto;
-		height: 30vh;
-		border-top: 1px solid #666;
-		padding: 1rem;
-		display: inline-flex;
-		gap: .5rem;
-	}
-
-	main {
-		height: 70vh;
-
-		.element {
-			margin: .5rem;
-			// position: fixed;
-			// z-index: 10;
-		}
-	}
-
-	.temp {
-		// position: fixed;
 	}
 }

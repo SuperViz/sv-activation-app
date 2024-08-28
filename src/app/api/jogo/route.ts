@@ -4,10 +4,11 @@ import { validateRequestBody } from "@/lib/zod/validate-body";
 import { z } from "zod";
 import { ElementDTO } from './dto/generate-element';
 import { IElement } from '../../../../types.game';
+import { createHash } from 'crypto';
 
 function getUniqueID(elementA: string, elementB: string): string {
   let id = [elementA, elementB].sort().join("").trim();
-  return Buffer.from(id).toString("base64");
+  return createHash('sha256').update(id).digest('hex');
 }
 
 function combineElements(elementA: string, elementB: string): IElement {
