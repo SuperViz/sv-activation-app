@@ -9,7 +9,7 @@ import UsersDashboard from "@/components/UsersDashboard";
 import {activations, users} from "@/data/activationsData";
 import {SuperVizRoomProvider} from "@superviz/react-sdk";
 
-const DEVELOPER_KEY = process.env.DEVELOPER_KEY as string
+const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
 const DASHBOARD_GROUP_NAME = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_NAME as string
 const DASHBOARD_PARTICIPANT_ID = process.env.NEXT_PUBLIC_DASHBOARD_PARTICIPANT_ID as string
@@ -17,7 +17,6 @@ const DASHBOARD_PARTICIPANT_NAME = process.env.NEXT_PUBLIC_DASHBOARD_PARTICIPANT
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string
 
 export default function Dashboard() {
-
   return (
     <SuperVizRoomProvider
       developerKey={DEVELOPER_KEY}
@@ -29,6 +28,7 @@ export default function Dashboard() {
         id: DASHBOARD_PARTICIPANT_ID,
         name: DASHBOARD_PARTICIPANT_NAME,
       }}
+      debug
       roomId={DASHBOARD_ROOM_ID}
     >
     <div className='grid grid-cols-12 w-full h-screen relative gap-[2.5rem] p-[1.25rem] tv:p-[2.5rem] tv:gap-[5rem] tvBg'>
