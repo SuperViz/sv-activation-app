@@ -5,6 +5,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { GetUserDTO } from './dto/get-user.dto';
 import { validateRequestBody } from '@/lib/zod/validate-body';
 import { z } from 'zod';
+import {EditUserDTO} from "@/app/api/user/dto/edit-user.dto";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
@@ -15,13 +16,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return parsedBody.response
     }
 
-    const { name, email, discordUser } = parsedBody.response
-
+    const { name, email } = parsedBody.response
+    
     const user = await db.user.create({
       data: {
         name,
         email,
-        discordUser
       }
     })
 
@@ -84,6 +84,37 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({}, {
       status: 500, 
+      statusText: 'Internal Server Error'
+    })
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const body = await request.text()
+    const parsedBody = validateRequestBody<z.infer<typeof EditUserDTO>>(EditUserDTO, body)
+
+    if(!parsedBody?.success) {
+      return parsedBody.response
+    }
+
+    const { email, discordUser } = parsedBody.response
+
+    const user = await db.user.update({
+      where: {
+        email,
+      },
+      data: {
+        discordUser
+      }
+    })
+
+    return NextResponse.json({ message: 'Discord Added', data: { user } }, { status: 201 })
+  } catch (error) {
+    console.log(error)
+
+    return NextResponse.json({}, {
+      status: 500,
       statusText: 'Internal Server Error'
     })
   }

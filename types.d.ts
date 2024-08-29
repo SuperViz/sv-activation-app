@@ -6,7 +6,8 @@ interface IActivation {
   description: string
   activationWord: string
   color: ActivationColor
-  link: string                
+  link: string          
+  page: string
   subtext?: {
     description: string
     activationWord: string
@@ -17,6 +18,7 @@ interface IUser {
   id: string
   name: string
   email: string
+  discordUser?: string
   activations: IUserActivation[]
   isOnline: boolean
 }

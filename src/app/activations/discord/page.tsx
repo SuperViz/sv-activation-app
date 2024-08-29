@@ -3,6 +3,10 @@
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import React from "react";
+import {addUserDiscord} from "@/app/services/addUserDiscord";
+import {IUser} from "../../../../types";
+
+const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
 export default function DiscordPage() {
   const [ discordUser, setDiscordUser ] = React.useState<string>('')
@@ -18,9 +22,12 @@ export default function DiscordPage() {
   }
 
   const handleSubmit = async () => {
-    console.log('discordUser', discordUser)
+    const userData = JSON.parse(localStorage.getItem(USERDATA_KEY)!) as IUser
+    const userEmail = userData.email
+    
+    await addUserDiscord({discordUser, email: userEmail})
 
-    // router.push('/activations')
+    // router.push('/activations/discord/embeded')
   }
   
   return (
