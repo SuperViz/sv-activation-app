@@ -28,7 +28,7 @@ export default function CardLink({ activation, userActivation }: ILinkProps) {
   
   return (
     <Link
-      href={activation.link}
+      href={activation.page}
       className={`mt-5 p-5 w-full rounded-2xl flex justify-between items-center ${userCompletedActivation ? 'bg-[#C9C4D108]' : 'bg-[#C9C4D11A]'}`}>
       <div className={`${userCompletedActivation ? 'opacity-15' : 'opacity-1'}`}>
         <p className="text-white text-2xl font-bold">{activation.description}</p>

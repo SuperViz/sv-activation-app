@@ -6,7 +6,8 @@ import {activations} from "@/data/activationsData";
 export default function ActivationCall() {
   const pathname = usePathname()
   const activation = activations.find(act => {
-    const activePath = pathname.split(/\/activations\//)[1]
+    const activePath = pathname.split(/\//)[2]
+    
     return act.id === activePath.toUpperCase()
   })
   

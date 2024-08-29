@@ -5,10 +5,12 @@ import Button from "@/components/Button";
 import React from "react";
 import {addUserDiscord} from "@/app/services/addUserDiscord";
 import {IUser} from "../../../../types";
+import {useRouter} from "next/navigation";
 
 const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
 export default function DiscordPage() {
+  const router = useRouter()
   const [ discordUser, setDiscordUser ] = React.useState<string>('')
   const [ validField, setValidField ] = React.useState<boolean>(false)
 
@@ -27,7 +29,7 @@ export default function DiscordPage() {
     
     await addUserDiscord({discordUser, email: userEmail})
 
-    // router.push('/activations/discord/embeded')
+    router.push('/activations/discord/embeded')
   }
   
   return (
