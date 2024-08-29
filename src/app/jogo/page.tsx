@@ -5,6 +5,7 @@ import { IElement } from '../../../types.game';
 import { Element } from '@/components/Game';
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
 import './game.scss';
+import { InitialElements } from '@/data/elementsData';
 
 export default function Jogo() {
   const [elements, setElements] = useState<IElement[]>([]);
@@ -15,30 +16,7 @@ export default function Jogo() {
       const savedElements = JSON.parse(existingSave) as IElement[];
       setElements(savedElements);
     } else {
-      localStorage.setItem("saved_game", JSON.stringify(
-        [
-          {
-            emoji: "💧",
-            name: "Water",
-            id: uuidv4(),
-          },
-          {
-            emoji: "🏆",
-            name: "Wind",
-            id: uuidv4(),
-          },
-          {
-            emoji: "🔥",
-            name: "Fire",
-            id: uuidv4(),
-          },
-          {
-            emoji: "🌎",
-            name: "Earth",
-            id: uuidv4(),
-          }
-        ]
-      ));
+      localStorage.setItem("saved_game", JSON.stringify(InitialElements));
     }
   }
 
@@ -47,25 +25,36 @@ export default function Jogo() {
     // localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
   }
 
-  const combineElements = (elementA: IElement, elementB: IElement) => {
-    // TODO: buscar na API a combinação dos elementos
-    const newElement = {
-      emoji: '👀',
-      name: 'test',
-      id: uuidv4(),
-      position: {
-        x: 0,
-        y: 0
-      }
-    }
+  const getEmailFromLocalStorage = () => {
+    const userData = localStorage.getItem("undefined");
+    if (userData)
+      return JSON.parse(userData).email;
+  }
 
+  const combineElements = (elementA: IElement, elementB: IElement) => {
     const indexB = elements.findIndex(el => el.id === elementB.id);
 
-    const newElements = [...elements];
-    newElements.splice(indexB + 1, 0, newElement);
+    fetch('/api/jogo', {
+      method: 'POST',
+      body: JSON.stringify({
+        elementA: elementA.name,
+        elementB: elementB.name,
+        email: getEmailFromLocalStorage()
+      })
+    }).then(res => res.json()).then(data => {
+      const newElements = [...elements];
+      newElements.splice(indexB + 1, 0, {
+        emoji: data.element.emoji,
+        name: data.element.name,
+        id: data.element.id,
+        isNew: data.isNew,
+      });
 
-    setElements(newElements);
-    saveNewElements(newElements);
+      setElements(newElements);
+      saveNewElements(newElements);
+    }).catch(err => {
+      console.error(err);
+    });
   }
 
   function removeElementFromBoard(element: IElement) {
@@ -75,8 +64,6 @@ export default function Jogo() {
 
   function onDragEnd(result: any) {
     if (result.combine) {
-      console.log(elements)
-      console.log(result);
       const elementA = elements.find(el => el.id === result.draggableId);
       const elementB = elements.find(el => el.id === result.combine.draggableId);
 

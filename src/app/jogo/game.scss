@@ -1,18 +1,24 @@
 div.game {
-	.element {
-		border: 1px solid #666;
-		border-radius: 6px;
-		background: #111;
-		padding: .8rem 1rem .6rem;
-		margin: .5rem .3rem;
-		display: block;
-		width: fit-content;
-		height: fit-content;
+	.elements {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
 
-		span:first-of-type {
-			width: 1em;
-			height: 1em;
-			margin-left: .5rem;
+		.element {
+			border: 1px solid #666;
+			border-radius: 6px;
+			background: #111;
+			padding: .8rem 1rem .6rem;
+			margin: .5rem .3rem;
+			display: block;
+			width: fit-content;
+			height: fit-content;
+
+			span:first-of-type {
+				width: 1em;
+				height: 1em;
+				margin-left: .5rem;
+			}
 		}
 	}
 }

@@ -11,12 +11,43 @@ function getUniqueID(elementA: string, elementB: string): string {
   return createHash('sha256').update(id).digest('hex');
 }
 
-function combineElements(elementA: string, elementB: string): IElement {
-  return {
-    emoji: '🔥',
-    name: 'Fire',
+async function combineElements(elementA: string, elementB: string): Promise<IElement | null> {
+  const AZURE_OPEN_AI = process.env.AZURE_OPEN_AI as string;
+  const task = `TASK: Combine ${elementA} and ${elementB} to create a new element. Try to keep the element as simple and realistic as possible and only 1 word if possible as well. If two basic elements are combined, you should prioritize making a new thing out of that, rather than simply combining the words. Example: Earth + Earth = Solar System. You are allowed to use one of the inputs as the output, but only if there are no other elements. Two of the same item should output a larger version of that item if applicable. Your response should be the name of the new element and MUST contain one and only one emoji to represent the element. The response should never have less than or more than 1 emoji. Example: Fire + Water = 💨 Steam. Your output should be in json format to be parsed. Format: {new_element: "name", emoji: "emoji"}`
+
+  const response = await fetch('https://sv-activation.openai.azure.com/openai/deployments/sv-activation/chat/completions?api-version=2024-02-15-preview', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': AZURE_OPEN_AI
+    },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a funny game for developers.'
+        },
+        {
+          role: 'user',
+          content: task
+        }
+      ],
+      temperature: 0.7,
+      top_p: 0.95,
+      max_tokens: 100
+    })
+  })
+
+  const data = await response.json()
+  const sanitazed = data.choices[0].message.content.replace(/```json\n/g, '').replace(/\n```/g, '')
+  const parsed = JSON.parse(sanitazed)
+  const newElement = {
+    emoji: parsed.emoji,
+    name: parsed.new_element,
     id: getUniqueID(elementA, elementB)
   }
+  return newElement
+
 }
 
 async function checkForExistingCombination(elementA: string, elementB: string): Promise<IElement | null> {
@@ -61,6 +92,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const existing = await checkForExistingCombination(elementA, elementB)
+    console.log('Existing:', existing)
     if (existing) {
       return NextResponse.json({
         element: existing,
@@ -68,7 +100,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       })
     }
 
-    const combination = combineElements(elementA, elementB)
+    console.log('Combining elements:', elementA, elementB)
+    const combination = await combineElements(elementA, elementB)
+    console.log('Combination:', combination)
     if (!combination) {
       return NextResponse.json({}, {
         status: 500,
@@ -83,40 +117,42 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         emoji: combination.emoji,
         elementA: elementA,
         elementB: elementB,
-        userId: email
+        userId: user.id
       }
     })
 
+    console.log('Element created:', element)
+
     // TODO: Add point to user
 
-    await fetch('https://nodeapi.superviz.com/realtime/superviz_dashboard/default/publish', {
-      method: 'POST',
-      headers: {
-        'apiKey': DEVELOPER_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: 'activation',
-        data: {
-          // TODO: Add data here
-        }
-      })
-    })
+    // await fetch('https://nodeapi.superviz.com/realtime/superviz_dashboard/default/publish', {
+    //   method: 'POST',
+    //   headers: {
+    //     'apiKey': DEVELOPER_KEY,
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     name: 'activation',
+    //     data: {
+    //       // TODO: Add data here
+    //     }
+    //   })
+    // })
 
-    await fetch('https://nodeapi.superviz.com/realtime/superviz_dashboard/game/publish', {
-      method: 'POST',
-      headers: {
-        'apiKey': DEVELOPER_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: 'new.element',
-        data: {
-          element,
-          participant: user.name
-        }
-      })
-    })
+    // await fetch('https://nodeapi.superviz.com/realtime/superviz_dashboard/game/publish', {
+    //   method: 'POST',
+    //   headers: {
+    //     'apiKey': DEVELOPER_KEY,
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     name: 'new.element',
+    //     data: {
+    //       element,
+    //       participant: user.name
+    //     }
+    //   })
+    // })
 
     return NextResponse.json({
       element: element,
