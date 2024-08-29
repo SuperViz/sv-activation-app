@@ -13,7 +13,7 @@ export default function User({ user, withActivations, withUsername, withStar = f
   const firstLetter = user.name.at(0) ?? 'U'
   const activationsNumber = user.activations.length
   const usernameMargin = 8 - (4 - activationsNumber) * 15
-  const userHasStar = activationsNumber === Object.keys(ActivationColor).length && user.activations.every(activation => activation.isCompleted)
+  const userHasStar = activationsNumber === Object.keys(ActivationColor).length && user.activations.every(activation => activation.completed)
   
   if (!withActivations) {
     return (
@@ -73,7 +73,7 @@ function UserActivations({ user }: { user: IUser}) {
 
 function ActivationsRings({username, activation, radius}: {username: string, activation: IUserActivation, radius: number}) {
   return (
-    <circle key={`${username}-${activation.color}`} className={activation.isCompleted ? '' : 'spin'} cx="100" cy="100" r={radius} fill="none"
-            stroke={`${activation.isCompleted ? `#${activation.color}` : `url(#gradientRing-${activation.color})`}`} strokeWidth="11"/>
+    <circle key={`${username}-${activation.color}`} className={activation.completed ? '' : 'spin'} cx="100" cy="100" r={radius} fill="none"
+            stroke={`${activation.completed ? `#${activation.color}` : `url(#gradientRing-${activation.color})`}`} strokeWidth="11"/>
   )
 }
