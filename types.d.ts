@@ -1,11 +1,13 @@
-import {ActivationEnum} from "@/app/page";
-
+import {ActivationColor} from "@/data/activationsData";
+import {ActivationType} from "@/global/global.types";
 
 interface IActivation {
+  id: ActivationType
   description: string
   activationWord: string
-  color: ActivationEnum
-  link: string                
+  color: ActivationColor
+  link: string          
+  page: string
   subtext?: {
     description: string
     activationWord: string
@@ -13,12 +15,18 @@ interface IActivation {
 }
 
 interface IUser {
+  id: string
   name: string
+  email: string
+  discordUser?: string
   activations: IUserActivation[]
   isOnline: boolean
 }
 
 interface IUserActivation {
-  isCompleted: boolean,
-  color: ActivationEnum,
+  id: ActivationType
+  completed: boolean
+  quantity?: number
+  color: ActivationColor
 }
+

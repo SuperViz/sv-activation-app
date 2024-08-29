@@ -1,6 +1,7 @@
 import {IActivation, IUser} from "../../types";
+import {ActivationType} from "@/global/global.types";
 
-export enum ActivationEnum {
+export enum ActivationColor {
   GAME = '957AFF',
   DISCORD = '0077FF',
   NEWSLETTER = 'DB6583',
@@ -9,28 +10,36 @@ export enum ActivationEnum {
 
 export const activations: IActivation[] = [
     {
+      id: ActivationType.NEWSLETTER,
       description: 'Cadastre na nossa',
       activationWord: 'Newsletter',
-      link: 'teste',
-      color: ActivationEnum.NEWSLETTER
+      link: 'https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah',
+      page: '/activations/newsletter',
+      color: ActivationColor.NEWSLETTER
     },
     {
+      id: ActivationType.DISCORD,
       description: 'Junte-se ao nosso',
       activationWord: 'Discord',
       link: 'https://discord.com/invite/Zb2arax9nn',
-      color: ActivationEnum.DISCORD
+      page: '/activations/discord',
+      color: ActivationColor.DISCORD
     },
     {
-      description: 'Experimente nosso',
-      activationWord: 'Jogo',
-      link: 'teste',
-      color: ActivationEnum.GAME
+      id: ActivationType.GAME,
+      description: 'Ganhe pontos no',
+      activationWord: 'Super Game',
+      link: '/onboarding-game',
+      page: '/activations/game',
+      color: ActivationColor.GAME
     },
     {
+      id: ActivationType.HACKATHON,
       description: 'Inscreva-se no',
       activationWord: 'Hackathon',
-      link: 'teste',
-      color: ActivationEnum.HACKATHON,
+      link: 'https://47xzvrbdgjk.typeform.com/to/cqzci1gD',
+      page: '/activations/hackathon',
+      color: ActivationColor.HACKATHON,
       subtext: {
         description: 'E concorra a',
         activationWord: '$5.000',
@@ -40,300 +49,312 @@ export const activations: IActivation[] = [
 
 export const users: IUser[] = [
   {
+    id: '111',
     name: 'Rhaenyra',
+    email: 'Rhaenyra@Rhaenyra.com',
+    isOnline: true,
     activations: [
       {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        id: ActivationType.HACKATHON,
+        completed: true,
+        color: ActivationColor.HACKATHON,
       },
       {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        id: ActivationType.DISCORD,
+        completed: true,
+        color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: true,
-        color: ActivationEnum.GAME,
+        id: ActivationType.GAME,
+        completed: false,
+        quantity: 2,
+        color: ActivationColor.GAME,
       },
       {
-        isCompleted: true,
-        color: ActivationEnum.NEWSLETTER,
+        id: ActivationType.NEWSLETTER,
+        completed: true,
+        color: ActivationColor.NEWSLETTER,
       },
     ],
-    isOnline: true,
   },
   {
+    id: '222',
     name: 'Corlys',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.NEWSLETTER,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.HACKATHON,
-      },
-    ],
+    email: 'Corlys@Corlys.com',
     isOnline: true,
-  },
-  {
-    name: 'Daemon',
     activations: [
       {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
+        id: ActivationType.NEWSLETTER,
+        completed: true,
+        color: ActivationColor.NEWSLETTER,
       },
       {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
+        id: ActivationType.DISCORD,
+        completed: true,
+        color: ActivationColor.DISCORD,
       },
       {
-        isCompleted: true,
-        color: ActivationEnum.NEWSLETTER,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.GAME,
+        id: ActivationType.HACKATHON,
+        completed: false,
+        color: ActivationColor.HACKATHON,
       },
     ],
-    isOnline: true,
   },
-  {
-    name: 'Rhaenys',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.GAME,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Alicent',
-    activations: [],
-    isOnline: true,
-  },
-  {
-    name: 'Danaeris',
-    activations: [],
-    isOnline: false,
-  },
-  {
-    name: 'Aemond',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.GAME,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Addam',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.NEWSLETTER,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Hugh',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.NEWSLETTER,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.GAME,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Jacaerys',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.GAME,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Aegon',
-    activations: [
-      {
-        isCompleted: false,
-        color: ActivationEnum.HACKATHON,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Vermax',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.DISCORD,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Vhagar',
-    activations: [
-      {
-        isCompleted: false,
-        color: ActivationEnum.HACKATHON,
-      },
-    ],
-    isOnline: false,
-  },
-  {
-    name: 'Alyn',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.GAME,
-      },
-    ],
-    isOnline: false,
-  },
-  {
-    name: 'Otto',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-    ],
-    isOnline: false,
-  },
-  {
-    name: 'Syrax',
-    activations: [],
-    isOnline: true,
-  },
-  {
-    name: 'Seasmoke',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.GAME,
-      },
-    ],
-    isOnline: false,
-  },
-  {
-    name: 'Criston',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.GAME,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Rickard',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.GAME,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.NEWSLETTER,
-      },
-    ],
-    isOnline: true,
-  },
-  {
-    name: 'Caraxes',
-    activations: [
-      {
-        isCompleted: true,
-        color: ActivationEnum.HACKATHON,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.DISCORD,
-      },
-      {
-        isCompleted: true,
-        color: ActivationEnum.GAME,
-      },
-      {
-        isCompleted: false,
-        color: ActivationEnum.NEWSLETTER,
-      },
-    ],
-    isOnline: false,
-  },
+  // {
+  //   name: 'Daemon',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.NEWSLETTER,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.GAME,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Rhaenys',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.GAME,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Alicent',
+  //   activations: [],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Danaeris',
+  //   activations: [],
+  //   isOnline: false,
+  // },
+  // {
+  //   name: 'Aemond',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.GAME,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Addam',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.NEWSLETTER,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Hugh',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.NEWSLETTER,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.GAME,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Jacaerys',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.GAME,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Aegon',
+  //   activations: [
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Vermax',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Vhagar',
+  //   activations: [
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //   ],
+  //   isOnline: false,
+  // },
+  // {
+  //   name: 'Alyn',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.GAME,
+  //     },
+  //   ],
+  //   isOnline: false,
+  // },
+  // {
+  //   name: 'Otto',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //   ],
+  //   isOnline: false,
+  // },
+  // {
+  //   name: 'Syrax',
+  //   activations: [],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Seasmoke',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.GAME,
+  //     },
+  //   ],
+  //   isOnline: false,
+  // },
+  // {
+  //   name: 'Criston',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.GAME,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Rickard',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.GAME,
+  //     },
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.NEWSLETTER,
+  //     },
+  //   ],
+  //   isOnline: true,
+  // },
+  // {
+  //   name: 'Caraxes',
+  //   activations: [
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.HACKATHON,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.DISCORD,
+  //     },
+  //     {
+  //       completed: true,
+  //       color: ActivationColor.GAME,
+  //     },
+  //     {
+  //       completed: false,
+  //       color: ActivationColor.NEWSLETTER,
+  //     },
+  //   ],
+  //   isOnline: false,
+  // },
 ]

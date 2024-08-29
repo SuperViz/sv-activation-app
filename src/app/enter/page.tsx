@@ -1,8 +1,9 @@
 'use client'
 
-import Button from "@/components/Button";
 import React from "react";
+import Button from "@/components/Button";
 import Input from "@/components/Input";
+import {createUser} from "@/app/services/createUser";
 import {useRouter} from "next/navigation";
 
 export default function Enter() {
@@ -29,28 +30,37 @@ export default function Enter() {
   }, {})
   
   const [ formData, setFormData ] = React.useState<Record<string, string>>(initialValues)
+  const [ validField, setValidField ] = React.useState<boolean>(false)
   
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement> ) => {
     const fieldName = event.target.getAttribute('id') as string
+    const fieldValidity = event.target.validity.valid
     const value = event.target.value
     setFormData({
       ...formData,
       [fieldName]: value
     })
+    if(fieldValidity !== validField) {
+      setValidField(fieldValidity)
+    }
   }
   
   const handleNext = () => {
     setStep((prevStep) => prevStep + 1)
+    setValidField(false)
   }
   
-  const handleSubmit = () => {
-    console.log(formData)
-    router.push('/activations')
+  const handleSubmit = async () => {
+    await createUser(formData)
+      .catch((error) => {
+        console.error('Erro interno', error)
+      })
+    
+    router.push('/userPage')
   }
   
   return (
-    <>
-      <div className="w-full h-full relative overflow-hidden">
+    <form className="w-full h-full relative overflow-hidden flex flex-col justify-end">
       {questions.map((question, index) => {
         return (
           <div 
@@ -66,19 +76,17 @@ export default function Enter() {
               label={question.question}
               id={question.id}
               onChange={handleChangeInput}
-              value={formData[question.id] as string}
+              value={formData[question.id]}
               type={question.type}
             />
           </div>
         )
       })}
-      </div>
       {step < (questions.length - 1) ? (
-        <Button text="Próximo" onClick={handleNext} type="button" />
+        <Button text="Próximo" onClick={handleNext} type="button" disabled={!validField}/>
         ) : (
-        <Button text="Começar" onClick={handleSubmit} type="button"/>  
+        <Button text="Começar" onClick={handleSubmit} type="button" disabled={!validField} />  
       )}
-
-    </>
+    </form>
   )
 }
