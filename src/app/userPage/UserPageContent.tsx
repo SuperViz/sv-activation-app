@@ -20,7 +20,7 @@ export default function UserPageContent({ user }: { user: IUser}) {
       <p className="w-full text-center font-normal text-lg">Escolha uma ativação para participar</p>
       {activations.map(activation => (
         <div key={activation.color} className="w-full">
-          <CardLink activation={activation} />
+          <CardLink activation={activation} userActivation={user.activations.find(act => act.id === activation.id)} />
         </div>
       ))}
     </>

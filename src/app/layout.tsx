@@ -8,7 +8,7 @@ const roboto = Roboto({ weight: ['400', '700', '900'], subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Superviz",
   description: "Generated with <3 by Superviz",
-};
+}
 
 export default function RootLayout({
   children,
