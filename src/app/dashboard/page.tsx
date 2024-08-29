@@ -31,7 +31,7 @@ export default function Dashboard() {
       }}
       roomId={DASHBOARD_ROOM_ID}
     >
-    <div className='grid grid-cols-12 w-full h-screen relative gap-[2.5rem] p-[1.25rem] tv:p-[2.5rem] tv:gap-[5rem]'>
+    <div className='grid grid-cols-12 w-full h-screen relative gap-[2.5rem] p-[1.25rem] tv:p-[2.5rem] tv:gap-[5rem] tvBg'>
       <div className="col-start-1 col-span-4 flex flex-col z-10 p-[2.5rem] tv:p-[5rem]">
         <Image src="/logo-sm.svg" width={108} height={20} alt="Logo Superviz" className="tv:w-[13.5rem] object-contain"/>
         <h1 className="font-black mt-[2rem] text-7xl tv:mt-[4rem] tv:text-[9.5rem] tv:leading-[10.5rem]">

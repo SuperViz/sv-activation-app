@@ -45,6 +45,14 @@ html, body {
     }
   }
   
+  .mobileBg {
+    background: no-repeat url('../../public/bg-ativacoes-mobile.png');
+  }
+  
+  .tvBg {
+    background: url('/public/bg-ativacoes-tv.png')
+  }
+  
   .spin {
     transform-origin: center;
     animation: spin 2s linear infinite;
