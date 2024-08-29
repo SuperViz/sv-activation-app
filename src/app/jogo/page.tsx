@@ -1,5 +1,4 @@
 'use client';
-import { v4 as uuidv4 } from 'uuid';
 import React, { useEffect, useState } from 'react';
 import { IElement } from '../../../types.game';
 import { Element } from '@/components/Game';

@@ -92,7 +92,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const existing = await checkForExistingCombination(elementA, elementB)
-    console.log('Existing:', existing)
     if (existing) {
       return NextResponse.json({
         element: existing,
@@ -100,9 +99,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       })
     }
 
-    console.log('Combining elements:', elementA, elementB)
     const combination = await combineElements(elementA, elementB)
-    console.log('Combination:', combination)
     if (!combination) {
       return NextResponse.json({}, {
         status: 500,
@@ -120,8 +117,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         userId: user.id
       }
     })
-
-    console.log('Element created:', element)
 
     // TODO: Add point to user
 
