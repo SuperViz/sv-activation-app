@@ -6,14 +6,18 @@ import CardLink from "@/components/CardLink";
 import React from "react";
 import { useRealtime } from "@superviz/react-sdk";
 import { IUser } from "../../../types";
+import { ActivationType } from '@/global/global.types';
 
 export default function UserPageContent({ user }: { user: IUser }) {
   const { subscribe } = useRealtime('default');
 
+  function handleActivationClick(message: any) {
+    const completedActivation = ActivationType.DISCORD;
+    // TODO: Completou uma ativação, marcar a ativação que usuário tem como completada (que ação foi feita)
+  }
+
   React.useEffect(() => {
-    subscribe("activation.complete", (e) => {
-      console.log(e);
-    });
+    subscribe("activation.complete", handleActivationClick);
   }, []);
 
   return (
