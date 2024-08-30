@@ -4,6 +4,7 @@ import { db } from '@/lib/prisma'
 import { validateRequestBody } from "@/lib/zod/validate-body";
 import { z } from "zod";
 
+// TODO: Verificar necessidade deste endpoint
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
 

@@ -19,7 +19,7 @@ export default function CardLink({ activation, userActivation, user }: ILinkProp
   const handleClick = () => {
     publish('create.activation', {
       activation: activation.id,
-      userEmail: user.email,
+      userId: user.id,
     })
 
     window.open(activation.page, '_self')
