@@ -7,7 +7,7 @@ import qrcode from '../../../public/qrcode_events.superviz.com.png'
 import Activations from "@/components/Activations";
 import UsersDashboard from "@/components/UsersDashboard";
 import {activations, users} from "@/data/activationsData";
-import {SuperVizRoomProvider} from "@superviz/react-sdk";
+import {Realtime, SuperVizRoomProvider} from "@superviz/react-sdk";
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
@@ -48,6 +48,7 @@ export default function Dashboard() {
       <div className="col-start-5 col-span-12 flex flex-col bg-[#C9C4D114] p-10 rounded-[2rem] tv:p-20 tv:rounded-[4rem]">
         <p className="font-black text-4xl tv:text-[5rem] tv:leading-[6rem]">Participantes em tempo real</p>
         <div className="grow">
+          <Realtime /> 
           <UsersDashboard users={users} />
         </div>
         <div className="flex justify-between mt-9">

@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import Matter from "matter-js";
 import User from "@/components/User";
 import {IUser} from "../../../types";
+import { useRealtime } from "@superviz/react-sdk";
 
 const BASE_SPEED = .5;
 const BALL_MARGIN = 7;
@@ -22,6 +23,12 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
+
+  const { subscribe } = useRealtime('default');
+
+  React.useEffect(() => {
+    subscribe("activation", (e) => console.log('evento!', e));
+  }, []);
   
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
