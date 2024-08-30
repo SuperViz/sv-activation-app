@@ -11,18 +11,18 @@ interface IButtonProps {
 export default function Button({ text, linkTo, disabled, type, onClick }: IButtonProps) {
   if (type === 'link' && linkTo) {
     return (
-      <Link 
-        href={linkTo} 
+      <Link
+        href={linkTo}
         className="w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl"
       >
         {text}
       </Link>
-      
+
     )
   }
-  
+
   return (
-    <button 
+    <button
       disabled={disabled}
       type="button"
       onClick={onClick}

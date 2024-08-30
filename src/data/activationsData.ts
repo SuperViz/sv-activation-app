@@ -29,7 +29,7 @@ export const activations: IActivation[] = [
     id: ActivationType.GAME,
     description: 'Ganhe pontos no',
     activationWord: 'Super Game',
-    link: '/onboarding-game',
+    link: '/activations/game',
     page: '/activations/game',
     color: ActivationColor.GAME
   },

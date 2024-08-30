@@ -1,112 +1,93 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { Element } from '@/components/Game';
-import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
-import './game.scss';
-import { InitialElements } from '@/data/elementsData';
-import { IElement } from '../../../../types.game';
+'use client'
 
-export default function Jogo() {
-  const [elements, setElements] = useState<IElement[]>([]);
-  const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
+import { useState } from 'react'
+import './onboarding.scss'
+import Button from '@/components/Button'
+import Image from 'next/image'
 
-  const getSavedElements = () => {
-    let existingSave = localStorage.getItem("saved_game");
-    if (existingSave) {
-      const savedElements = JSON.parse(existingSave) as IElement[];
-      setElements(savedElements);
-    } else {
-      localStorage.setItem("saved_game", JSON.stringify(InitialElements));
-    }
-  }
+export default function GameOnboarding() {
+	const [currentStep, setCurrentStep] = useState(0)
 
-  const saveNewElements = (elementsToSave: IElement[]) => {
-    localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
-  }
+	const moveToGame = () => {
+		window.open('/activations/game/play', '_self')
+	}
 
-  const getEmailFromLocalStorage = () => {
-    const userData = localStorage.getItem(USERDATA_KEY);
-    if (userData)
-      return JSON.parse(userData).email;
-  }
+	const moveNext = () => {
+		if (localStorage.getItem('onboarding-finished'))
+			moveToGame()
+		else
+			setCurrentStep(currentStep + 1)
 
-  const combineElements = (elementA: IElement, elementB: IElement) => {
-    const indexB = elements.findIndex(el => el.id === elementB.id);
+		if (currentStep === 2)
+			localStorage.setItem('onboarding-finished', 'true')
+	}
 
-    fetch('/api/game', {
-      method: 'POST',
-      body: JSON.stringify({
-        elementA: elementA.name,
-        elementB: elementB.name,
-        email: getEmailFromLocalStorage()
-      })
-    }).then(res => res.json()).then(data => {
-      const newElements = [...elements];
-      newElements.splice(indexB + 1, 0, {
-        emoji: data.element.emoji,
-        name: data.element.name,
-        id: data.element.id,
-        isNew: data.isNew,
-      });
+	return (
+		<div className='onboarding'>
+			{currentStep === 0 && (
+				<div className='step'>
+					<div className='game-title'>
+						<h1>Super<span>{'<Craft>'}</span></h1>
+						<p>Combine e crie elementos</p>
+						<p>🔥 💧 🍃 🌎</p>
+					</div>
 
-      setElements(newElements);
-      saveNewElements(newElements);
-    }).catch(err => {
-      console.error(err);
-    });
-  }
+					<Button text={'Jogar'} type={'button'} onClick={moveNext} />
+				</div>
+			)}
 
-  function removeElementFromBoard(element: IElement) {
-    const newElements = elements.filter(el => el.id !== element.id);
-    setElements(newElements);
-  }
+			{currentStep === 1 && (
+				<div className='step'>
+					<div className='step-counter'>
+						<div className='step-circle active'></div>
+						<div className='step-circle'></div>
+						<div className='step-circle'></div>
+					</div>
 
-  function onDragEnd(result: any) {
-    if (result.combine) {
-      const elementA = elements.find(el => el.id === result.draggableId);
-      const elementB = elements.find(el => el.id === result.combine.draggableId);
+					<div className='step-description'>
+						<h2>Como jogar</h2>
+						<p>Todos os jogadores começam com elementos básicos como Água, Vento, Terra e Fogo. Arraste os elementos e os combine para criar novos.</p>
+					</div>
 
-      if (!elementA || !elementB) return;
-      combineElements(elementA, elementB);
-    }
-  }
+					<Button text={'Próximo'} type={'button'} onClick={moveNext} />
+				</div>
+			)}
 
-  const renderElement = (element: IElement, index: number, provided: any) => {
-    return (
-      <Draggable key={element.id} index={index} draggableId={element.id}>
-        {(provided: any) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
-            <Element
-              element={element}
-              onContextMenu={removeElementFromBoard} />
-          </div>
-        )}
-      </Draggable>
-    )
-  }
+			{currentStep === 2 && (
+				<div className='step'>
+					<div className='step-counter'>
+						<div className='step-circle active'></div>
+						<div className='step-circle active'></div>
+						<div className='step-circle'></div>
+					</div>
 
-  resetServerContext();
+					<div className='step-description'>
+						<h2>Como jogar</h2>
+						<p>Ao descobrir elementos inéditos que nenhum jogador jamais encontrou, ganhe +1 ponto para concorrer ao prêmio!</p>
+					</div>
 
-  useEffect(() => {
-    getSavedElements();
-  }, []);
+					<Button text={'Próximo'} type={'button'} onClick={moveNext} />
+				</div>
+			)}
 
-  return (
-    <div className='game'>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="elements" isCombineEnabled>
-          {(provided: any) => (
-            <div className="elements" {...provided.droppableProps} ref={provided.innerRef} >
-              {elements.map((element, index) => renderElement(element, index, provided))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
-  );
-};
+			{currentStep === 3 && (
+				<div className='step'>
+					<div className='step-counter'>
+						<div className='step-circle active'></div>
+						<div className='step-circle active'></div>
+						<div className='step-circle active'></div>
+					</div>
+
+					<div className='step-description'>
+						<h2>Como jogar</h2>
+						<p>Você pode conseguir até 10 pontos e aumentar suas chances de levar o prêmio!</p>
+					</div>
+
+					<Image src={'/game-you.png'} alt={'Você'} width={101} height={141} />
+
+					<Button text={'Próximo'} type={'button'} onClick={moveToGame} />
+				</div>
+			)}
+		</div>
+	)
+}
