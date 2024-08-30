@@ -4,6 +4,7 @@ import { validateRequestBody } from "@/lib/zod/validate-body";
 import { DiscordWebhookBodySchema } from "./discord.dto";
 import { z } from "zod";
 import { ActivationType } from "@/global/global.types";
+import { publishEvent } from '@/app/services/publishEvent';
 
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -54,6 +55,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     })
 
+    await publishEvent('default', 'activation.complete', {
+      userId: user.id,
+      activation: ActivationType.DISCORD
+    })
 
 
     return NextResponse.json({}, { status: 200 })

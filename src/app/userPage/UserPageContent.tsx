@@ -6,17 +6,31 @@ import CardLink from "@/components/CardLink";
 import React from "react";
 import { useRealtime } from "@superviz/react-sdk";
 import { IUser } from "../../../types";
-import { ActivationType } from '@/global/global.types';
 
 export default function UserPageContent({ user }: { user: IUser }) {
   const { subscribe } = useRealtime('default');
 
+  function handleActivationStart(message: any) {
+    const userId = message.data.userId;
+    const activation = message.data.activation;
+    console.log('Iniciou a ativação', userId, activation);
+  }
+
   function handleActivationClick(message: any) {
-    const completedActivation = ActivationType.DISCORD;
-    // TODO: Completou uma ativação, marcar a ativação que usuário tem como completada (que ação foi feita)
+    const userId = message.data.userId;
+    const completedActivation = message.data.activation;
+    console.log('ativação concluida', userId, completedActivation);
+  }
+
+  function handleGameUpdate(message: any) {
+    const userId = message.data.userId;
+    const points = message.data.points;
+    console.log('Atualizou os pontos do usuário', userId, points);
   }
 
   React.useEffect(() => {
+    subscribe("activation.start", handleActivationStart);
+    subscribe("activation.game.update", handleGameUpdate);
     subscribe("activation.complete", handleActivationClick);
   }, []);
 

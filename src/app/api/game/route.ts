@@ -5,6 +5,7 @@ import { z } from "zod";
 import { ElementDTO } from './dto/generate-element';
 import { IElement } from '../../../../types.game';
 import { createHash } from 'crypto';
+import { publishEvent } from '@/app/services/publishEvent';
 
 function getUniqueID(elementA: string, elementB: string): string {
   let id = [elementA, elementB].sort().join("").trim();
@@ -61,9 +62,6 @@ async function checkForExistingCombination(elementA: string, elementB: string): 
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
-  const ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string;
-
   try {
     const body = await request.text()
     const parsedBody = validateRequestBody<z.infer<typeof ElementDTO>>(ElementDTO, body)
@@ -120,34 +118,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
 
     // TODO: Add point to user
+    const totalPoints = 4 // TODO: pegar quantidade de pontos
 
-    await fetch(`https://nodeapi.superviz.com/realtime/${ROOM_ID}/default/publish`, {
-      method: 'POST',
-      headers: {
-        'apiKey': DEVELOPER_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: 'activation',
-        data: {
-          // TODO: Add data here
-        }
-      })
+    await publishEvent('default', 'new.element', {
+      name: 'activation.game.update',
+      data: {
+        userId: user.id,
+        points: totalPoints
+      }
     })
 
-    await fetch(`https://nodeapi.superviz.com/realtime/${ROOM_ID}/game/publish`, {
-      method: 'POST',
-      headers: {
-        'apiKey': DEVELOPER_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: 'new.element',
-        data: {
-          element,
-          participant: user.name
-        }
-      })
+    await publishEvent('game', 'new.element', {
+      name: 'new.element',
+      data: {
+        element,
+        userName: user.name
+      }
     })
 
     return NextResponse.json({
