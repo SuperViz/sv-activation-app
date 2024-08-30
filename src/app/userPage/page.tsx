@@ -8,7 +8,9 @@ import { useRouter } from "next/navigation";
 import { users } from '@/data/activationsData';
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
-const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
+const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string
+const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
+const DASHBOARD_GROUP_NAME = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_NAME as string
 
 export default function Activations() {
   const [user, setUser] = React.useState<IUser>()
@@ -33,14 +35,14 @@ export default function Activations() {
     <SuperVizRoomProvider
       developerKey={DEVELOPER_KEY}
       group={{
-        id: "dashboardGroup",
-        name: "Dashboard",
+        id: DASHBOARD_GROUP_ID,
+        name: DASHBOARD_GROUP_NAME,
       }}
       participant={{
         id: user.id,
         name: user.name,
       }}
-      roomId="superviz_dashboard"
+      roomId={DASHBOARD_ROOM_ID}
     >
       <Realtime />
       <UserPageContent user={user} />

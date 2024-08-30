@@ -1,7 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
+'use client'
+
+import React, { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import User from "@/components/User";
-import {IUser} from "../../../types";
+import { IUser, IUserActivation } from "../../../types";
+import { ActivationColor, users as mockUsers } from '@/data/activationsData';
+import { useRealtime, useSuperviz } from '@superviz/react-sdk';
 
 const BASE_SPEED = .5;
 const BALL_MARGIN = 7;
@@ -13,16 +17,15 @@ type Ball = {
   user: IUser,
 };
 
-interface IUsersDashboardProps {
-  users: IUser[]
-}
-
-export default function UsersDashboard({ users }: IUsersDashboardProps) {
+export default function UsersDashboard() {
   const [balls, setBalls] = useState<Ball[]>([]);
+  const [users, setUsers] = React.useState<IUser[]>(mockUsers);
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
-  
+
+
+
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
@@ -139,16 +142,59 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
     requestAnimationFrame(animate);
   };
 
+  const { stopRoom, hasJoinedRoom } = useSuperviz();
+  const { subscribe } = useRealtime('default');
+
+  function handleActivationStart(message: any) {
+    const userId = message.data.userId;
+    const activationName = message.data.activation;
+
+    const user = users.find(user => user.id === userId);
+    if (!user) return;
+
+    const activation: IUserActivation = {
+      id: activationName,
+      completed: false,
+      color: ActivationColor.DISCORD // TODO: Cor da ativação não pode ficar no css não?
+    }
+
+    user.activations.push(activation);
+  }
+
+  function handleActivationClick(message: any) {
+    const userId = message.data.userId;
+    const completedActivation = message.data.activation;
+    console.log('ativação concluida', userId, completedActivation);
+  }
+
+  function handleGameUpdate(message: any) {
+    const userId = message.data.userId;
+    const points = message.data.points;
+    console.log('Atualizou os pontos do usuário', userId, points);
+  }
+
   useEffect(() => {
     initialize();
+    subscribe("activation.start", handleActivationStart);
+    subscribe("activation.game.update", handleGameUpdate);
+    subscribe("activation.complete", handleActivationClick);
+
+    const handleBeforeUnload = () => {
+      if (hasJoinedRoom) {
+        stopRoom();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       if (!engineRef.current) return;
 
       Matter.Engine.clear(engineRef.current);
     };
-  }, []);
-  
+  }, [hasJoinedRoom]);
+
   return (
     <div ref={containerRef} className="relative overflow-hidden w-full h-full">
       {balls.map((ball) => (
@@ -158,7 +204,7 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
           style={{
             width: `${ball.size}px`,
             height: `${ball.size}px`,
-            top: `${ball.position.y - ball.size / 2}px`, 
+            top: `${ball.position.y - ball.size / 2}px`,
             left: `${ball.position.x - ball.size / 2}px`,
           }}
         >

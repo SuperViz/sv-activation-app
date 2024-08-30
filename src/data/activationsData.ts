@@ -78,6 +78,15 @@ export const users: IUser[] = [
     ],
   },
   {
+    id: '333',
+    name: 'Rhaenyra',
+    email: 'Rhaenyra@Rhaenyra.com',
+    isOnline: true,
+    activations: [
+
+    ],
+  },
+  {
     id: '222',
     name: 'Corlys',
     email: 'Corlys@Corlys.com',
