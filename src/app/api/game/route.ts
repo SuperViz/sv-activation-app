@@ -14,7 +14,7 @@ function getUniqueID(elementA: string, elementB: string): string {
 
 async function combineElements(elementA: string, elementB: string): Promise<IElement | null> {
   const AZURE_OPEN_AI = process.env.AZURE_OPEN_AI as string;
-  const task = `TASK: Combine ${elementA} and ${elementB} to create a new element. Try to keep the element as simple and realistic as possible and only 1 word if possible as well. If two basic elements are combined, you should prioritize making a new thing out of that, rather than simply combining the words. Example: Earth + Earth = Solar System. You are allowed to use one of the inputs as the output, but only if there are no other elements. Two of the same item should output a larger version of that item if applicable. Your response should be the name of the new element and MUST contain one and only one emoji to represent the element. The response should never have less than or more than 1 emoji. Example: Fire + Water = 💨 Steam. Your output should be in json format to be parsed. Format: {new_element: "name", emoji: "emoji"}`
+  const task = `TAREFA: Combine ${elementA} e ${elementB} para criar um novo elemento. Tente manter o elemento o mais simples e realista possível e, preferencialmente com apenas 1 palavra. Se dois elementos básicos forem combinados, você deve priorizar a criação de uma nova coisa a partir disso, em vez de simplesmente combinar as palavras. Exemplo: Terra + Terra = Sistema Solar. Você pode usar um dos inputs como output, mas apenas se não houver outros elementos. Dois itens iguais devem resultar em uma versão maior desse item, se aplicável. Sua resposta deve ser o nome do novo elemento e DEVE conter um e apenas um emoji para representar o elemento. A resposta SOMENTE 1 emoji. Exemplo: Fogo + Água = 💨 Vapor. Sua saída deve estar em formato json para ser analisada. Formato: {new_element: "nome", emoji: "emoji"}`
 
   const response = await fetch('https://sv-activation.openai.azure.com/openai/deployments/sv-activation/chat/completions?api-version=2024-02-15-preview', {
     method: 'POST',
@@ -26,7 +26,7 @@ async function combineElements(elementA: string, elementB: string): Promise<IEle
       messages: [
         {
           role: 'system',
-          content: 'You are a funny game for developers.'
+          content: 'Você é um jogo divertido para desenvolvedores, piadas da área de tecnologia e desenvolvimento são bem vindas!'
         },
         {
           role: 'user',
