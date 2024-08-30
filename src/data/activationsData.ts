@@ -1,5 +1,5 @@
-import {IActivation, IUser} from "../../types";
-import {ActivationType} from "@/global/global.types";
+import { IActivation, IUser } from "../../types";
+import { ActivationType } from "@/global/global.types";
 
 export enum ActivationColor {
   GAME = '957AFF',
@@ -9,43 +9,43 @@ export enum ActivationColor {
 }
 
 export const activations: IActivation[] = [
-    {
-      id: ActivationType.NEWSLETTER,
-      description: 'Cadastre na nossa',
-      activationWord: 'Newsletter',
-      link: 'https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah',
-      page: '/activations/newsletter',
-      color: ActivationColor.NEWSLETTER
-    },
-    {
-      id: ActivationType.DISCORD,
-      description: 'Junte-se ao nosso',
-      activationWord: 'Discord',
-      link: 'https://discord.com/invite/Zb2arax9nn',
-      page: '/activations/discord',
-      color: ActivationColor.DISCORD
-    },
-    {
-      id: ActivationType.GAME,
-      description: 'Ganhe pontos no',
-      activationWord: 'Super Game',
-      link: '/onboarding-game',
-      page: '/activations/game',
-      color: ActivationColor.GAME
-    },
-    {
-      id: ActivationType.HACKATHON,
-      description: 'Inscreva-se no',
-      activationWord: 'Hackathon',
-      link: 'https://47xzvrbdgjk.typeform.com/to/cqzci1gD',
-      page: '/activations/hackathon',
-      color: ActivationColor.HACKATHON,
-      subtext: {
-        description: 'E concorra a',
-        activationWord: '$5.000',
-      }
-    },
-  ]
+  {
+    id: ActivationType.NEWSLETTER,
+    description: 'Cadastre na nossa',
+    activationWord: 'Newsletter',
+    link: 'https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah',
+    page: '/activations/newsletter',
+    color: ActivationColor.NEWSLETTER
+  },
+  {
+    id: ActivationType.DISCORD,
+    description: 'Junte-se ao nosso',
+    activationWord: 'Discord',
+    link: 'https://discord.com/invite/Zb2arax9nn',
+    page: '/activations/discord',
+    color: ActivationColor.DISCORD
+  },
+  {
+    id: ActivationType.GAME,
+    description: 'Ganhe pontos no',
+    activationWord: 'Super Game',
+    link: '/onboarding-game',
+    page: '/activations/game',
+    color: ActivationColor.GAME
+  },
+  {
+    id: ActivationType.HACKATHON,
+    description: 'Inscreva-se no',
+    activationWord: 'Hackathon',
+    link: 'https://47xzvrbdgjk.typeform.com/to/cqzci1gD',
+    page: '/activations/hackathon',
+    color: ActivationColor.HACKATHON,
+    subtext: {
+      description: 'E concorra a',
+      activationWord: '$5.000',
+    }
+  },
+]
 
 export const users: IUser[] = [
   {
