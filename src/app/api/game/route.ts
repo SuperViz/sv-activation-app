@@ -62,6 +62,7 @@ async function checkForExistingCombination(elementA: string, elementB: string): 
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
+  const ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string;
 
   try {
     const body = await request.text()
@@ -120,34 +121,34 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // TODO: Add point to user
 
-    // await fetch('https://nodeapi.superviz.com/realtime/superviz_dashboard/default/publish', {
-    //   method: 'POST',
-    //   headers: {
-    //     'apiKey': DEVELOPER_KEY,
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     name: 'activation',
-    //     data: {
-    //       // TODO: Add data here
-    //     }
-    //   })
-    // })
+    await fetch(`https://nodeapi.superviz.com/realtime/${ROOM_ID}/default/publish`, {
+      method: 'POST',
+      headers: {
+        'apiKey': DEVELOPER_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'activation',
+        data: {
+          // TODO: Add data here
+        }
+      })
+    })
 
-    // await fetch('https://nodeapi.superviz.com/realtime/superviz_dashboard/game/publish', {
-    //   method: 'POST',
-    //   headers: {
-    //     'apiKey': DEVELOPER_KEY,
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     name: 'new.element',
-    //     data: {
-    //       element,
-    //       participant: user.name
-    //     }
-    //   })
-    // })
+    await fetch(`https://nodeapi.superviz.com/realtime/${ROOM_ID}/game/publish`, {
+      method: 'POST',
+      headers: {
+        'apiKey': DEVELOPER_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'new.element',
+        data: {
+          element,
+          participant: user.name
+        }
+      })
+    })
 
     return NextResponse.json({
       element: element,

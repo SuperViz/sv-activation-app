@@ -6,7 +6,7 @@ export default function NewsletterPage() {
         width="100%"
         height="100%"
         allowFullScreen
-        sandbox={``}
+        sandbox='allow-scripts allow-same-origin allow-forms'
       >
       </iframe>
     </div>

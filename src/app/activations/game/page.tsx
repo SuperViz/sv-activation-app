@@ -1,13 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { IElement } from '../../../types.game';
 import { Element } from '@/components/Game';
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
 import './game.scss';
 import { InitialElements } from '@/data/elementsData';
+import { IElement } from '../../../../types.game';
 
 export default function Jogo() {
   const [elements, setElements] = useState<IElement[]>([]);
+  const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -20,12 +21,11 @@ export default function Jogo() {
   }
 
   const saveNewElements = (elementsToSave: IElement[]) => {
-    // TODO: salvar no localStorage
-    // localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
+    localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
   }
 
   const getEmailFromLocalStorage = () => {
-    const userData = localStorage.getItem("undefined");
+    const userData = localStorage.getItem(USERDATA_KEY);
     if (userData)
       return JSON.parse(userData).email;
   }
@@ -33,7 +33,7 @@ export default function Jogo() {
   const combineElements = (elementA: IElement, elementB: IElement) => {
     const indexB = elements.findIndex(el => el.id === elementB.id);
 
-    fetch('/api/jogo', {
+    fetch('/api/game', {
       method: 'POST',
       body: JSON.stringify({
         elementA: elementA.name,
