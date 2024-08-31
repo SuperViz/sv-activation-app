@@ -34,7 +34,7 @@ export default function DiscordPage() {
 
   return (
     <>
-      <form className="w-full h-full relative overflow-hidden flex flex-col justify-end">
+      <form className="w-full h-full relative overflow-hidden flex flex-col justify-end px-1">
         <div
           className={`absolute bottom-[40%] left-0 w-full transition-all duration-700 ease-in-out transform`}
         >

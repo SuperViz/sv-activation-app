@@ -11,8 +11,6 @@ interface ILinkProps {
 }
 export default function CardLink({ activation, userActivation, user }: ILinkProps) {
   const userCompletedActivation = userActivation ? userActivation.completed : false
-  console.log('activation', activation)
-  console.log('userActivation', userActivation)
 
   const { publish } = useRealtime('default');
 
@@ -43,7 +41,7 @@ export default function CardLink({ activation, userActivation, user }: ILinkProp
     <button
       onClick={handleClick}
       className={`mt-5 p-5 w-full rounded-2xl flex justify-between items-center ${userCompletedActivation ? 'bg-[#C9C4D108]' : 'bg-[#C9C4D11A]'}`}>
-      <div className={`${userCompletedActivation ? 'opacity-15' : 'opacity-1'}`}>
+      <div className={`${userCompletedActivation ? 'opacity-15' : 'opacity-1'} text-left`}>
         <p className="text-white text-2xl font-bold">{activation.description}</p>
         <p className="text-2xl font-bold" style={{ color: `#${activation.color}` }}>{activation.activationWord}</p>
         {activation.subtext && (

@@ -21,7 +21,7 @@ export default function App() {
   }
   
   return (
-    <div className='flex flex-col w-full h-screen px-8 py-6'>
+    <div className='flex flex-col w-full h-dvh px-8 py-6'>
       <div className="relative flex flex-col justify-between z-10 h-full">
         <div className="flex flex-col items-center">
           <Image src="./logo-sm.svg" width={109} height={80} alt="Logo Superviz"/>
