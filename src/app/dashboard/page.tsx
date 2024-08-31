@@ -1,13 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Image from "next/image";
 import fenderImg from '../../../public/fender-lego-tv.png'
 import qrcode from '../../../public/qrcode_events.superviz.com.png'
 import Activations from "@/components/Activations";
 import UsersDashboard from "@/components/UsersDashboard";
 import { activations } from "@/data/activationsData";
-import { SuperVizRoomProvider } from "@superviz/react-sdk";
+import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
@@ -17,6 +17,7 @@ const DASHBOARD_PARTICIPANT_NAME = process.env.NEXT_PUBLIC_DASHBOARD_PARTICIPANT
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string
 
 export default function Dashboard() {
+
   return (
     <SuperVizRoomProvider
       developerKey={DEVELOPER_KEY}
@@ -47,6 +48,7 @@ export default function Dashboard() {
         <div className="flex flex-col bg-[#C9C4D114] p-10 rounded-[2rem] min-w-[84.375rem] tv:p-20 tv:rounded-[4rem] tv:min-w-[168.75rem] grow">
           <p className="font-black text-4xl tv:text-[5rem] tv:leading-[6rem]">Participantes em tempo real</p>
           <div className="grow">
+            <Realtime />
             <UsersDashboard />
           </div>
           <div className="flex justify-between mt-9">

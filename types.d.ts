@@ -1,12 +1,12 @@
-import {ActivationColor} from "@/data/activationsData";
-import {ActivationType} from "@/global/global.types";
+import { ActivationColor } from "@/data/activationsData";
+import { ActivationType } from "@/global/global.types";
 
 interface IActivation {
   id: ActivationType
   description: string
   activationWord: string
   color: ActivationColor
-  link: string          
+  link: string
   page: string
   subtext?: {
     description: string
@@ -20,6 +20,7 @@ interface IUser {
   email: string
   discordUser?: string
   activations: IUserActivation[]
+  isOnline?: boolean
 }
 
 interface IUserActivation {

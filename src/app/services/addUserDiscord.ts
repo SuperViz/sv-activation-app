@@ -1,9 +1,9 @@
-import getUserData from "@/app/services/getUserData";
-import {IUser} from "../../../types";
+import { IUser } from "../../../types";
+import { getUserData } from './getUserData';
 
 const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string
 
-export async function addUserDiscord(formData: Record<string, string>): Promise<void>{
+export async function addUserDiscord(formData: Record<string, string>): Promise<void> {
 
   await fetch('/api/user', {
     method: 'PATCH',

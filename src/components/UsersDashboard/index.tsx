@@ -3,9 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import User from "@/components/User";
-import { IUser, IUserActivation } from "../../../types";
-import { ActivationColor, users as mockUsers } from '@/data/activationsData';
-import { useRealtime, useSuperviz } from '@superviz/react-sdk';
+import { IUser, IUserActivation, IUserResponse } from "../../../types";
+import { ActivationColor } from '@/data/activationsData';
+import { useRealtime, useRealtimeParticipant, useSuperviz } from '@superviz/react-sdk';
+import { ActivationType } from '@/global/global.types';
+import { getOnlineUsersIds, getUsers } from '@/app/services/getUserData';
 
 const BASE_SPEED = .5;
 const BALL_MARGIN = 7;
@@ -19,12 +21,10 @@ type Ball = {
 
 export default function UsersDashboard() {
   const [balls, setBalls] = useState<Ball[]>([]);
-  const [users, setUsers] = React.useState<IUser[]>(mockUsers);
+  const [users, setUsers] = React.useState<IUser[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
-
-
 
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
@@ -144,40 +144,103 @@ export default function UsersDashboard() {
 
   const { stopRoom, hasJoinedRoom } = useSuperviz();
   const { subscribe } = useRealtime('default');
+  const { subscribe: participantSubscribe } = useRealtimeParticipant('default');
+
+  function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
+    const user = users.find(user => user.id === userId);
+    if (!user) return;
+    if (!completed) {
+      const activation: IUserActivation = {
+        name: activationName,
+        completed: completed,
+        color: ActivationColor[activationName]
+      }
+
+      user.activations.push(activation);
+    } else {
+      const activation = user.activations.find(activation => activation.name === activationName);
+      if (activation)
+        activation.completed = true;
+    }
+  }
+
+  function handleParticipantStatusChange(userId: string, isOnline: boolean) {
+    const user = users.find(user => user.id === userId);
+    if (!user) return;
+
+    user.isOnline = isOnline;
+  }
 
   function handleActivationStart(message: any) {
     const userId = message.data.userId;
     const activationName = message.data.activation;
 
-    const user = users.find(user => user.id === userId);
-    if (!user) return;
-
-    const activation: IUserActivation = {
-      id: activationName,
-      completed: false,
-      color: ActivationColor.DISCORD // TODO: Cor da ativação não pode ficar no css não?
-    }
-
-    user.activations.push(activation);
+    completeActivation(userId, activationName, false);
   }
 
-  function handleActivationClick(message: any) {
+  function handleActivationComplete(message: any) {
     const userId = message.data.userId;
-    const completedActivation = message.data.activation;
-    console.log('ativação concluida', userId, completedActivation);
+    const activationName = message.data.activation;
+
+    completeActivation(userId, activationName, true);
   }
 
   function handleGameUpdate(message: any) {
     const userId = message.data.userId;
     const points = message.data.points;
-    console.log('Atualizou os pontos do usuário', userId, points);
+
+    const user = users.find(user => user.id === userId);
+    if (!user) return;
+
+    user.activations.forEach(activation => {
+      if (activation.name === ActivationType.GAME) {
+        activation.quantity = points;
+      }
+    })
+  }
+
+  function fetchUsers() {
+    getUsers().then((fetchedUsers: IUserResponse[]) => {
+      const users: IUser[] = fetchedUsers.map(user => {
+        const activations: IUserActivation[] = user.activations.map(activation => {
+          return {
+            name: activation.name,
+            completed: activation.completed,
+            quantity: activation.quantity,
+            color: ActivationColor[activation.name]
+          };
+        });
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          discordUser: user.discordUser,
+          activations: activations
+        };
+      });
+      setUsers(users);
+    }).then(() => {
+      getOnlineUsersIds().then((onlineUsersIds: string[]) => {
+        if (onlineUsersIds.length === 0) return;
+        users.forEach(user => {
+          if (onlineUsersIds.includes(user.id)) {
+            user.isOnline = true;
+          }
+        });
+      });
+    });
   }
 
   useEffect(() => {
+    fetchUsers();
     initialize();
     subscribe("activation.start", handleActivationStart);
     subscribe("activation.game.update", handleGameUpdate);
-    subscribe("activation.complete", handleActivationClick);
+    subscribe("activation.complete", handleActivationComplete);
+
+    participantSubscribe('presence.leave', (message) => handleParticipantStatusChange(message.id, false));
+    participantSubscribe('presence.joined-room', (message) => handleParticipantStatusChange(message.id, true));
 
     const handleBeforeUnload = () => {
       if (hasJoinedRoom) {

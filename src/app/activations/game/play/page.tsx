@@ -24,12 +24,6 @@ export default function Jogo() {
     localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
   }
 
-  const getEmailFromLocalStorage = () => {
-    const userData = localStorage.getItem(USERDATA_KEY);
-    if (userData)
-      return JSON.parse(userData).email;
-  }
-
   const combineElements = (elementA: IElement, elementB: IElement) => {
     const indexB = elements.findIndex(el => el.id === elementB.id);
 
@@ -38,7 +32,7 @@ export default function Jogo() {
       body: JSON.stringify({
         elementA: elementA.name,
         elementB: elementB.name,
-        email: getEmailFromLocalStorage()
+        email: localStorage.getItem(USERDATA_KEY)
       })
     }).then(res => res.json()).then(data => {
       const newElements = [...elements];
