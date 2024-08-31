@@ -21,6 +21,6 @@ export async function createUser(formData: Record<string, string>): Promise<void
       return response.data.user as IUser;
     })
     .then((userData) => {
-      localStorage.setItem(USERDATA_KEY, JSON.stringify(userData))
+      localStorage.setItem(USERDATA_KEY, JSON.stringify(userData.email))
     })
 }

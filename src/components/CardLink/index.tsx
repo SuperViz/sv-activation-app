@@ -1,6 +1,6 @@
 'use client'
 
-import { IActivation, IUser, IUserActivation } from "../../../types";
+import {IActivation, IUser, IUserActivation} from "../../../types";
 import ProgressIndicator from "@/components/CardLink/ProgressIndicator";
 import { useRealtime } from '@superviz/react-sdk';
 

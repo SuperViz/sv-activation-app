@@ -1,6 +1,6 @@
-import {IUser} from "../../../types";
+import {IUserResponse} from "../../../types";
 
-export default async function getUserData(email: string): Promise<IUser> {
+export default async function getUserData(email: string): Promise<IUserResponse> {
   const params = new URLSearchParams({ email: email})
   
   return await fetch(`/api/user?${params}`)

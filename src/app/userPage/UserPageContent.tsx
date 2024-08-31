@@ -5,10 +5,12 @@ import { activations } from "@/data/activationsData";
 import CardLink from "@/components/CardLink";
 import React from "react";
 import { useRealtime } from "@superviz/react-sdk";
-import { IUser } from "../../../types";
+import { IUser, IUserActivation} from "../../../types";
 
-export default function UserPageContent({ user }: { user: IUser }) {
+export default function UserPageContent({ user, userActivations}: { user: IUser, userActivations: IUserActivation[] }) {
   const { subscribe } = useRealtime('default');
+  
+  //TODO: tirar o link quando a ativação estiver "completed"
 
   function handleActivationStart(message: any) {
     const userId = message.data.userId;
@@ -42,7 +44,7 @@ export default function UserPageContent({ user }: { user: IUser }) {
       <p className="w-full text-center font-normal text-lg">Escolha uma ativação para participar</p>
       {activations.map(activation => (
         <div key={activation.color} className="w-full">
-          <CardLink user={user} activation={activation} userActivation={user.activations.find(act => act.id === activation.id)} />
+          <CardLink user={user} activation={activation} userActivation={userActivations.find(act => act.name === activation.id)} />
         </div>
       ))}
     </>

@@ -20,13 +20,31 @@ interface IUser {
   email: string
   discordUser?: string
   activations: IUserActivation[]
-  isOnline: boolean
 }
 
 interface IUserActivation {
-  id: ActivationType
+  name: ActivationType
   completed: boolean
   quantity?: number
   color: ActivationColor
 }
 
+interface IUserResponse {
+  id: string
+  name: string
+  discordUser?: string
+  email: string
+  createdAt: Date
+  updatedAt: Date
+  activations: IActivationResponse[]
+}
+
+interface IActivationResponse {
+  id: string
+  name: ActivationType
+  completed: boolean
+  quantity: number
+  userId: string
+  createdAt: Date
+  updatedAt: Date
+}

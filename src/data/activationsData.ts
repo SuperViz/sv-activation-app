@@ -55,23 +55,23 @@ export const users: IUser[] = [
     isOnline: true,
     activations: [
       {
-        id: ActivationType.HACKATHON,
+        name: ActivationType.HACKATHON,
         completed: true,
         color: ActivationColor.HACKATHON,
       },
       {
-        id: ActivationType.DISCORD,
+        name: ActivationType.DISCORD,
         completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        id: ActivationType.GAME,
+        name: ActivationType.GAME,
         completed: false,
         quantity: 2,
         color: ActivationColor.GAME,
       },
       {
-        id: ActivationType.NEWSLETTER,
+        name: ActivationType.NEWSLETTER,
         completed: true,
         color: ActivationColor.NEWSLETTER,
       },
@@ -93,17 +93,17 @@ export const users: IUser[] = [
     isOnline: true,
     activations: [
       {
-        id: ActivationType.NEWSLETTER,
+        name: ActivationType.NEWSLETTER,
         completed: true,
         color: ActivationColor.NEWSLETTER,
       },
       {
-        id: ActivationType.DISCORD,
+        name: ActivationType.DISCORD,
         completed: true,
         color: ActivationColor.DISCORD,
       },
       {
-        id: ActivationType.HACKATHON,
+        name: ActivationType.HACKATHON,
         completed: false,
         color: ActivationColor.HACKATHON,
       },
