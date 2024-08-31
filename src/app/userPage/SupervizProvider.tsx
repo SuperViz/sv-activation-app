@@ -13,7 +13,6 @@ const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
 
 export default function SupervizProvider({ userEmail }: { userEmail: string }) {
   const [user, setUser] = React.useState<IUser>()
-  const [userActivations, setUserActivations] = React.useState<IUserActivation[]>([])
   const { data, isLoading } = useQuery({ queryKey: [userEmail], queryFn: async () => await getUserData(userEmail) })
 
 
@@ -21,13 +20,13 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
     if (data) {
       const { id, name, email, discordUser, activations } = data
       const parsedActivations = parseUserActivation(activations)
-      setUserActivations(parsedActivations)
       const parsedUser: IUser = {
         id,
         name,
         email,
         discordUser,
-        activations: parsedActivations
+        activations: parsedActivations,
+        isOnline: true
       }
       setUser(parsedUser)
     }
@@ -69,7 +68,7 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
       roomId={DASHBOARD_ROOM_ID}
     >
       <Realtime />
-      <UserPageContent user={user} userActivations={userActivations} />
+      <UserPageContent user={user} />
     </SuperVizRoomProvider>
   ) :
     (
