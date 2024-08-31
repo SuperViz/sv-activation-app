@@ -1,7 +1,7 @@
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
 import UserPageContent from "@/app/userPage/UserPageContent";
 import React from "react";
-import { IActivationResponse, IUser, IUserActivation, IUserResponse } from "../../../types";
+import {IActivationResponse, IUser, IUserActivation} from "../../../types";
 import { ActivationColor } from "@/data/activationsData";
 import { useQuery } from "@tanstack/react-query";
 import { getUserData } from '../services/getUserData';
@@ -34,7 +34,7 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
 
   const parseUserActivation = (userActivations: IActivationResponse[] = []) => {
     return userActivations.map((userActivation) => {
-      const activationBase = {
+      const activationBase: IUserActivation = {
         name: userActivation.name,
         completed: userActivation.completed,
         quantity: undefined,
@@ -46,7 +46,7 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
           quantity: userActivation.quantity,
         }
       }
-      return activationBase as IUserActivation
+      return activationBase
     })
   }
 

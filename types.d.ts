@@ -35,8 +35,6 @@ interface IUserResponse {
   name: string
   discordUser?: string
   email: string
-  createdAt: Date
-  updatedAt: Date
   activations: IActivationResponse[]
 }
 
@@ -46,6 +44,4 @@ interface IActivationResponse {
   completed: boolean
   quantity: number
   userId: string
-  createdAt: Date
-  updatedAt: Date
 }
