@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import User from "@/components/User";
-import { IUser, IUserActivation, IUserResponse } from "../../../types";
+import {IUser, IUserActivation, IUserResponse} from "../../../types";
 import { ActivationColor } from '@/data/activationsData';
 import { useRealtime, useRealtimeParticipant, useSuperviz } from '@superviz/react-sdk';
 import { ActivationType } from '@/global/global.types';
@@ -27,12 +27,27 @@ export default function UsersDashboard() {
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
-
-    const size = 36 + user.activations.length * 15;
+    const userActivationDiameter = 80 + user.activations.length * 30;
+    
+    const size = windowWidth > 3000 ? userActivationDiameter/2 : userActivationDiameter/4;
     const ball = Matter.Bodies.circle(
       (Math.random() * (containerWidth - BALL_MARGIN)) + (BALL_MARGIN / 2),
       (Math.random() * (containerHeight - BALL_MARGIN)) + (BALL_MARGIN / 2),
@@ -110,7 +125,7 @@ export default function UsersDashboard() {
     ballsRef.current = newBalls;
     setBalls(newBalls);
     Matter.Runner.run(engine);
-    animate();
+    // animate();
   }
 
   // Set up animation loop
@@ -280,15 +295,15 @@ export default function UsersDashboard() {
       {balls.map((ball) => (
         <div
           key={ball.id}
-          className="absolute flex justify-center items-center"
+          className="absolute"
           style={{
-            width: `${ball.size}px`,
-            height: `${ball.size}px`,
-            top: `${ball.position.y - ball.size / 2}px`,
+            width: `${ball.size * 2}px`,
+            height: `${ball.size * 2}px`,
+            top: `${ball.position.y - ball.size / 2}px`, 
             left: `${ball.position.x - ball.size / 2}px`,
           }}
         >
-          <User user={ball.user} withActivations={true} withUsername={true} withStar={true} />
+          <User user={ball.user} withActivations={false} />
         </div>
       ))}
     </div>

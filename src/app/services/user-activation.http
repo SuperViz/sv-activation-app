@@ -1,0 +1,9 @@
+### Criar ativação
+# @name Criar ativação
+POST http://localhost:3000/api/user/activation
+Content-Type: application/json
+
+{
+  "name": "GAME",
+  "userEmail": "dani@dani.com"
+}

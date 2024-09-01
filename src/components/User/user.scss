@@ -1,0 +1,130 @@
+.baseUser {
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  width: 2.25rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.firstRing {
+  background-color: transparent;
+  border: 6px #C9C4D11A solid;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.secondRing {
+  background: transparent;
+  border: 6px #C9C4D11A solid;
+  border-radius: 50%;
+  width: 66px;
+  height: 66px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.thirdRing {
+  background: transparent;
+  border: 6px #C9C4D11A solid;
+  border-radius: 50%;
+  width: 82px;
+  height: 82px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.fourthRing {
+  background: transparent;
+  border: 6px #C9C4D11A solid;
+  border-radius: 50%;
+  width: 98px;
+  height: 98px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.game {
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  
+  &::after {
+    content: '';
+    width: calc(100% + 12px);
+    height: calc(100% + 12px);
+    position: relative;
+    border-radius: 50%;
+    top: -6px;
+    left: -6px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: conic-gradient(
+    /* Primeira seção colorida */
+          red 0% 9%,
+    /* Espaço transparente */
+          transparent 9% 10%,
+    /* Segunda seção colorida */
+          red 10% 19%,
+    /* Espaço transparente */
+          transparent 19% 20%,
+    /* Terceira seção colorida */
+          red 20% 29%,
+    /* Espaço transparente */
+          transparent 29% 30%,
+    /* Quarta seção colorida */
+          red 30% 39%,
+    /* Espaço transparente */
+          transparent 39% 40%,
+    /* Quinta seção colorida */
+          red 40% 49%,
+    /* Espaço transparente */
+          transparent 49% 50%,
+    /* Sexta seção colorida */
+          red 50% 59%,
+    /* Espaço transparente */
+          transparent 59% 60%,
+    /* Sétima seção colorida */
+          red 60% 69%,
+    /* Espaço transparente */
+          transparent 69% 70%,
+    /* Oitava seção colorida */
+          red 70% 79%,
+    /* Espaço transparente */
+          transparent 79% 80%,
+    /* Nona seção colorida */
+          red 80% 89%,
+    /* Espaço transparente */
+          transparent 89% 90%,
+    /* Décima seção colorida */
+          red 90% 99%,
+    /* Espaço transparente */
+          transparent 99% 100%
+    );
+  }
+}
