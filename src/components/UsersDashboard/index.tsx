@@ -235,6 +235,8 @@ export default function UsersDashboard() {
   useEffect(() => {
     fetchUsers();
     initialize();
+
+    // TODO: Add new user to the balls array
     subscribe("activation.start", handleActivationStart);
     subscribe("activation.game.update", handleGameUpdate);
     subscribe("activation.complete", handleActivationComplete);
