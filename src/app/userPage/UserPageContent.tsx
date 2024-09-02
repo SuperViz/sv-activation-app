@@ -1,6 +1,6 @@
 'use client'
 
-import User from "@/components/User";
+import User, {MobileUser} from "@/components/User";
 import { ActivationColor, activations } from "@/data/activationsData";
 import CardLink from "@/components/CardLink";
 import React from "react";
@@ -71,7 +71,7 @@ export default function UserPageContent({ user, setUser }: { user: IUser, setUse
   return (
     <div>
       <div className="my-5 pb-5 w-screen border-b border-[#ffffff1a]">
-        <User user={user} withActivations={true} withUsername={true} withStar={false} />
+        <MobileUser user={user} />
       </div>
       <p className="w-full text-center font-normal text-lg">Escolha uma ativação para participar</p>
       <div className='w-full p-5'>
