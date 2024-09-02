@@ -10,7 +10,7 @@ export function TVUser({ user }: { user: IUser }) {
   const userHasStar = activationsNumber === Object.keys(ActivationColor).length && user.activations.every(activation => activation.completed)
 
   return (
-    <div className={`flex flex-col items-center justify-center`} >
+    <div className={`flex flex-col items-center justify-center ${user.isOnline ? 'opacity-100'  : 'opacity-20'}`} >
       {userHasStar && <p className="mb-1 tv:text-[1.75rem]">⭐️</p>}
       <div className={`relative w-[12.125rem] h-[12.125rem]`}>
         <TVActivations userActivations={user.activations} />

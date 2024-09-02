@@ -6,9 +6,11 @@ import CardLink from "@/components/CardLink";
 import React, { useCallback } from "react";
 import { useRealtime, useRealtimeParticipant } from "@superviz/react-sdk";
 import { IUser, IUserActivation } from "../../../types";
-import { ActivationType } from '@/global/global.types';
+import { ActivationType, ActivationTypePage } from '@/global/global.types';
+import Link from "next/link";
+import Image from "next/image";
 
-export default function UserPageContent({ user, setUser }: { user: IUser, setUser: any }) {
+export default function UserPageContent({ user, setUser, setPage }: { user: IUser, setUser: any, setPage: (page: ActivationTypePage) => void }) {
   const { subscribe } = useRealtime('default');
   const { update, isReady } = useRealtimeParticipant('default')
   function completeActivation(activationName: ActivationType, completed: boolean) {
@@ -48,7 +50,6 @@ export default function UserPageContent({ user, setUser }: { user: IUser, setUse
   }
 
   const handleGameUpdate = useCallback((message: any) => {
-    console.log('message', message);
     const userId = message.data.userId;
     const points = message.data.points;
 
@@ -72,17 +73,29 @@ export default function UserPageContent({ user, setUser }: { user: IUser, setUse
   }, [user, isReady])
 
   return (
-    <div>
-      <div className="my-5 pb-5 w-screen border-b border-[#ffffff1a]">
-        <MobileUser user={user} />
-      </div>
-      <p className="w-full text-center font-normal text-lg">Escolha uma ativação para participar</p>
-      <div className='w-full p-5'>
-        {activations.map(activation => (
-          <div key={activation.color} className="w-full">
-            <CardLink user={user} activation={activation} userActivation={user.activations.find(act => act.name === activation.id)} />
+    <div className='flex flex-col w-full h-screen mobileBg'>
+      <div className="relative flex h-full overflow-auto overflow-x-hidden px-8 py-6 flex-col items-center z-10">
+        <Link href={'https://superviz.com/codecon-summit'}>
+          <Image src="/logo-sm.svg" width={109} height={80} alt="Logo Superviz" />
+        </Link>
+        <div>
+          <div className="my-5 pb-5 w-screen border-b border-[#ffffff1a]">
+            <MobileUser user={user} />
           </div>
-        ))}
+          <p className="w-full text-center font-normal text-lg">Escolha uma ativação para participar</p>
+          <div className='w-full p-5'>
+            {activations.map(activation => (
+              <div key={activation.color} className="w-full">
+                <CardLink
+                  setPage={setPage}
+                  user={user}
+                  activation={activation}
+                  userActivation={user.activations.find(act => act.name === activation.id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )

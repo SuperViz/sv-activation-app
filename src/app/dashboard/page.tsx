@@ -48,13 +48,15 @@ export default function Dashboard() {
           <Image src={qrcode} width={145} height={145} alt="QR Code para ativação" className="mt-[3.125rem] tv:w-[18.125rem] tv:mt-[6.25rem]" />
         </div>
         <Image src={fenderImg} alt="Imagem de um Lego da Fender" className="z-0 absolute bottom-[2.5rem] tv:bottom-[5rem] left-0 max-w-[27vw] object-contain" />
-        <div className="flex flex-col bg-[#C9C4D114] p-10 rounded-[2rem] min-w-[84.375rem] tv:p-20 tv:rounded-[4rem] tv:min-w-[168.75rem] grow">
-          <p className="font-black text-4xl tv:text-[5rem] tv:leading-[6rem]">Participantes em tempo real</p>
+        <div className="flex flex-col bg-[#C9C4D114] py-10 rounded-[2rem] min-w-[84.375rem] tv:py-20 tv:rounded-[4rem] tv:min-w-[168.75rem] grow">
+          <div className='px-10 tv:px-20'>
+            <p className="font-black text-4xl tv:text-[5rem] tv:leading-[6rem]">Participantes em tempo real</p>
+          </div>
           <div className="grow">
             <Realtime />
             <UsersDashboard />
           </div>
-          <div className="flex justify-between mt-9">
+          <div className="flex justify-between mt-9 px-10 tv:px-20">
             <Activations activations={activations} />
             <div className="flex gap-3 items-center">
               <Image src="/sync-logo.svg" width={25} height={20} alt="ícone de sincronização" className="tv:w-[3.125rem] object-contain" />
