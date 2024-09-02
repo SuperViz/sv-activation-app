@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
-import User from "@/components/User";
+import { TVUser } from "@/components/User";
 import { IUser, IUserActivation, IUserResponse } from "../../../types";
 import { ActivationColor } from '@/data/activationsData';
 import { useRealtime, useRealtimeParticipant, useSuperviz } from '@superviz/react-sdk';
@@ -27,12 +27,27 @@ export default function UsersDashboard() {
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
+    const userActivationDiameter = 194;
 
-    const size = 36 + user.activations.length * 15;
+    const size = windowWidth > 3000 ? userActivationDiameter / 2 : userActivationDiameter / 4;
     const ball = Matter.Bodies.circle(
       (Math.random() * (containerWidth - BALL_MARGIN)) + (BALL_MARGIN / 2),
       (Math.random() * (containerHeight - BALL_MARGIN)) + (BALL_MARGIN / 2),
@@ -146,6 +161,7 @@ export default function UsersDashboard() {
 
   const { stopRoom, hasJoinedRoom } = useSuperviz();
   const { subscribe } = useRealtime('default');
+  const { subscribe: gameSubscribe } = useRealtime('game');
   const { subscribe: participantSubscribe } = useRealtimeParticipant('default');
 
   function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
@@ -209,7 +225,7 @@ export default function UsersDashboard() {
     const element = message.data.element;
     const points = message.data.points;
 
-    toast(`${element.emoji} ${userFromMessage?.name} descobriu ${element.name.toUpperCase()} e tem mais chance de ganhar! ${element.emoji}`, {
+    toast(`${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`, {
       position: 'bottom-left',
       autoClose: 5000,
       hideProgressBar: false,
@@ -270,8 +286,8 @@ export default function UsersDashboard() {
 
     // TODO: Add new user to the balls array
     subscribe("activation.start", handleActivationStart);
-    subscribe("activation.game.update", handleGameUpdate);
     subscribe("activation.complete", handleActivationComplete);
+    gameSubscribe("new.element", handleGameUpdate);
 
     participantSubscribe('presence.leave', (message) => handleParticipantStatusChange(message.id, false));
     participantSubscribe('presence.joined-room', (message) => handleParticipantStatusChange(message.id, true));
@@ -298,7 +314,7 @@ export default function UsersDashboard() {
       {balls.map((ball) => (
         <div
           key={ball.id}
-          className="absolute flex justify-center items-center"
+          className="absolute"
           style={{
             width: `${ball.size}px`,
             height: `${ball.size}px`,
@@ -306,7 +322,7 @@ export default function UsersDashboard() {
             left: `${ball.position.x - ball.size / 2}px`,
           }}
         >
-          <User user={ball.user} withActivations={true} withUsername={true} withStar={true} />
+          <TVUser user={ball.user} />
         </div>
       ))}
     </div>

@@ -16,6 +16,7 @@ const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
 const DASHBOARD_GROUP_NAME = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_NAME as string
 const DASHBOARD_PARTICIPANT_ID = uuid()
 const DASHBOARD_PARTICIPANT_NAME = process.env.NEXT_PUBLIC_DASHBOARD_PARTICIPANT_NAME as string
+
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string
 
 export default function Dashboard() {

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import './onboarding.scss'
 import Button from '@/components/Button'
 import Image from 'next/image'
+import { InitialElements } from '@/data/elementsData'
 
 export default function GameOnboarding() {
 	const [currentStep, setCurrentStep] = useState(0)
@@ -13,6 +14,10 @@ export default function GameOnboarding() {
 	}
 
 	const moveNext = () => {
+		let existingSave = localStorage.getItem("saved_game");
+		if (!existingSave)
+			localStorage.setItem("saved_game", JSON.stringify(InitialElements));
+
 		if (localStorage.getItem('onboarding-finished'))
 			moveToGame()
 		else

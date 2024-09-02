@@ -3,12 +3,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Element } from '@/components/Game';
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
 import './game.scss';
-import { InitialElements } from '@/data/elementsData';
 import { IElement } from '../../../../../types.game';
-import { useRealtime } from '@superviz/react-sdk';
 
 export default function Jogo() {
+  const gameOverAt = 9;
   const [elements, setElements] = useState<IElement[]>([]);
+  const [gameOver, setGameOver] = useState(false);
   const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
   // const { subscribe } = useRealtime('game');
@@ -18,8 +18,10 @@ export default function Jogo() {
     if (existingSave) {
       const savedElements = JSON.parse(existingSave) as IElement[];
       setElements(savedElements);
-    } else {
-      localStorage.setItem("saved_game", JSON.stringify(InitialElements));
+    }
+
+    if (elements.filter(el => el.isNew).length === gameOverAt) {
+      setGameOver(true);
     }
   }
 
@@ -27,7 +29,27 @@ export default function Jogo() {
     localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
   }
 
+  const addNewElement = (index: number, element: IElement, isNew: boolean) => {
+    if (elements.find(el => el.name === element.name)) return;
+
+    const newElements = [...elements];
+    newElements.splice(index + 1, 0, {
+      emoji: element.emoji,
+      name: element.name,
+      id: element.id,
+      isNew: isNew,
+    });
+
+    setElements(newElements);
+    saveNewElements(newElements);
+
+    if (elements.filter(el => el.isNew).length === gameOverAt) {
+      setGameOver(true);
+    }
+  }
+
   const combineElements = (elementA: IElement, elementB: IElement) => {
+    console.log('combineElements', elementA, elementB);
     const indexB = elements.findIndex(el => el.id === elementB.id);
 
     fetch('/api/game', {
@@ -38,16 +60,7 @@ export default function Jogo() {
         email: JSON.parse(localStorage.getItem(USERDATA_KEY) as string),
       })
     }).then(res => res.json()).then(data => {
-      const newElements = [...elements];
-      newElements.splice(indexB + 1, 0, {
-        emoji: data.element.emoji,
-        name: data.element.name,
-        id: data.element.id,
-        isNew: data.isNew,
-      });
-
-      setElements(newElements);
-      saveNewElements(newElements);
+      addNewElement(indexB, data.element, data.isNew);
     }).catch(err => {
       console.error(err);
     });
@@ -59,6 +72,7 @@ export default function Jogo() {
   }
 
   function onDragEnd(result: any) {
+    console.log('onDragEnd', result);
     if (result.combine) {
       const elementA = elements.find(el => el.id === result.draggableId);
       const elementB = elements.find(el => el.id === result.combine.draggableId);
@@ -70,7 +84,7 @@ export default function Jogo() {
 
   const renderElement = (element: IElement, index: number, provided: any) => {
     return (
-      <Draggable key={element.id} index={index} draggableId={element.id}>
+      <Draggable isDragDisabled={gameOver} key={element.id} index={index} draggableId={element.id}>
         {(provided: any) => (
           <div
             ref={provided.innerRef}
