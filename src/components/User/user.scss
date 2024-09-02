@@ -23,7 +23,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
 }
 
 .secondRing {
@@ -35,7 +35,13 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
+  
+  &.incomplete, &.GAME {
+    $t: 6;
+    $w: 66;
+    clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+  }
 }
 
 .thirdRing {
@@ -47,7 +53,15 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
+
+  &.incomplete, &.GAME {
+    $t: 6;
+    $w: 82;
+    clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+  }
+
+  
 }
 
 .fourthRing {
@@ -59,72 +73,317 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
+
+  &.incomplete, &.GAME {
+    $t: 6;
+    $w: 98;
+    clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+  }
 }
 
-.game {
-  &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+.DISCORD {
+  $DISCORD-COLOR: #0077FF;
+  
+  &.completed {
+    border-color: $DISCORD-COLOR;
   }
   
-  &::after {
-    content: '';
-    width: calc(100% + 12px);
-    height: calc(100% + 12px);
-    position: relative;
-    border-radius: 50%;
-    top: -6px;
-    left: -6px;
+  &.incomplete {
+    border: none;
+    background-image: conic-gradient($DISCORD-COLOR, transparent 80%);
+    animation: spin 1s linear infinite;
+  }
+}
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: conic-gradient(
-    /* Primeira seção colorida */
-          red 0% 9%,
-    /* Espaço transparente */
-          transparent 9% 10%,
-    /* Segunda seção colorida */
-          red 10% 19%,
-    /* Espaço transparente */
-          transparent 19% 20%,
-    /* Terceira seção colorida */
-          red 20% 29%,
-    /* Espaço transparente */
-          transparent 29% 30%,
-    /* Quarta seção colorida */
-          red 30% 39%,
-    /* Espaço transparente */
-          transparent 39% 40%,
-    /* Quinta seção colorida */
-          red 40% 49%,
-    /* Espaço transparente */
-          transparent 49% 50%,
-    /* Sexta seção colorida */
-          red 50% 59%,
-    /* Espaço transparente */
-          transparent 59% 60%,
-    /* Sétima seção colorida */
-          red 60% 69%,
-    /* Espaço transparente */
-          transparent 69% 70%,
-    /* Oitava seção colorida */
-          red 70% 79%,
-    /* Espaço transparente */
-          transparent 79% 80%,
-    /* Nona seção colorida */
-          red 80% 89%,
-    /* Espaço transparente */
-          transparent 89% 90%,
-    /* Décima seção colorida */
-          red 90% 99%,
-    /* Espaço transparente */
-          transparent 99% 100%
-    );
+.HACKATHON {
+  $HACKATHON-COLOR:  #56E29E;
+
+  &.completed {
+    border-color: $HACKATHON-COLOR;
+  }
+
+  &.incomplete {
+    border: none;
+    background-image: conic-gradient($HACKATHON-COLOR, transparent 80%);
+    animation: spin 5s linear infinite;
+  }
+}
+
+.NEWSLETTER {
+  $NEWSLETTER-COLOR:  #DB6583;
+  &.completed {
+    border-color: $NEWSLETTER-COLOR;
+  }
+
+  &.incomplete {
+    border: none;
+    background-image: conic-gradient($NEWSLETTER-COLOR, transparent 80%);
+    animation: spin 5s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+
+.GAME {
+  border: none;
+  $activity-1: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255, 0.35) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255, 0.35) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255, 0.35) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255, 0.35) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255, 0.35) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255, 0.35) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255, 0.35) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-2: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255, 0.35) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255, 0.35) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255, 0.35) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255, 0.35) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255, 0.35) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255, 0.35) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-3: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255, 0.35) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255, 0.35) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255, 0.35) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255, 0.35) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255, 0.35) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-4: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255, 0.35) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255, 0.35) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255, 0.35) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255, 0.35) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-5: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255, 0.35) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255, 0.35) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255, 0.35) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-6: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255, 0.35) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255, 0.35) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-7: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255, 0.35) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-8: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-9: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
+  $activity-10: conic-gradient(
+                  rgb(149, 122, 255) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255) 90% 98%,
+                  transparent 98% 100%
+  );
+  
+  &.GAME-1 {
+    background-image: $activity-1;
+  }
+  &.GAME-2 {
+    background-image: $activity-2;
+  }
+  &.GAME-3 {
+    background-image: $activity-3;
+  }
+  &.GAME-4 {
+    background-image: $activity-4;
+  }
+  &.GAME-5 {
+    background-image: $activity-5;
+  }
+  &.GAME-6 {
+    background-image: $activity-6;
+  }
+  &.GAME-7 {
+    background-image: $activity-7;
+  }
+  &.GAME-8 {
+    background-image: $activity-8;
+  }
+  &.GAME-9 {
+    background-image: $activity-9;
+  }
+  &.GAME-10 {
+    background-image: $activity-10;
   }
 }

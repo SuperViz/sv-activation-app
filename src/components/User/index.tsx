@@ -2,7 +2,6 @@ import React from "react";
 import {IUser, IUserActivation} from "../../../types";
 import {ActivationColor} from "@/data/activationsData";
 import {ActivationType} from "@/global/global.types";
-import GameProgressMobile from "@/components/User/GameProgressMobile";
 import "./user.scss"
 
 interface IUserProps {
@@ -101,7 +100,7 @@ export function MobileUser({ user} : { user: IUser}) {
     <div className={`flex flex-col items-center justify-center`} >
       {userHasStar && <p className="mb-1 tv:text-[1.75rem]">⭐️</p>}
       <div className={`relative w-[6.5rem] h-[6.5rem]`}>
-        <MobileActivationsSvg userActivations={user.activations}/>
+        <MobileActivationsDiv userActivations={user.activations}/>
         <div
           className="baseUser">
           <span className="text-[#26242A] text-lg tv:text-[2.25rem] font-black">{firstLetter.toUpperCase()}</span>
@@ -113,62 +112,28 @@ export function MobileUser({ user} : { user: IUser}) {
 }
 
 function MobileActivationsDiv({userActivations}: { userActivations: IUserActivation[] }) {
+  const ringClasses = (index: number) => {
+    if(!userActivations[index]) {
+      return ''
+    }
+    
+    if(userActivations[index].name === ActivationType.GAME) {
+      return `GAME GAME-${userActivations[index].quantity || 1}`
+    }
+    
+    if(userActivations[index].completed) {
+      return `${userActivations[index].name} completed`
+    }
+
+    return `${userActivations[index].name} incomplete`
+  }
   
   return (
     <>
-      <div className="firstRing"></div>
-      <div className="secondRing game"></div>
-      <div className="thirdRing"></div>
-      <div className="fourthRing"></div>
+      <div className={`firstRing ${ringClasses(0)}`}></div>
+      <div className={`secondRing ${ringClasses(1)}`}></div>
+      <div className={`thirdRing ${ringClasses(2)}`}></div>
+      <div className={`fourthRing ${ringClasses(3)}`}></div>
     </>
-  )
-  
-}
-
-function MobileActivationsSvg({userActivations}: { userActivations: IUserActivation[] }) {
-  
-  //TODO: os pontos do jogo
-  const activationsRadius = [
-    25,
-    33,
-    41,
-    49,
-  ]
-  
-  return (
-    <svg width="104" height="104" viewBox="0 0 104 104" fill="none">
-      {Object.keys(ActivationColor).map((activation) => (
-        <defs key={activation}>
-          <linearGradient id={`gradientRing-${ActivationColor[activation as keyof typeof ActivationColor]}`} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="30%" style={{stopColor: `#${ActivationColor[activation as keyof typeof ActivationColor]}`, stopOpacity: 1}}/>
-            <stop offset="90%" style={{stopColor: 'transparent', stopOpacity: 1}}/>
-          </linearGradient>
-        </defs>
-      ))}
-      {activationsRadius.map((radius, index) => {
-        const userActivation = userActivations[index]
-        
-        if(userActivation) {
-          if(userActivation.name === ActivationType.GAME) {
-            return (
-              <GameProgressMobile level={index} quantity={userActivation.quantity || 1} />
-            )
-          }
-
-
-          return (
-            <circle key={`${userActivation.color}`}
-                    className={userActivation.completed ? '' : 'spin'}
-                    cx="52" cy="52" r={radius} fill="none"
-                    stroke={`${userActivation.completed ? `#${userActivation.color}` : `url(#gradientRing-${userActivation.color})`}`}
-                    strokeWidth="6"/>
-          )
-        }
-
-        return (
-          <circle key={radius} cx="52" cy="52" r={radius} strokeWidth="6" stroke="#C9C4D1" strokeOpacity="0.1"/>
-        )
-      })}
-    </svg>
   )
 }
