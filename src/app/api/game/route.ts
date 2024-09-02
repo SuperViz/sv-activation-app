@@ -6,6 +6,7 @@ import { ElementDTO } from './dto/generate-element';
 import { IElement } from '../../../../types.game';
 import { createHash } from 'crypto';
 import { publishEvent } from '@/app/services/publishEvent';
+import { ActivationType } from '@/global/global.types';
 
 function getUniqueID(elementA: string, elementB: string): string {
   let id = [elementA, elementB].sort().join("").trim();
@@ -117,19 +118,42 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     })
 
-    // TODO: Add point to user
-    const totalPoints = 4 // TODO: pegar quantidade de pontos
+    const activation = await db.activation.findFirst({
+      where: {
+        name: ActivationType.GAME,
+        userId: user.id
+      }
+    })
+
+    if (!activation) {
+      return NextResponse.json({ message: 'Activation Doesn\'t exists ' }, { status: 400 })
+    }
+
+    if (activation.quantity === 10) {
+      return NextResponse.json({ message: 'Game Over' }, { status: 400 })
+    }
+
+    const quantity = activation.quantity + 1
+
+    await db.activation.update({
+      data: {
+        quantity: quantity
+      },
+      where: {
+        id: activation.id
+      }
+    })
 
     await Promise.all([
       publishEvent('default', 'activation.game.update', {
-        user: user,
-        points: totalPoints,
-        element: element
+        userId: user.id,
+        points: quantity
       }),
 
       publishEvent('game', 'new.element', {
         element,
-        userName: user.name
+        user,
+        points: quantity
       })
     ])
 

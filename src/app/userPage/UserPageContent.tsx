@@ -3,7 +3,7 @@
 import { MobileUser } from "@/components/User";
 import { ActivationColor, activations } from "@/data/activationsData";
 import CardLink from "@/components/CardLink";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRealtime } from "@superviz/react-sdk";
 import { IUser, IUserActivation } from "../../../types";
 import { ActivationType } from '@/global/global.types';
@@ -22,10 +22,8 @@ export default function UserPageContent({ user, setUser }: { user: IUser, setUse
       copyUser.activations.push(activation);
     } else {
       const activation = copyUser.activations.find(activation => activation.name === activationName);
-      if (activation) {
+      if (activation)
         activation.completed = true;
-        //TODO: tirar o link quando a ativação estiver "completed"
-      }
     }
 
     setUser(copyUser);
@@ -48,10 +46,10 @@ export default function UserPageContent({ user, setUser }: { user: IUser, setUse
     }
   }
 
-  function handleGameUpdate(message: any) {
+  const handleGameUpdate = useCallback((message: any) => {
+    console.log('message', message);
     const userId = message.data.userId;
     const points = message.data.points;
-    console.log('Atualizou os pontos do usuário', userId, points);
 
     if (user.id === userId) {
       user.activations.forEach(activation => {
@@ -60,7 +58,7 @@ export default function UserPageContent({ user, setUser }: { user: IUser, setUse
         }
       })
     }
-  }
+  }, []);
 
   React.useEffect(() => {
     subscribe("activation.start", handleActivationStart);

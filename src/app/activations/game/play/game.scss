@@ -1,23 +1,62 @@
 div.game {
 	.elements {
-		display: flex;
-		flex-wrap: wrap;
+		// display: flex;
+		// flex-wrap: wrap;
 		justify-content: center;
+		user-select: none;
 
-		.element {
-			border: 1px solid #666;
-			border-radius: 6px;
-			background: #111;
-			padding: .8rem 1rem .6rem;
-			margin: .5rem .3rem;
-			display: block;
-			width: fit-content;
-			height: fit-content;
+		.element-wrapper {
+			position: relative;
 
-			span:first-of-type {
-				width: 1em;
-				height: 1em;
-				margin-left: .5rem;
+			.new-element {
+				position: absolute;
+				background: linear-gradient(170deg, #4cd964, #5ac8fa, #007aff, #6210CC, #ff2d55);
+				width: calc(100% - .6rem);
+				left: .3rem;
+				border-radius: .5rem;
+				height: calc(2.6rem + 6px);
+				background-clip: padding-box !important;
+				box-sizing: border-box;
+			}
+
+			.element {
+				position: relative;
+				border: 3px solid #666;
+				border-radius: .5rem;
+				background: #111;
+				padding: .8rem 1rem;
+				margin: .5rem .3rem;
+				display: block;
+				line-height: 100%;
+				width: fit-content;
+				height: calc(2.6rem + 6px);
+				z-index: 1;
+				font-family: Roboto, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+				&.isNew {
+					background-clip: padding-box !important;
+					box-sizing: border-box;
+					border-color: transparent;
+
+					.points {
+						color: #957AFF;
+						font-weight: 900;
+						font-size: .7rem;
+						padding: 5px;
+						border: 2px solid #957AFF;
+						border-radius: 50%;
+						margin: 0 0 0 .8rem;
+						position: relative;
+						top: -1px;
+						right: -8px;
+					}
+				}
+
+				span:first-of-type {
+					width: 1em;
+					height: 1em;
+					margin-right: .5rem;
+				}
 			}
 		}
 	}

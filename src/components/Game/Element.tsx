@@ -9,6 +9,9 @@ export interface IElementOnBoardProps {
 export function Element({ element, onContextMenu }: IElementOnBoardProps) {
 	const [loading, setLoading] = useState(false);
 	const classList: string[] = ["element", "dragging"];
+
+	if (element.isNew) classList.push("isNew");
+
 	if (loading) classList.push("loading");
 
 	const handleContextMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,14 +24,20 @@ export function Element({ element, onContextMenu }: IElementOnBoardProps) {
 	}
 
 	return (
-		<div className={classList.join(" ")}
-			id={element.id}
-			data-element={element.name}
-			onContextMenu={handleContextMenu}
-			onDoubleClick={handleContextMenu}
-		>
-			<span>{element.emoji}</span>
-			<span>{element.name}</span>
+		<div className='element-wrapper'>
+			{element.isNew && (<div className="new-element"></div>)}
+			<div className={classList.join(" ")}
+				id={element.id}
+				data-element={element.name}
+				onContextMenu={handleContextMenu}
+				onDoubleClick={handleContextMenu}
+			>
+				<span>{element.emoji}</span>
+				<span>
+					{element.name}
+					{element.isNew && (<span className='points'>+1</span>)}
+				</span>
+			</div>
 		</div>
 	)
 }

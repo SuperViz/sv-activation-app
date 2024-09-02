@@ -13,6 +13,8 @@ export default function CardLink({ activation, userActivation, user }: ILinkProp
   const userCompletedActivation = userActivation ? userActivation.completed : false
 
   const handleClick = () => {
+    if (userCompletedActivation) return
+
     createActivation({
       name: activation.id,
       userEmail: user.email,
