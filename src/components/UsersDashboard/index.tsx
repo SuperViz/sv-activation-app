@@ -184,7 +184,6 @@ export default function UsersDashboard() {
     });
 
     ballsRef.current = balls;
-    console.log('balls', balls)
     setBalls(balls);
     setUsers(newUsers);
   }
@@ -210,7 +209,6 @@ export default function UsersDashboard() {
   }
 
   const handleGameUpdate = useCallback((message: any) => {
-    console.log('game', message)
     const userFromMessage = message.data.user;
     const element = message.data.element;
     const points = message.data.points;
@@ -227,9 +225,7 @@ export default function UsersDashboard() {
       theme: "dark",
     });
 
-    console.log('dddd', users, userFromMessage.id)
     const user = users.find(user => user.id === userFromMessage.id);
-    console.log('user', user)
     if (!user) return;
 
     user.activations.forEach(activation => {
@@ -277,7 +273,7 @@ export default function UsersDashboard() {
   function createUser(user: IUser) {
     const ball = createBall(user)
 
-    if(ballsRef.current?.some(ball => ball.user.id === user.id)) return
+    if (ballsRef.current?.some(ball => ball.user.id === user.id)) return
 
     ballsRef.current = [...ballsRef.current, ball]
     setBalls((previous) => [...previous, ball])
