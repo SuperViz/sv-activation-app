@@ -1,14 +1,17 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Element } from '@/components/Game';
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
 import './game.scss';
 import { InitialElements } from '@/data/elementsData';
 import { IElement } from '../../../../../types.game';
+import { useRealtime } from '@superviz/react-sdk';
 
 export default function Jogo() {
   const [elements, setElements] = useState<IElement[]>([]);
   const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
+
+  // const { subscribe } = useRealtime('game');
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -32,7 +35,7 @@ export default function Jogo() {
       body: JSON.stringify({
         elementA: elementA.name,
         elementB: elementB.name,
-        email: localStorage.getItem(USERDATA_KEY)
+        email: JSON.parse(localStorage.getItem(USERDATA_KEY) as string),
       })
     }).then(res => res.json()).then(data => {
       const newElements = [...elements];
@@ -83,9 +86,15 @@ export default function Jogo() {
     )
   }
 
+  const handleGameUpdate = useCallback((message: any) => {
+
+  }, []);
+
   resetServerContext();
 
   useEffect(() => {
+    // subscribe("new.element", handleGameUpdate);
+
     getSavedElements();
   }, []);
 

@@ -120,21 +120,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // TODO: Add point to user
     const totalPoints = 4 // TODO: pegar quantidade de pontos
 
-    await publishEvent('default', 'new.element', {
-      name: 'activation.game.update',
-      data: {
-        userId: user.id,
-        points: totalPoints
-      }
-    })
+    await Promise.all([
+      publishEvent('default', 'activation.game.update', {
+        user: user,
+        points: totalPoints,
+        element: element
+      }),
 
-    await publishEvent('game', 'new.element', {
-      name: 'new.element',
-      data: {
+      publishEvent('game', 'new.element', {
         element,
         userName: user.name
-      }
-    })
+      })
+    ])
 
     return NextResponse.json({
       element: element,

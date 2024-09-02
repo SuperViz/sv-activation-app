@@ -12,6 +12,10 @@ html, body {
   color: white;
 }
 
+.Toastify__progress-bar-theme--dark {
+  background: linear-gradient(90deg, #4cd964, #5ac8fa, #007aff, #34aadc, #6210CC, #ff2d55) !important;
+}
+
 @layer components {
   .activations {
     .pinpoint{

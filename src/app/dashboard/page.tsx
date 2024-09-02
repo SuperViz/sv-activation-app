@@ -8,6 +8,7 @@ import Activations from "@/components/Activations";
 import UsersDashboard from "@/components/UsersDashboard";
 import { activations } from "@/data/activationsData";
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
+import { ToastContainer } from 'react-toastify';
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
@@ -61,6 +62,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </SuperVizRoomProvider>
   );
 };

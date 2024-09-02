@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import User from "@/components/User";
 import { IUser, IUserActivation, IUserResponse } from "../../../types";
@@ -8,6 +8,8 @@ import { ActivationColor } from '@/data/activationsData';
 import { useRealtime, useRealtimeParticipant, useSuperviz } from '@superviz/react-sdk';
 import { ActivationType } from '@/global/global.types';
 import { getOnlineUsersIds, getUsers } from '@/app/services/getUserData';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BASE_SPEED = .5;
 const BALL_MARGIN = 7;
@@ -149,7 +151,7 @@ export default function UsersDashboard() {
   function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
     const user = users.find(user => user.id === userId);
     if (!user) return;
-    if (!completed) {
+    if (!completed && !user.activations.some(activation => activation.name === activationName)) {
       const activation: IUserActivation = {
         name: activationName,
         completed: completed,
@@ -185,11 +187,24 @@ export default function UsersDashboard() {
     completeActivation(userId, activationName, true);
   }
 
-  function handleGameUpdate(message: any) {
-    const userId = message.data.userId;
+  const handleGameUpdate = useCallback((message: any) => {
+    const userFromMessage = message.data.user;
+    const element = message.data.element;
     const points = message.data.points;
 
-    const user = users.find(user => user.id === userId);
+    toast(`${element.emoji} ${userFromMessage?.name} descobriu ${element.name.toUpperCase()} e tem mais chance de ganhar! ${element.emoji}`, {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      closeButton: false,
+      progress: undefined,
+      theme: "dark",
+    });
+
+    const user = users.find(user => user.id === userFromMessage.id);
     if (!user) return;
 
     user.activations.forEach(activation => {
@@ -197,7 +212,7 @@ export default function UsersDashboard() {
         activation.quantity = points;
       }
     })
-  }
+  }, []);
 
   function fetchUsers() {
     getUsers().then((fetchedUsers: IUserResponse[]) => {

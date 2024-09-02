@@ -8,27 +8,27 @@ import { useRealtime } from "@superviz/react-sdk";
 import { IUser, IUserActivation } from "../../../types";
 import { ActivationType } from '@/global/global.types';
 
-export default function UserPageContent({ user }: { user: IUser }) {
+export default function UserPageContent({ user, setUser }: { user: IUser, setUser: any }) {
   const { subscribe } = useRealtime('default');
-
-
   function completeActivation(activationName: ActivationType, completed: boolean) {
-    if (!completed) {
-      console.log('ativação iniciada', activationName, completed, user);
+    let copyUser = { ...user };
+
+    if (!completed && !copyUser.activations.some(activation => activation.name === activationName)) {
       const activation: IUserActivation = {
         name: activationName,
         completed: completed,
         color: ActivationColor[activationName]
       }
-      user.activations.push(activation);
+      copyUser.activations.push(activation);
     } else {
-      console.log('ativação completa', activationName, completed, user);
-      const activation = user.activations.find(activation => activation.name === activationName);
+      const activation = copyUser.activations.find(activation => activation.name === activationName);
       if (activation) {
         activation.completed = true;
         //TODO: tirar o link quando a ativação estiver "completed"
       }
     }
+
+    setUser(copyUser);
   }
 
   function handleActivationStart(message: any) {
@@ -69,16 +69,18 @@ export default function UserPageContent({ user }: { user: IUser }) {
   }, []);
 
   return (
-    <>
+    <div>
       <div className="my-5 pb-5 w-screen border-b border-[#ffffff1a]">
         <User user={user} withActivations={true} withUsername={true} withStar={false} />
       </div>
       <p className="w-full text-center font-normal text-lg">Escolha uma ativação para participar</p>
-      {activations.map(activation => (
-        <div key={activation.color} className="w-full">
-          <CardLink user={user} activation={activation} userActivation={user.activations.find(act => act.name === activation.id)} />
-        </div>
-      ))}
-    </>
+      <div className='w-full p-5'>
+        {activations.map(activation => (
+          <div key={activation.color} className="w-full">
+            <CardLink user={user} activation={activation} userActivation={user.activations.find(act => act.name === activation.id)} />
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }

@@ -9,7 +9,11 @@ export default function ActivationLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isGame = window.location.pathname.includes('game');
+
+  let isGame = false;
+  if (typeof window !== 'undefined') {
+    isGame = window?.location.pathname.includes('game') ?? false;
+  };
 
   return (
     <div className={`flex flex-col w-screen h-screen mobileBg`}>

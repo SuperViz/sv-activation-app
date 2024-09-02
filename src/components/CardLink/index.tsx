@@ -1,8 +1,8 @@
 'use client'
 
+import { createActivation } from '@/app/services/createActivation';
 import { IActivation, IUser, IUserActivation } from "../../../types";
 import ProgressIndicator from "@/components/CardLink/ProgressIndicator";
-import { useRealtime } from '@superviz/react-sdk';
 
 interface ILinkProps {
   activation: IActivation
@@ -12,15 +12,14 @@ interface ILinkProps {
 export default function CardLink({ activation, userActivation, user }: ILinkProps) {
   const userCompletedActivation = userActivation ? userActivation.completed : false
 
-  const { publish } = useRealtime('default');
-
   const handleClick = () => {
-    publish('create.activation', {
-      activation: activation.id,
-      userId: user.id,
+    createActivation({
+      name: activation.id,
+      userEmail: user.email,
+    }).then(() => {
+      window.open(activation.page, '_self')
     })
 
-    window.open(activation.page, '_self')
   }
 
   const completedCheckmark = () => {

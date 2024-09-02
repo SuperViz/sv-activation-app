@@ -20,5 +20,15 @@ export const InitialElements: IElement[] = [
 		emoji: "🌎",
 		name: "Terra",
 		id: '0295fe6d-c132-45bf-9671-00ae149de87e',
+	},
+	{
+		emoji: "💩",
+		name: "JavaScript",
+		id: '90c85c3b-f844-41c5-b95e-f75332f4f7d1',
+	},
+	{
+		emoji: "☕",
+		name: "Café",
+		id: '1127fd9a-287d-4cce-9257-5e5df4fde10e',
 	}
 ]

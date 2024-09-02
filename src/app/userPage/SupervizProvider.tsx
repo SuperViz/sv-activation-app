@@ -1,7 +1,7 @@
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
 import UserPageContent from "@/app/userPage/UserPageContent";
 import React from "react";
-import {IActivationResponse, IUser, IUserActivation} from "../../../types";
+import { IActivationResponse, IUser, IUserActivation } from "../../../types";
 import { ActivationColor } from "@/data/activationsData";
 import { useQuery } from "@tanstack/react-query";
 import { getUserData } from '../services/getUserData';
@@ -68,7 +68,7 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
       roomId={DASHBOARD_ROOM_ID}
     >
       <Realtime />
-      <UserPageContent user={user} />
+      <UserPageContent setUser={setUser} user={user} />
     </SuperVizRoomProvider>
   ) :
     (

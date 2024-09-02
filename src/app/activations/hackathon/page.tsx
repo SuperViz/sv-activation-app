@@ -9,13 +9,7 @@ export default function HackathonPage() {
         height="100%"
         allowFullScreen
         sandbox='allow-scripts allow-same-origin allow-forms'
-      >
-        <p>
-          <a href="https://superviz.com/">
-            Oops... algo deu errado!
-          </a>
-        </p>
-      </iframe>
+      ></iframe>
     </div>
   )
 }
