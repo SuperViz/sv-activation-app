@@ -62,6 +62,15 @@ async function checkForExistingCombination(elementA: string, elementB: string): 
   return element;
 }
 
+async function checkForExistingName(elementName: string): Promise<boolean> {
+  const element = await db.element.findFirst({
+    where: {
+      name: elementName
+    }
+  })
+  return !!element;
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.text()
@@ -117,6 +126,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         userId: user.id
       }
     })
+
+    const existName = await checkForExistingName(element.name)
+    if (existName) {
+      return NextResponse.json({
+        element: element,
+        isNew: false
+      })
+    }
 
     const activation = await db.activation.findFirst({
       where: {
