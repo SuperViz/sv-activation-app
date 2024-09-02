@@ -1,10 +1,10 @@
 import React from "react";
-import {IUser, IUserActivation} from "../../../types";
-import {ActivationColor} from "@/data/activationsData";
-import {ActivationType} from "@/global/global.types";
+import { IUser, IUserActivation } from "../../../types";
+import { ActivationColor } from "@/data/activationsData";
+import { ActivationType } from "@/global/global.types";
 import "./user.scss"
 
-export function TVUser({ user } : { user: IUser}) {
+export function TVUser({ user }: { user: IUser }) {
   const firstLetter = user.name.at(0) ?? 'U'
   const activationsNumber = user.activations.length
   const userHasStar = activationsNumber === Object.keys(ActivationColor).length && user.activations.every(activation => activation.completed)
@@ -13,7 +13,7 @@ export function TVUser({ user } : { user: IUser}) {
     <div className={`flex flex-col items-center justify-center`} >
       {userHasStar && <p className="mb-1 tv:text-[1.75rem]">⭐️</p>}
       <div className={`relative w-[12.125rem] h-[12.125rem]`}>
-        <TVActivations userActivations={user.activations}/>
+        <TVActivations userActivations={user.activations} />
         <div
           className="baseUser">
           <span className="text-[#26242A] text-lg tv:text-[2.25rem] font-black">{firstLetter.toUpperCase()}</span>
@@ -24,17 +24,17 @@ export function TVUser({ user } : { user: IUser}) {
   )
 }
 
-function TVActivations({userActivations}: { userActivations: IUserActivation[] }) {
+function TVActivations({ userActivations }: { userActivations: IUserActivation[] }) {
   const ringClasses = (index: number) => {
-    if(!userActivations[index]) {
+    if (!userActivations[index]) {
       return ''
     }
 
-    if(userActivations[index].name === ActivationType.GAME) {
+    if (userActivations[index].name === ActivationType.GAME) {
       return `GAME GAME-${userActivations[index].quantity || 1}`
     }
 
-    if(userActivations[index].completed) {
+    if (userActivations[index].completed) {
       return `${userActivations[index].name} completed`
     }
 
@@ -51,7 +51,7 @@ function TVActivations({userActivations}: { userActivations: IUserActivation[] }
   )
 }
 
-export function MobileUser({ user} : { user: IUser}) {
+export function MobileUser({ user }: { user: IUser }) {
   const firstLetter = user.name.at(0) ?? 'U'
   const activationsNumber = user.activations.length
   const userHasStar = activationsNumber === Object.keys(ActivationColor).length && user.activations.every(activation => activation.completed)
@@ -60,7 +60,7 @@ export function MobileUser({ user} : { user: IUser}) {
     <div className={`flex flex-col items-center justify-center`} >
       {userHasStar && <p className="mb-1 tv:text-[1.75rem]">⭐️</p>}
       <div className={`relative w-[6.5rem] h-[6.5rem]`}>
-        <MobileActivations userActivations={user.activations}/>
+        <MobileActivations userActivations={user.activations} />
         <div
           className="baseUser">
           <span className="text-[#26242A] text-lg tv:text-[2.25rem] font-black">{firstLetter.toUpperCase()}</span>
@@ -71,23 +71,23 @@ export function MobileUser({ user} : { user: IUser}) {
   )
 }
 
-function MobileActivations({userActivations}: { userActivations: IUserActivation[] }) {
+function MobileActivations({ userActivations }: { userActivations: IUserActivation[] }) {
   const ringClasses = (index: number) => {
-    if(!userActivations[index]) {
+    if (!userActivations[index]) {
       return ''
     }
-    
-    if(userActivations[index].name === ActivationType.GAME) {
+
+    if (userActivations[index].name === ActivationType.GAME) {
       return `GAME GAME-${userActivations[index].quantity || 1}`
     }
-    
-    if(userActivations[index].completed) {
+
+    if (userActivations[index].completed) {
       return `${userActivations[index].name} completed`
     }
 
     return `${userActivations[index].name} incomplete`
   }
-  
+
   return (
     <>
       <div className={`firstRing ${ringClasses(0)}`}></div>

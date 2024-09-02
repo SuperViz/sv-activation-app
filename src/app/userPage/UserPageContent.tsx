@@ -1,6 +1,6 @@
 'use client'
 
-import User, {MobileUser} from "@/components/User";
+import { MobileUser } from "@/components/User";
 import { ActivationColor, activations } from "@/data/activationsData";
 import CardLink from "@/components/CardLink";
 import React from "react";
