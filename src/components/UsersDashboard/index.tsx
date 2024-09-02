@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const BASE_SPEED = .5;
-const BALL_MARGIN = 7;
+const BALL_MARGIN = 1;
 
 type Ball = {
   id: number;
@@ -187,6 +187,23 @@ export default function UsersDashboard() {
     completeActivation(userId, activationName, true);
   }
 
+  function handleParticipantUpdate(message: any) {
+    const userExists = users.some((user) => message.data?.id === user?.id)
+
+    if(!userExists) { 
+      createUser(message.data)
+    }
+  }
+
+  function createUser(user: IUser) {
+    const ball =  createBall(user)
+
+    console.log(ball)
+
+    ballsRef.current = [...ballsRef.current, ball]
+    setBalls((previous) => [...previous, ball])
+  }
+
   const handleGameUpdate = useCallback((message: any) => {
     const userFromMessage = message.data.user;
     const element = message.data.element;
@@ -258,6 +275,7 @@ export default function UsersDashboard() {
 
     participantSubscribe('presence.leave', (message) => handleParticipantStatusChange(message.id, false));
     participantSubscribe('presence.joined-room', (message) => handleParticipantStatusChange(message.id, true));
+    participantSubscribe('presence.update', (message) => handleParticipantUpdate(message))
 
     const handleBeforeUnload = () => {
       if (hasJoinedRoom) {

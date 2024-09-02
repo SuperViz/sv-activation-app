@@ -4,12 +4,13 @@ import User from "@/components/User";
 import { ActivationColor, activations } from "@/data/activationsData";
 import CardLink from "@/components/CardLink";
 import React from "react";
-import { useRealtime } from "@superviz/react-sdk";
+import { useRealtime, useRealtimeParticipant } from "@superviz/react-sdk";
 import { IUser, IUserActivation } from "../../../types";
 import { ActivationType } from '@/global/global.types';
 
 export default function UserPageContent({ user, setUser }: { user: IUser, setUser: any }) {
   const { subscribe } = useRealtime('default');
+  const { update, isReady } = useRealtimeParticipant('default')
   function completeActivation(activationName: ActivationType, completed: boolean) {
     let copyUser = { ...user };
 
@@ -67,6 +68,10 @@ export default function UserPageContent({ user, setUser }: { user: IUser, setUse
     subscribe("activation.game.update", handleGameUpdate);
     subscribe("activation.complete", handleActivationClick);
   }, []);
+
+  React.useEffect(() => {
+    update(user)
+  }, [user, isReady])
 
   return (
     <div>
