@@ -3,7 +3,13 @@ import { IUserResponse } from "../../../types";
 export async function getUserData(email: string): Promise<IUserResponse> {
   const params = new URLSearchParams({ email: email })
 
-  return await fetch(`/api/user?${params}`)
+  return await fetch(`/api/user?${params}`, {
+    headers: { 
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+  })
     .then(async (res) => {
       return await res.json()
     })
@@ -12,7 +18,13 @@ export async function getUserData(email: string): Promise<IUserResponse> {
 
 
 export function getUsers(): Promise<IUserResponse[]> {
-  return fetch(`/api/users`)
+  return fetch(`/api/users`, {
+    headers: { 
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+  })
     .then((res) => {
       return res.json()
     })

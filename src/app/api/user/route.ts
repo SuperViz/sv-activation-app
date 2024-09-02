@@ -7,6 +7,8 @@ import { validateRequestBody } from '@/lib/zod/validate-body';
 import { z } from 'zod';
 import {EditUserDTO} from "@/app/api/user/dto/edit-user.dto";
 
+export const fetchCache = 'force-no-store'
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.text()

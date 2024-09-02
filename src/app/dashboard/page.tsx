@@ -9,11 +9,12 @@ import UsersDashboard from "@/components/UsersDashboard";
 import { activations } from "@/data/activationsData";
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
 import { ToastContainer } from 'react-toastify';
+import { v4 as uuid } from 'uuid'
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
 const DASHBOARD_GROUP_NAME = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_NAME as string
-const DASHBOARD_PARTICIPANT_ID = process.env.NEXT_PUBLIC_DASHBOARD_PARTICIPANT_ID as string
+const DASHBOARD_PARTICIPANT_ID = uuid()
 const DASHBOARD_PARTICIPANT_NAME = process.env.NEXT_PUBLIC_DASHBOARD_PARTICIPANT_NAME as string
 
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string
