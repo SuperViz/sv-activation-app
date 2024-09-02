@@ -4,12 +4,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 2.25rem;
-  width: 2.25rem;
+  height: 36px;
+  width: 36px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  @media screen and (min-width: 1080px) {
+    width: 70px;
+    height: 70px;
+  }
 }
 
 
@@ -24,6 +29,25 @@
   top: 50%;
   left: 50%;
   translate: -50% -50%;
+
+  @media screen and (min-width: 1080px) {
+    border-width: 10px;
+    width: 98px;
+    height: 98px;
+  }
+
+  &.incomplete, &.GAME {
+    $t: 6;
+    $w: 50;
+    clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+
+    @media screen and (min-width: 1080px) {
+      $t: 10;
+      $w: 98;
+      clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+    }
+  }
+
 }
 
 .secondRing {
@@ -36,11 +60,23 @@
   top: 50%;
   left: 50%;
   translate: -50% -50%;
+
+  @media screen and (min-width: 1080px) {
+    border-width: 10px;
+    width: 130px;
+    height: 130px;
+  }
   
   &.incomplete, &.GAME {
     $t: 6;
     $w: 66;
     clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+
+    @media screen and (min-width: 1080px) {
+      $t: 10;
+      $w: 130;
+      clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+    }
   }
 }
 
@@ -55,10 +91,22 @@
   left: 50%;
   translate: -50% -50%;
 
+  @media screen and (min-width: 1080px) {
+    border-width: 10px;
+    width: 162px;
+    height: 162px;
+  }
+
   &.incomplete, &.GAME {
     $t: 6;
     $w: 82;
     clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+
+    @media screen and (min-width: 1080px) {
+      $t: 10;
+      $w: 162;
+      clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+    }
   }
 
   
@@ -75,10 +123,22 @@
   left: 50%;
   translate: -50% -50%;
 
+  @media screen and (min-width: 1080px) {
+    border-width: 10px;
+    width: 194px;
+    height: 194px;
+  }
+
   &.incomplete, &.GAME {
     $t: 6;
     $w: 98;
     clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+
+    @media screen and (min-width: 1080px) {
+      $t: 10;
+      $w: 194;
+      clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
+    }
   }
 }
 
