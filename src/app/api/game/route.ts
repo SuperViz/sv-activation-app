@@ -15,7 +15,7 @@ function getUniqueID(elementA: string, elementB: string): string {
 
 async function combineElements(elementA: string, elementB: string): Promise<IElement | null> {
   const AZURE_OPEN_AI = process.env.AZURE_OPEN_AI as string;
-  const task = `TAREFA: Combine ${elementA} e ${elementB} para criar um novo elemento. Tente manter o elemento o mais simples e realista possível e, preferencialmente com apenas 1 palavra. Se dois elementos básicos forem combinados, você deve priorizar a criação de uma nova coisa a partir disso, em vez de simplesmente combinar as palavras. Exemplo: Terra + Terra = Sistema Solar. Você pode usar um dos inputs como output, mas apenas se não houver outros elementos. Dois itens iguais devem resultar em uma versão maior desse item, se aplicável. Sua resposta deve ser o nome do novo elemento e DEVE conter um e apenas um emoji para representar o elemento. A resposta SOMENTE 1 emoji. Exemplo: Fogo + Água = 💨 Vapor. Sua saída deve estar em formato json para ser analisada. Formato: {new_element: "nome", emoji: "emoji"}`
+  const task = `TAREFA: Combine ${elementA} e ${elementB} para criar um novo elemento. Tente manter o elemento o mais simples e realista possível. Se dois elementos básicos forem combinados, você deve priorizar a criação de uma nova coisa a partir disso, em vez de simplesmente combinar as palavras. Exemplo: Terra + Agua = Planta. Você pode usar um dos inputs como output, caso precise. Dois itens iguais devem resultar em uma versão maior desse item. Exemplo: Terra + Terra: Sistema Solar. Se o elemento não houver combinação possível, use uma tecnologia com nome parecido, Exemplo: Terra + Bug = "Terraform". Sua resposta deve ser o nome do novo elemento e deve conter SOMENTE UM emoji para representar o elemento. Nomes de tecnologias, empresas, jargões em inglês, buzzwords são bem vindas. Ao criar nomes de techs, seja em inglês. Exemplo: Desenvolvedor + Café =  Bug. Sua saída deve estar em formato json para ser analisada. Formato: {new_element: "nome", emoji: "emoji"}`
 
   const response = await fetch('https://sv-activation.openai.azure.com/openai/deployments/sv-activation/chat/completions?api-version=2024-02-15-preview', {
     method: 'POST',
@@ -34,8 +34,8 @@ async function combineElements(elementA: string, elementB: string): Promise<IEle
           content: task
         }
       ],
-      temperature: 0.7,
-      top_p: 0.95,
+      temperature: 0.35,
+      top_p: 0.85,
       max_tokens: 100
     })
   })
