@@ -3,13 +3,15 @@
 import { createActivation } from '@/app/services/createActivation';
 import { IActivation, IUser, IUserActivation } from "../../../types";
 import ProgressIndicator from "@/components/CardLink/ProgressIndicator";
+import { ActivationTypePage } from '@/global/global.types';
 
 interface ILinkProps {
   activation: IActivation
   userActivation: IUserActivation | undefined
   user: IUser
+  setPage: (page: ActivationTypePage) => void 
 }
-export default function CardLink({ activation, userActivation, user }: ILinkProps) {
+export default function CardLink({ activation, userActivation, user, setPage }: ILinkProps) {
   const userCompletedActivation = userActivation ? userActivation.completed : false
 
   const handleClick = () => {
@@ -19,7 +21,7 @@ export default function CardLink({ activation, userActivation, user }: ILinkProp
       name: activation.id,
       userEmail: user.email,
     }).then(() => {
-      window.open(activation.page, '_self')
+      setPage(activation.page)
     })
 
   }

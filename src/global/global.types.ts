@@ -4,3 +4,12 @@ export enum ActivationType {
   NEWSLETTER = 'NEWSLETTER',
   HACKATHON = 'HACKATHON'
 }
+
+export enum ActivationTypePage {
+  GAME_ONBOARDING = 'GAME.ONBOARDING',
+  GAME_PLAY = 'GAME.PLAY',
+  DISCORD = 'DISCORD',
+  NEWSLETTER = 'NEWSLETTER',
+  HACKATHON = 'HACKATHON',
+  LINKS = 'LINKS'
+}

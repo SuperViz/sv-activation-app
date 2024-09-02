@@ -2,16 +2,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Element } from '@/components/Game';
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
-import './game.scss';
-import { IElement } from '../../../../../types.game';
+import './GameActivationPlayLayout.scss';
+import { IElement } from '../../../types.game';
+import { ActivationTypePage } from '@/global/global.types';
+import ActivationLayout from './ActivationLayout';
 
-export default function Jogo() {
+export default function GameActivationPlayLayout({ setPage }: { setPage: (page: ActivationTypePage) => void }) {
   const gameOverAt = 9;
   const [elements, setElements] = useState<IElement[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
-
-  // const { subscribe } = useRealtime('game');
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -113,17 +113,19 @@ export default function Jogo() {
   }, []);
 
   return (
-    <div className='game'>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="elements" isCombineEnabled>
-          {(provided: any) => (
-            <div className="elements" {...provided.droppableProps} ref={provided.innerRef} >
-              {elements.map((element, index) => renderElement(element, index, provided))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
+    <ActivationLayout setPage={setPage}>
+      <div className='game'>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="elements" isCombineEnabled>
+            {(provided: any) => (
+              <div className="elements" {...provided.droppableProps} ref={provided.innerRef} >
+                {elements.map((element, index) => renderElement(element, index, provided))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
+    </ActivationLayout>
   );
 };
