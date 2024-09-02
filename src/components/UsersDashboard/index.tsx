@@ -9,6 +9,7 @@ import { useRealtime, useRealtimeParticipant, useSuperviz } from '@superviz/reac
 import { ActivationType } from '@/global/global.types';
 import { getOnlineUsersIds, getUsers } from '@/app/services/getUserData';
 import { toast } from 'react-toastify';
+import { v4 as uuid } from 'uuid';
 import 'react-toastify/dist/ReactToastify.css';
 
 const BASE_SPEED = .5;
@@ -95,7 +96,7 @@ export default function UsersDashboard() {
       Matter.Bodies.rectangle(containerWidth, containerHeight / 2, 1, containerHeight, wallOptions)
     ];
 
-    Matter.World.add(engine.world, walls);
+    // Matter.World.add(engine.world, walls);
 
     // Create balls
     const newBalls: Ball[] = [];
@@ -164,6 +165,30 @@ export default function UsersDashboard() {
   const { subscribe: gameSubscribe } = useRealtime('game');
   const { subscribe: participantSubscribe } = useRealtimeParticipant('default');
 
+  const setUsersToNewState = (user: IUser) => {
+    const newUsers = users.map(u => {
+      if (u.id === user.id) {
+        return user;
+      }
+      return u;
+    });
+
+    const balls = ballsRef.current.map(ball => {
+      if (ball.user.id === user.id) {
+        return {
+          ...ball,
+          user,
+        };
+      }
+      return ball;
+    });
+
+    ballsRef.current = balls;
+    console.log('balls', balls)
+    setBalls(balls);
+    setUsers(newUsers);
+  }
+
   function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
     const user = users.find(user => user.id === userId);
     if (!user) return;
@@ -180,7 +205,42 @@ export default function UsersDashboard() {
       if (activation)
         activation.completed = true;
     }
+
+    setUsersToNewState(user);
   }
+
+  const handleGameUpdate = useCallback((message: any) => {
+    console.log('game', message)
+    const userFromMessage = message.data.user;
+    const element = message.data.element;
+    const points = message.data.points;
+
+    toast(`${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`, {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      closeButton: false,
+      progress: undefined,
+      theme: "dark",
+    });
+
+    console.log('dddd', users, userFromMessage.id)
+    const user = users.find(user => user.id === userFromMessage.id);
+    console.log('user', user)
+    if (!user) return;
+
+    user.activations.forEach(activation => {
+      if (activation.name === ActivationType.GAME) {
+        activation.quantity = points;
+      }
+    })
+
+    setUsersToNewState(user);
+  }, [users]);
+
 
   function handleParticipantStatusChange(userId: string, isOnline: boolean) {
     const user = users.find(user => user.id === userId);
@@ -206,46 +266,19 @@ export default function UsersDashboard() {
   function handleParticipantUpdate(message: any) {
     const userExists = users.some((user) => message.data?.id === user?.id)
 
-    if(!userExists) { 
+    if (!userExists) {
       createUser(message.data)
     }
   }
 
   function createUser(user: IUser) {
-    const ball =  createBall(user)
+    const ball = createBall(user)
 
     console.log(ball)
 
     ballsRef.current = [...ballsRef.current, ball]
     setBalls((previous) => [...previous, ball])
   }
-
-  const handleGameUpdate = useCallback((message: any) => {
-    const userFromMessage = message.data.user;
-    const element = message.data.element;
-    const points = message.data.points;
-
-    toast(`${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`, {
-      position: 'bottom-left',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      closeButton: false,
-      progress: undefined,
-      theme: "dark",
-    });
-
-    const user = users.find(user => user.id === userFromMessage.id);
-    if (!user) return;
-
-    user.activations.forEach(activation => {
-      if (activation.name === ActivationType.GAME) {
-        activation.quantity = points;
-      }
-    })
-  }, []);
 
   function fetchUsers() {
     getUsers().then((fetchedUsers: IUserResponse[]) => {
@@ -309,9 +342,44 @@ export default function UsersDashboard() {
     };
   }, [hasJoinedRoom]);
 
+  function criarMonteDeusuario() {
+    for (let i = 0; i < 75; i++) {
+      createUser({
+        id: uuid(),
+        name: 'Rhaenyra',
+        email: 'Rhaenyra@Rhaenyra.com',
+        isOnline: true,
+        activations: [
+          {
+            name: ActivationType.HACKATHON,
+            completed: true,
+            color: ActivationColor.HACKATHON,
+          },
+          {
+            name: ActivationType.DISCORD,
+            completed: true,
+            color: ActivationColor.DISCORD,
+          },
+          {
+            name: ActivationType.GAME,
+            completed: false,
+            quantity: 2,
+            color: ActivationColor.GAME,
+          },
+          {
+            name: ActivationType.NEWSLETTER,
+            completed: true,
+            color: ActivationColor.NEWSLETTER,
+          },
+        ],
+      },)
+    }
+  }
+
   return (
     <div ref={containerRef} className="relative overflow-hidden w-full h-full">
-      {balls.map((ball) => (
+      <button onClick={() => criarMonteDeusuario()}>Ola</button>
+      {balls.sort(ball => ball.user.isOnline ? 1 : 0).filter((_, index) => index < 75).map((ball) => (
         <div
           key={ball.id}
           className="absolute"

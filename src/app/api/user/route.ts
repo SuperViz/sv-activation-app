@@ -5,7 +5,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { GetUserDTO } from './dto/get-user.dto';
 import { validateRequestBody } from '@/lib/zod/validate-body';
 import { z } from 'zod';
-import {EditUserDTO} from "@/app/api/user/dto/edit-user.dto";
+import { EditUserDTO } from "@/app/api/user/dto/edit-user.dto";
 
 export const fetchCache = 'force-no-store'
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const { name, email } = parsedBody.response
-    
+
     const user = await db.user.create({
       data: {
         name,
@@ -96,7 +96,7 @@ export async function PATCH(request: NextRequest) {
     const body = await request.text()
     const parsedBody = validateRequestBody<z.infer<typeof EditUserDTO>>(EditUserDTO, body)
 
-    if(!parsedBody?.success) {
+    if (!parsedBody?.success) {
       return parsedBody.response
     }
 
