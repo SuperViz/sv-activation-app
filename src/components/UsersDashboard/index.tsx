@@ -47,11 +47,22 @@ export default function UsersDashboard() {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
     const userActivationDiameter = 194;
-
+  
     const size = windowWidth > 3000 ? userActivationDiameter / 2 : userActivationDiameter / 4;
+    
+    // Calculate the inner area (80% of the container)
+    const innerWidth = containerWidth * 1;
+    const innerHeight = containerHeight * 1;
+    const offsetX = (containerWidth - innerWidth) / 2;
+    const offsetY = (containerHeight - innerHeight) / 2;
+  
+    // Adjust the position calculation to ensure the ball is within the inner walls
+    const x = offsetX + size + Math.random() * (innerWidth - size * 2);
+    const y = offsetY + size + Math.random() * (innerHeight - size * 2);
+    
     const ball = Matter.Bodies.circle(
-      (Math.random() * (containerWidth - BALL_MARGIN)) + (BALL_MARGIN / 2),
-      (Math.random() * (containerHeight - BALL_MARGIN)) + (BALL_MARGIN / 2),
+      x,
+      y,
       size,
       {
         restitution: 1,
@@ -60,16 +71,16 @@ export default function UsersDashboard() {
         mass: 1,
       }
     );
-
+  
     Matter.World.add(engineRef.current!.world, ball);
-
+  
     const direction = Math.random() * Math.PI * 2;
-
+  
     Matter.Body.setVelocity(ball, {
       x: Math.sin(direction) * BASE_SPEED,
       y: Math.cos(direction) * BASE_SPEED
     });
-
+  
     return {
       id: ball.id,
       size: size * 2,
@@ -88,16 +99,33 @@ export default function UsersDashboard() {
     const containerWidth = containerRef.current.clientWidth;
     const containerHeight = containerRef.current.clientHeight;
 
-    const wallOptions = { isStatic: true };
+    // Calculate the dimensions for the inner area (80% of the container)
+    const innerWidth = containerWidth * 1.2;
+    const innerHeight = containerHeight * 1;
+    const offsetX = (containerWidth - innerWidth) / 2;
+    const offsetY = (containerHeight - innerHeight) / 2;
+
+    const wallThickness = 10; // Increased thickness for visibility
+    const wallOptions = { 
+      isStatic: true,
+      render: {
+        fillStyle: 'rgba(255, 255, 255, 0.5)' // Semi-transparent white
+      }
+    };
+
     const walls = [
-      Matter.Bodies.rectangle(containerWidth / 2, 0, containerWidth, 1, wallOptions),
-      Matter.Bodies.rectangle(containerWidth / 2, containerHeight, containerWidth, 1, wallOptions),
-      Matter.Bodies.rectangle(0, containerHeight / 2, 1, containerHeight, wallOptions),
-      Matter.Bodies.rectangle(containerWidth, containerHeight / 2, 1, containerHeight, wallOptions)
+      // Top wall
+      Matter.Bodies.rectangle(containerWidth / 2, offsetY, innerWidth, wallThickness, wallOptions),
+      // Bottom wall
+      Matter.Bodies.rectangle(containerWidth / 2, containerHeight - offsetY, innerWidth, wallThickness, wallOptions),
+      // Left wall
+      Matter.Bodies.rectangle(offsetX, containerHeight / 2, wallThickness, innerHeight, wallOptions),
+      // Right wall
+      Matter.Bodies.rectangle(containerWidth - offsetX, containerHeight / 2, wallThickness, innerHeight, wallOptions)
     ];
 
     Matter.World.add(engine.world, walls);
-
+  
     // Create balls
     const newBalls: Ball[] = [];
     for (const user of users) {
@@ -109,16 +137,47 @@ export default function UsersDashboard() {
       const pairs = event.pairs;
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
-        const randomAngle = (Math.random() - 0.5) * Math.PI;
-        const velocityA = Matter.Vector.rotate(pair.bodyA.velocity, randomAngle);
-        const velocityB = Matter.Vector.rotate(pair.bodyB.velocity, randomAngle);
+        
+        // Calculate the collision normal
+        const normal = pair.collision.normal;
+        
+        // Calculate the relative velocity
+        const relativeVelocity = {
+          x: pair.bodyB.velocity.x - pair.bodyA.velocity.x,
+          y: pair.bodyB.velocity.y - pair.bodyA.velocity.y
+        };
+        
+        // Calculate the dot product of relative velocity and normal
+        const dotProduct = relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
+        
+        // Calculate the impulse scalar
+        const impulseScalar = -(1 + 0.5) * dotProduct / (pair.bodyA.inverseMass + pair.bodyB.inverseMass);
+        
+        // Apply impulse to both bodies
+        const impulse = {
+          x: normal.x * impulseScalar,
+          y: normal.y * impulseScalar
+        };
+        
         Matter.Body.setVelocity(pair.bodyA, {
-          x: velocityA.x * -1,
-          y: velocityA.y * -1
+          x: pair.bodyA.velocity.x - impulse.x * pair.bodyA.inverseMass,
+          y: pair.bodyA.velocity.y - impulse.y * pair.bodyA.inverseMass
+        });
+        
+        Matter.Body.setVelocity(pair.bodyB, {
+          x: pair.bodyB.velocity.x + impulse.x * pair.bodyB.inverseMass,
+          y: pair.bodyB.velocity.y + impulse.y * pair.bodyB.inverseMass
+        });
+        
+        // Add a small random perturbation for variety
+        const perturbation = 0.1;
+        Matter.Body.setVelocity(pair.bodyA, {
+          x: pair.bodyA.velocity.x + (Math.random() - 0.5) * perturbation,
+          y: pair.bodyA.velocity.y + (Math.random() - 0.5) * perturbation
         });
         Matter.Body.setVelocity(pair.bodyB, {
-          x: velocityB.x * -1,
-          y: velocityB.y * -1
+          x: pair.bodyB.velocity.x + (Math.random() - 0.5) * perturbation,
+          y: pair.bodyB.velocity.y + (Math.random() - 0.5) * perturbation
         });
       }
     });
@@ -345,43 +404,8 @@ export default function UsersDashboard() {
     };
   }, [hasJoinedRoom]);
 
-  function criarMonteDeusuario() {
-    for (let i = 0; i < 75; i++) {
-      createUser({
-        id: uuid(),
-        name: 'Rhaenyra',
-        email: 'Rhaenyra@Rhaenyra.com',
-        isOnline: true,
-        activations: [
-          {
-            name: ActivationType.HACKATHON,
-            completed: true,
-            color: ActivationColor.HACKATHON,
-          },
-          {
-            name: ActivationType.DISCORD,
-            completed: true,
-            color: ActivationColor.DISCORD,
-          },
-          {
-            name: ActivationType.GAME,
-            completed: false,
-            quantity: 2,
-            color: ActivationColor.GAME,
-          },
-          {
-            name: ActivationType.NEWSLETTER,
-            completed: true,
-            color: ActivationColor.NEWSLETTER,
-          },
-        ],
-      },)
-    }
-  }
-
   return (
     <div ref={containerRef} className="relative overflow-hidden w-full h-full">
-      <button onClick={() => criarMonteDeusuario()}>Ola</button>
       {balls.sort(ball => ball.user.isOnline ? 1 : 0).filter((_, index) => index < 75).map((ball) => (
         <div
           key={ball.id}
