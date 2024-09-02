@@ -1,10 +1,16 @@
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
-import UserPageContent from "@/app/userPage/UserPageContent";
-import React from "react";
+import UserPageContent from "@/components/ActivationsPages/UserPageContent";
+import React, { useState } from "react";
 import { IActivationResponse, IUser, IUserActivation } from "../../../types";
 import { ActivationColor } from "@/data/activationsData";
 import { useQuery } from "@tanstack/react-query";
 import { getUserData } from '../services/getUserData';
+import { ActivationTypePage } from "@/global/global.types";
+import DiscordActivation from "@/components/ActivationsPages/DiscordActivation";
+import HackathonActivation from "@/components/ActivationsPages/HackathonActivation";
+import NewsletterActivation from "@/components/ActivationsPages/NewsLetterActivation";
+import GameOnboarding from "@/components/ActivationsPages/GameActivationOnboardLayout";
+import GameActivationPlayLayout from "@/components/ActivationsPages/GameActivationPlayLayout";
 
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
@@ -14,6 +20,7 @@ const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
 export default function SupervizProvider({ userEmail }: { userEmail: string }) {
   const [user, setUser] = React.useState<IUser>()
   const { data, isLoading } = useQuery({ queryKey: [userEmail], queryFn: async () => await getUserData(userEmail) })
+  const [page, setPage] = useState<ActivationTypePage>(ActivationTypePage.LINKS)
 
 
   React.useEffect(() => {
@@ -68,7 +75,12 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
       roomId={DASHBOARD_ROOM_ID}
     >
       <Realtime />
-      <UserPageContent setUser={setUser} user={user} />
+      {page === ActivationTypePage.LINKS && <UserPageContent setUser={setUser} user={user} setPage={setPage} />}
+      {page === ActivationTypePage.DISCORD && <DiscordActivation setPage={setPage} />}
+      {page === ActivationTypePage.HACKATHON && <HackathonActivation setPage={setPage} />}
+      {page === ActivationTypePage.NEWSLETTER && <NewsletterActivation setPage={setPage} />}
+      {page === ActivationTypePage.GAME_ONBOARDING && <GameOnboarding setPage={setPage} />}
+      {page === ActivationTypePage.GAME_PLAY && <GameActivationPlayLayout setPage={setPage} />}
     </SuperVizRoomProvider>
   ) :
     (

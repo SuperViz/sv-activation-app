@@ -96,7 +96,7 @@ export default function UsersDashboard() {
       Matter.Bodies.rectangle(containerWidth, containerHeight / 2, 1, containerHeight, wallOptions)
     ];
 
-    // Matter.World.add(engine.world, walls);
+    Matter.World.add(engine.world, walls);
 
     // Create balls
     const newBalls: Ball[] = [];
@@ -268,13 +268,16 @@ export default function UsersDashboard() {
 
     if (!userExists) {
       createUser(message.data)
+      setUsers((previous) => {
+        return [...previous, message.data]
+      })
     }
   }
 
   function createUser(user: IUser) {
     const ball = createBall(user)
 
-    console.log(ball)
+    if(ballsRef.current?.some(ball => ball.user.id === user.id)) return
 
     ballsRef.current = [...ballsRef.current, ball]
     setBalls((previous) => [...previous, ball])

@@ -1,5 +1,5 @@
 import { ActivationColor } from "@/data/activationsData";
-import { ActivationType } from "@/global/global.types";
+import { ActivationType, ActivationTypePage } from "@/global/global.types";
 
 interface IActivation {
   id: ActivationType
@@ -7,7 +7,7 @@ interface IActivation {
   activationWord: string
   color: ActivationColor
   link: string
-  page: string
+  page: ActivationTypePage
   subtext?: {
     description: string
     activationWord: string
