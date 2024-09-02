@@ -1,8 +1,15 @@
-import React, {useEffect, useRef, useState} from "react";
+'use client'
+
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import User from "@/components/User";
-import {IUser} from "../../../types";
-import { useRealtime } from "@superviz/react-sdk";
+import { IUser, IUserActivation, IUserResponse } from "../../../types";
+import { ActivationColor } from '@/data/activationsData';
+import { useRealtime, useRealtimeParticipant, useSuperviz } from '@superviz/react-sdk';
+import { ActivationType } from '@/global/global.types';
+import { getOnlineUsersIds, getUsers } from '@/app/services/getUserData';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BASE_SPEED = .5;
 const BALL_MARGIN = 7;
@@ -14,12 +21,9 @@ type Ball = {
   user: IUser,
 };
 
-interface IUsersDashboardProps {
-  users: IUser[]
-}
-
-export default function UsersDashboard({ users }: IUsersDashboardProps) {
+export default function UsersDashboard() {
   const [balls, setBalls] = useState<Ball[]>([]);
+  const [users, setUsers] = React.useState<IUser[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
@@ -29,7 +33,7 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
   React.useEffect(() => {
     subscribe("activation", (e) => console.log('evento!', e));
   }, []);
-  
+
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
@@ -146,16 +150,137 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
     requestAnimationFrame(animate);
   };
 
+  const { stopRoom, hasJoinedRoom } = useSuperviz();
+  const { subscribe } = useRealtime('default');
+  const { subscribe: participantSubscribe } = useRealtimeParticipant('default');
+
+  function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
+    const user = users.find(user => user.id === userId);
+    if (!user) return;
+    if (!completed && !user.activations.some(activation => activation.name === activationName)) {
+      const activation: IUserActivation = {
+        name: activationName,
+        completed: completed,
+        color: ActivationColor[activationName]
+      }
+
+      user.activations.push(activation);
+    } else {
+      const activation = user.activations.find(activation => activation.name === activationName);
+      if (activation)
+        activation.completed = true;
+    }
+  }
+
+  function handleParticipantStatusChange(userId: string, isOnline: boolean) {
+    const user = users.find(user => user.id === userId);
+    if (!user) return;
+
+    user.isOnline = isOnline;
+  }
+
+  function handleActivationStart(message: any) {
+    const userId = message.data.userId;
+    const activationName = message.data.activation;
+
+    completeActivation(userId, activationName, false);
+  }
+
+  function handleActivationComplete(message: any) {
+    const userId = message.data.userId;
+    const activationName = message.data.activation;
+
+    completeActivation(userId, activationName, true);
+  }
+
+  const handleGameUpdate = useCallback((message: any) => {
+    const userFromMessage = message.data.user;
+    const element = message.data.element;
+    const points = message.data.points;
+
+    toast(`${element.emoji} ${userFromMessage?.name} descobriu ${element.name.toUpperCase()} e tem mais chance de ganhar! ${element.emoji}`, {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      closeButton: false,
+      progress: undefined,
+      theme: "dark",
+    });
+
+    const user = users.find(user => user.id === userFromMessage.id);
+    if (!user) return;
+
+    user.activations.forEach(activation => {
+      if (activation.name === ActivationType.GAME) {
+        activation.quantity = points;
+      }
+    })
+  }, []);
+
+  function fetchUsers() {
+    getUsers().then((fetchedUsers: IUserResponse[]) => {
+      const users: IUser[] = fetchedUsers.map(user => {
+        const activations: IUserActivation[] = user.activations.map(activation => {
+          return {
+            name: activation.name,
+            completed: activation.completed,
+            quantity: activation.quantity,
+            color: ActivationColor[activation.name]
+          };
+        });
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          discordUser: user.discordUser,
+          activations: activations
+        };
+      });
+      setUsers(users);
+    }).then(() => {
+      getOnlineUsersIds().then((onlineUsersIds: string[]) => {
+        if (onlineUsersIds.length === 0) return;
+        users.forEach(user => {
+          if (onlineUsersIds.includes(user.id)) {
+            user.isOnline = true;
+          }
+        });
+      });
+    });
+  }
+
   useEffect(() => {
+    fetchUsers();
     initialize();
 
+    // TODO: Add new user to the balls array
+    subscribe("activation.start", handleActivationStart);
+    subscribe("activation.game.update", handleGameUpdate);
+    subscribe("activation.complete", handleActivationComplete);
+
+    participantSubscribe('presence.leave', (message) => handleParticipantStatusChange(message.id, false));
+    participantSubscribe('presence.joined-room', (message) => handleParticipantStatusChange(message.id, true));
+
+    const handleBeforeUnload = () => {
+      if (hasJoinedRoom) {
+        stopRoom();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       if (!engineRef.current) return;
 
       Matter.Engine.clear(engineRef.current);
     };
-  }, []);
-  
+  }, [hasJoinedRoom]);
+
   return (
     <div ref={containerRef} className="relative overflow-hidden w-full h-full">
       {balls.map((ball) => (
@@ -165,7 +290,7 @@ export default function UsersDashboard({ users }: IUsersDashboardProps) {
           style={{
             width: `${ball.size}px`,
             height: `${ball.size}px`,
-            top: `${ball.position.y - ball.size / 2}px`, 
+            top: `${ball.position.y - ball.size / 2}px`,
             left: `${ball.position.x - ball.size / 2}px`,
           }}
         >

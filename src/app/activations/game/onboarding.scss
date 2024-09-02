@@ -1,0 +1,66 @@
+.onboarding {
+	padding: 2rem 1.5rem;
+
+	.step {
+		display: flex;
+		flex-direction: column;
+		height: calc(100vh - 56px - 6rem);
+		text-align: center;
+
+		.game-title {
+			margin-top: auto;
+			font-family: Roboto, Arial, sans-serif;
+
+			h1 {
+				font-size: 4.7608rem;
+				font-weight: 900;
+				line-height: 97%;
+				margin-bottom: 2rem;
+
+				span {
+					display: block;
+					color: #957AFF;
+				}
+			}
+		}
+
+		h2 {
+			color: #957AFF;
+			font-size: 1.5rem;
+			margin-bottom: 1.5rem;
+			font-weight: 900;
+		}
+
+		p {
+			font-size: 1.5rem;
+			font-weight: 400;
+			margin-bottom: 1rem;
+			line-height: 115%;
+		}
+
+		.step-counter {
+			margin: 2rem auto;
+			display: flex;
+			gap: 1rem;
+
+			.step-circle {
+				width: 50px;
+				height: 6px;
+				background: #4C4C4C;
+				border-radius: 3px;
+
+				&.active {
+					background-color: #957AFF;
+				}
+			}
+		}
+
+		img {
+			margin: auto;
+		}
+
+		button {
+			margin-top: auto;
+		}
+	}
+}

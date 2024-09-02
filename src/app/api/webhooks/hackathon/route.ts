@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from '@/lib/prisma'
 import { ActivationType } from "@/global/global.types";
+import { publishEvent } from '@/app/services/publishEvent';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
@@ -9,39 +10,44 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const field = parsed.form_response.definition.fields.find((field: any) => field.type === 'email')
     const anwser = parsed.form_response.answers.find((anwser: any) => anwser.field.ref === field.ref)
-    
-    if(!anwser.email) {
+
+    if (!anwser.email) {
       return NextResponse.json({}, { status: 400 })
     }
 
     const user = await db.user.findFirst({
-      where: { 
+      where: {
         email: anwser.email
       }
     })
 
-    if(!user) {
-      return NextResponse.json({message: 'User Doesn\'t exists '}, { status: 404 })
+    if (!user) {
+      return NextResponse.json({ message: 'User Doesn\'t exists ' }, { status: 404 })
     }
 
     const activation = await db.activation.findFirst({
-      where: { 
+      where: {
         name: ActivationType.HACKATHON,
         userId: user.id
       }
     })
 
-    if(!activation) {
-      return NextResponse.json({message: 'Activation Doesn\'t exists '}, { status: 404 })
+    if (!activation) {
+      return NextResponse.json({ message: 'Activation Doesn\'t exists ' }, { status: 404 })
     }
-    
+
     await db.activation.update({
-      data: { 
+      data: {
         completed: true
-      }, 
-      where: { 
+      },
+      where: {
         id: activation.id
       }
+    })
+
+    await publishEvent('default', 'activation.complete', {
+      userId: user.id,
+      activation: ActivationType.HACKATHON
     })
 
     return NextResponse.json({ message: 'Success' }, { status: 200 })
@@ -49,7 +55,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.log(error)
 
     return NextResponse.json({}, {
-      status: 500, 
+      status: 500,
       statusText: 'Internal Server Error'
     })
   }

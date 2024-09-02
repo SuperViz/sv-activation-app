@@ -4,10 +4,11 @@ import { validateRequestBody } from "@/lib/zod/validate-body";
 import { DiscordWebhookBodySchema } from "./discord.dto";
 import { z } from "zod";
 import { ActivationType } from "@/global/global.types";
+import { publishEvent } from '@/app/services/publishEvent';
 
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  try {    
+  try {
     const body = await request.text()
     const validatedBody = validateRequestBody<z.infer<typeof DiscordWebhookBodySchema>>(DiscordWebhookBodySchema, body)
 
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         OR: [
           {
             discordUser: username
-          }, 
+          },
           {
             discordUser: globalname
           }
@@ -30,31 +31,37 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     })
 
-    if(!user) {
-      return NextResponse.json({message: 'User Doesn\'t exists '}, { status: 404 })
+    if (!user) {
+      return NextResponse.json({ message: 'User Doesn\'t exists ' }, { status: 404 })
     }
 
     const activation = await db.activation.findFirst({
-      where: { 
+      where: {
         name: ActivationType.DISCORD,
         userId: user.id
       }
     })
 
-    if(!activation) {
-      return NextResponse.json({message: 'Activation Doesn\'t exists '}, { status: 404 })
+    if (!activation) {
+      return NextResponse.json({ message: 'Activation Doesn\'t exists ' }, { status: 404 })
     }
 
     await db.activation.update({
-      data: { 
+      data: {
         completed: true
       },
       where: {
         id: activation.id
       }
     })
-  
-    return NextResponse.json({}, { status: 200})
+
+    await publishEvent('default', 'activation.complete', {
+      userId: user.id,
+      activation: ActivationType.DISCORD
+    })
+
+
+    return NextResponse.json({}, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 })
   }

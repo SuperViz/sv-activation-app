@@ -3,10 +3,9 @@ import { CreateActivationDTO } from "./dto/create-activation.dto";
 import { db } from '@/lib/prisma'
 import { validateRequestBody } from "@/lib/zod/validate-body";
 import { z } from "zod";
+import { publishEvent } from '@/app/services/publishEvent';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
-
   try {
     const body = await request.text()
     const parsedBody = validateRequestBody<z.infer<typeof CreateActivationDTO>>(CreateActivationDTO, body)
@@ -58,18 +57,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     })
 
-    await fetch('https://nodeapi.superviz.com/realtime/superviz_dashboard/default/publish', {
-      method: 'POST',
-      headers: {
-        'apiKey': DEVELOPER_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: 'activation',
-        data: {
-          activation,
-        }
-      })
+    await publishEvent('default', 'activation.start', {
+      userId: user.id,
+      activation: activation.name,
     })
 
     return NextResponse.json(

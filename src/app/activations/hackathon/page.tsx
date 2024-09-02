@@ -1,6 +1,6 @@
 export default function HackathonPage() {
-  
-  
+
+
   return (
     <div className={`bg-[#313338] w-full h-full rounded-2xl p-4`}>
       <iframe
@@ -8,13 +8,8 @@ export default function HackathonPage() {
         width="100%"
         height="100%"
         allowFullScreen
-      >
-        <p>
-          <a href="https://superviz.com/">
-            Oops... algo deu errado!
-          </a>
-        </p>
-      </iframe>
+        sandbox='allow-scripts allow-same-origin allow-forms'
+      ></iframe>
     </div>
   )
 }

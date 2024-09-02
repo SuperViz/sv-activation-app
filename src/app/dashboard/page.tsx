@@ -1,13 +1,14 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Image from "next/image";
 import fenderImg from '../../../public/fender-lego-tv.png'
 import qrcode from '../../../public/qrcode_events.superviz.com.png'
 import Activations from "@/components/Activations";
 import UsersDashboard from "@/components/UsersDashboard";
-import {activations, users} from "@/data/activationsData";
-import {Realtime, SuperVizRoomProvider} from "@superviz/react-sdk";
+import { activations } from "@/data/activationsData";
+import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
+import { ToastContainer } from 'react-toastify';
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string
@@ -17,6 +18,7 @@ const DASHBOARD_PARTICIPANT_NAME = process.env.NEXT_PUBLIC_DASHBOARD_PARTICIPANT
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string
 
 export default function Dashboard() {
+
   return (
     <SuperVizRoomProvider
       developerKey={DEVELOPER_KEY}
@@ -28,39 +30,39 @@ export default function Dashboard() {
         id: DASHBOARD_PARTICIPANT_ID,
         name: DASHBOARD_PARTICIPANT_NAME,
       }}
-      debug
       roomId={DASHBOARD_ROOM_ID}
     >
-    <div className='grid grid-cols-12 w-full h-screen relative gap-[2.5rem] p-[1.25rem] tv:p-[2.5rem] tv:gap-[5rem] tvBg'>
-      <div className="col-start-1 col-span-4 flex flex-col z-10 p-[2.5rem] tv:p-[5rem]">
-        <Image src="/logo-sm.svg" width={108} height={20} alt="Logo Superviz" className="tv:w-[13.5rem] object-contain"/>
-        <h1 className="font-black mt-[2rem] text-7xl tv:mt-[4rem] tv:text-[9.5rem] tv:leading-[10.5rem]">
-          Ganhe um LEGO<span className="text-3xl tv:text-[5rem] tv:leading-[6rem] align-top">® </span>
-          da Fender<span className="text-3xl tv:text-[5rem] tv:leading-[6rem] align-top">®</span>
-        </h1>
-        <div className="text-3xl mt-[3.125rem] tv:mt-[6.25rem] tv:text-[4rem] tv:leading-[5.5rem]">
-          <p>Participe de qualquer ativação e ganhe pontos para concorrer.</p>
-          <p className="font-black">Quanto mais ativações, mais chances de ganhar.</p>
+      <div className='flex w-full h-screen relative p-[1.25rem] tv:p-[2.5rem] tvBg'>
+        <div className="flex flex-col z-10 p-[2.5rem] tv:p-[5rem] shrink">
+          <Image src="/logo-sm.svg" width={108} height={20} alt="Logo Superviz" className="tv:w-[13.5rem] object-contain" />
+          <h1 className="font-black mt-[2rem] text-7xl tv:mt-[4rem] tv:text-[9.5rem] tv:leading-[10.5rem]">
+            Ganhe um LEGO<span className="text-3xl tv:text-[5rem] tv:leading-[6rem] align-top">® </span>
+            da Fender<span className="text-3xl tv:text-[5rem] tv:leading-[6rem] align-top">®</span>
+          </h1>
+          <div className="text-3xl mt-[3.125rem] tv:mt-[6.25rem] tv:text-[4rem] tv:leading-[5.5rem]">
+            <p>Participe de qualquer ativação e ganhe pontos para concorrer.</p>
+            <p className="font-black">Quanto mais ativações, mais chances de ganhar.</p>
+          </div>
+          <Image src={qrcode} width={145} height={145} alt="QR Code para ativação" className="mt-[3.125rem] tv:w-[18.125rem] tv:mt-[6.25rem]" />
         </div>
-        <Image src={qrcode} width={145} height={145} alt="QR Code para ativação" className="mt-[3.125rem] tv:w-[18.125rem] tv:mt-[6.25rem]"/>
-      </div>
-      <Image src={fenderImg} alt="Imagem de um Lego da Fender" className="z-0 absolute bottom-[2.5rem] tv:bottom-[5rem] left-0 max-w-[27vw] object-contain" />
-      <div className="col-start-5 col-span-12 flex flex-col bg-[#C9C4D114] p-10 rounded-[2rem] tv:p-20 tv:rounded-[4rem]">
-        <p className="font-black text-4xl tv:text-[5rem] tv:leading-[6rem]">Participantes em tempo real</p>
-        <div className="grow">
-          <Realtime /> 
-          <UsersDashboard users={users} />
-        </div>
-        <div className="flex justify-between mt-9">
-          <Activations activations={activations} />
-          <div className="flex gap-3 items-center">
-            <Image src="/sync-logo.svg" width={25} height={20} alt="ícone de sincronização" className="tv:w-[3.125rem] object-contain"/>
-            <span className="tv:text-[2.12rem] tv:leading-[2.5rem]">Sincronização de dados por </span>
-            <Image src="/logo-md.svg" width={80} height={15} alt="Superviz" className="tv:w-[9.7rem] object-contain"/>
+        <Image src={fenderImg} alt="Imagem de um Lego da Fender" className="z-0 absolute bottom-[2.5rem] tv:bottom-[5rem] left-0 max-w-[27vw] object-contain" />
+        <div className="flex flex-col bg-[#C9C4D114] p-10 rounded-[2rem] min-w-[84.375rem] tv:p-20 tv:rounded-[4rem] tv:min-w-[168.75rem] grow">
+          <p className="font-black text-4xl tv:text-[5rem] tv:leading-[6rem]">Participantes em tempo real</p>
+          <div className="grow">
+            <Realtime />
+            <UsersDashboard />
+          </div>
+          <div className="flex justify-between mt-9">
+            <Activations activations={activations} />
+            <div className="flex gap-3 items-center">
+              <Image src="/sync-logo.svg" width={25} height={20} alt="ícone de sincronização" className="tv:w-[3.125rem] object-contain" />
+              <span className="tv:text-[2.12rem] tv:leading-[2.5rem]">Sincronização de dados por </span>
+              <Image src="/logo-md.svg" width={80} height={15} alt="Superviz" className="tv:w-[9.7rem] object-contain" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <ToastContainer />
     </SuperVizRoomProvider>
   );
 };

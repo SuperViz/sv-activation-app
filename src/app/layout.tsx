@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "Generated with <3 by Superviz",
 }
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{
