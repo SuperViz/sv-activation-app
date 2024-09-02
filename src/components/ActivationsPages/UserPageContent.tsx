@@ -50,7 +50,6 @@ export default function UserPageContent({ user, setUser, setPage }: { user: IUse
   }
 
   const handleGameUpdate = useCallback((message: any) => {
-    console.log('message', message);
     const userId = message.data.userId;
     const points = message.data.points;
 
@@ -87,11 +86,11 @@ export default function UserPageContent({ user, setUser, setPage }: { user: IUse
           <div className='w-full p-5'>
             {activations.map(activation => (
               <div key={activation.color} className="w-full">
-                <CardLink 
+                <CardLink
                   setPage={setPage}
-                  user={user} 
-                  activation={activation} 
-                  userActivation={user.activations.find(act => act.name === activation.id)} 
+                  user={user}
+                  activation={activation}
+                  userActivation={user.activations.find(act => act.name === activation.id)}
                 />
               </div>
             ))}

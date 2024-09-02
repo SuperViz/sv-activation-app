@@ -6,12 +6,19 @@ import './GameActivationPlayLayout.scss';
 import { IElement } from '../../../types.game';
 import { ActivationTypePage } from '@/global/global.types';
 import ActivationLayout from './ActivationLayout';
+import { useRealtime } from '@superviz/react-sdk';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function GameActivationPlayLayout({ setPage }: { setPage: (page: ActivationTypePage) => void }) {
+  const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
+
   const gameOverAt = 9;
+
   const [elements, setElements] = useState<IElement[]>([]);
   const [gameOver, setGameOver] = useState(false);
-  const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
+
+  const { subscribe } = useRealtime('game');
+
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -100,14 +107,27 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
     )
   }
 
-  const handleGameUpdate = useCallback((message: any) => {
+  const handleGameUpdate = (message: any) => {
+    const userFromMessage = message.data.user;
+    const element = message.data.element;
 
-  }, []);
+    toast(`${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`, {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      closeButton: false,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
 
   resetServerContext();
 
   useEffect(() => {
-    // subscribe("new.element", handleGameUpdate);
+    subscribe("new.element", handleGameUpdate);
 
     getSavedElements();
   }, []);
@@ -126,6 +146,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
           </Droppable>
         </DragDropContext>
       </div>
+      <ToastContainer />
     </ActivationLayout>
   );
 };
