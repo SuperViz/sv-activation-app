@@ -28,12 +28,6 @@ export default function UsersDashboard() {
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
 
-  const { subscribe } = useRealtime('default');
-
-  React.useEffect(() => {
-    subscribe("activation", (e) => console.log('evento!', e));
-  }, []);
-
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
