@@ -60,7 +60,7 @@ export default function Enter() {
   }
   
   return (
-    <form className="w-full h-full relative overflow-hidden flex flex-col justify-end px-1">
+    <form className="w-full h-full relative overflow-hidden flex flex-col justify-end">
       {questions.map((question, index) => {
         return (
           <div 
