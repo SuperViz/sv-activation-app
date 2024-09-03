@@ -59,7 +59,7 @@ export default function Dashboard() {
           </div>
           <div className="flex justify-between mt-9 px-10 tv:px-20">
             <Activations activations={activations} />
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-center sv-shadow">
               <Image src="/sync-logo.svg" width={25} height={20} alt="ícone de sincronização" className="tv:w-[3.125rem] object-contain" />
               <span className="tv:text-[2.12rem] tv:leading-[2.5rem]">Sincronização de dados por </span>
               <Image src="/logo-md.svg" width={80} height={15} alt="Superviz" className="tv:w-[9.7rem] object-contain" />
