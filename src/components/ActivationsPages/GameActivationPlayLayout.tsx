@@ -16,10 +16,15 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
   const gameOverAt = 9;
 
   const [elements, setElements] = useState<IElement[]>([]);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(true);
 
   const { subscribe } = useRealtime('game');
 
+  const checkGameOver = () => {
+    if (elements.filter(el => el.isNew).length === gameOverAt) {
+      setGameOver(true);
+    }
+  }
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -28,9 +33,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
       setElements(savedElements);
     }
 
-    if (elements.filter(el => el.isNew).length === gameOverAt) {
-      setGameOver(true);
-    }
+    checkGameOver();
   }
 
   const saveNewElements = (elementsToSave: IElement[]) => {
@@ -51,13 +54,10 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
     setElements(newElements);
     saveNewElements(newElements);
 
-    if (elements.filter(el => el.isNew).length === gameOverAt) {
-      setGameOver(true);
-    }
+    checkGameOver();
   }
 
   const combineElements = (elementA: IElement, elementB: IElement) => {
-    console.log('combineElements', elementA, elementB);
     const indexB = elements.findIndex(el => el.id === elementB.id);
 
     fetch('/api/game', {
@@ -75,7 +75,6 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
   }
 
   function onDragEnd(result: any) {
-    console.log('onDragEnd', result);
     if (result.combine) {
       const elementA = elements.find(el => el.id === result.draggableId);
       const elementB = elements.find(el => el.id === result.combine.draggableId);
@@ -126,7 +125,6 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
 
   useEffect(() => {
     subscribe("new.element", handleGameUpdate);
-
     getSavedElements();
   }, []);
 
@@ -139,6 +137,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
   return (
     <ActivationLayout setPage={setPage}>
       <div className='game'>
+        {gameOver && (<div className='game-over'><h1>Parabéns!</h1><p>Você já descobriu 10 elementos novos!</p></div>)}
         <DragDropContext onDragEnd={mapAndInvoke(onDragEnd)}>
           <Droppable droppableId="elements" isCombineEnabled direction={'horizontal'}>
             {(provided: any) => (
@@ -151,8 +150,13 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
                   flexDirection: 'row',
                   flexWrap: 'wrap',
                 }} >
-                {elements.map((element, index) => renderElement(element, index, provided))}
-                {/* {provided.placeholder} */}
+                {elements.filter(el => el.isNew).length === gameOverAt
+                  ? elements
+                    .slice()
+                    .sort((a, b) => (a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1))
+                    .map((element, index) => renderElement(element, index, provided))
+                  : elements.map((element, index) => renderElement(element, index, provided))
+                }
               </div>
             )}
           </Droppable>

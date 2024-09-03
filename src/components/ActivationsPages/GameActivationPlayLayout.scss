@@ -1,6 +1,26 @@
 div.game {
 	flex-grow: 1;
 
+	.game-over {
+		text-align: center;
+		font-family: Roboto, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		margin: 1rem 0 0;
+
+		h1 {
+			color: #957AFF;
+			font-size: 1.5rem;
+			margin-bottom: 1.5rem;
+			font-weight: 900;
+		}
+
+		p {
+			font-size: 1.5rem;
+			font-weight: 400;
+			margin-bottom: 1rem;
+			line-height: 115%;
+		}
+	}
+
 	.elements {
 		justify-content: center;
 		user-select: none;
