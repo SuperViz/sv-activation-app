@@ -9,11 +9,11 @@ import { useRealtime, useRealtimeParticipant, useSuperviz } from '@superviz/reac
 import { ActivationType } from '@/global/global.types';
 import { getOnlineUsersIds, getUsers } from '@/app/services/getUserData';
 import { toast } from 'react-toastify';
-import { v4 as uuid } from 'uuid';
 import 'react-toastify/dist/ReactToastify.css';
 
-const BASE_SPEED = .5;
-const BALL_MARGIN = 1;
+const BASE_SPEED = 0.5;
+const MAX_SPEED = 1;
+const MIN_SPEED = 0.1;
 
 type Ball = {
   id: number;
@@ -65,7 +65,7 @@ export default function UsersDashboard() {
       y,
       size,
       {
-        restitution: 1,
+        restitution: 0.8 + Math.random() * 0.4, // Random restitution between 0.8 and 1.2
         friction: 0,
         frictionAir: 0,
         mass: 1,
@@ -75,10 +75,11 @@ export default function UsersDashboard() {
     Matter.World.add(engineRef.current!.world, ball);
   
     const direction = Math.random() * Math.PI * 2;
+    const speed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
   
     Matter.Body.setVelocity(ball, {
-      x: Math.sin(direction) * BASE_SPEED,
-      y: Math.cos(direction) * BASE_SPEED
+      x: Math.sin(direction) * speed,
+      y: Math.cos(direction) * speed
     });
   
     return {
@@ -132,28 +133,22 @@ export default function UsersDashboard() {
       newBalls.push(createBall(user));
     }
 
-    // Add collision detection
     Matter.Events.on(engine, 'collisionStart', (event) => {
       const pairs = event.pairs;
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
         
-        // Calculate the collision normal
         const normal = pair.collision.normal;
-        
-        // Calculate the relative velocity
         const relativeVelocity = {
           x: pair.bodyB.velocity.x - pair.bodyA.velocity.x,
           y: pair.bodyB.velocity.y - pair.bodyA.velocity.y
         };
         
-        // Calculate the dot product of relative velocity and normal
         const dotProduct = relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
         
-        // Calculate the impulse scalar
-        const impulseScalar = -(1 + 0.5) * dotProduct / (pair.bodyA.inverseMass + pair.bodyB.inverseMass);
+        const restitution = 0.8 + Math.random() * 0.4; // Random restitution between 0.8 and 1.2
+        const impulseScalar = -(1 + restitution) * dotProduct / (pair.bodyA.inverseMass + pair.bodyB.inverseMass);
         
-        // Apply impulse to both bodies
         const impulse = {
           x: normal.x * impulseScalar,
           y: normal.y * impulseScalar
@@ -169,8 +164,7 @@ export default function UsersDashboard() {
           y: pair.bodyB.velocity.y + impulse.y * pair.bodyB.inverseMass
         });
         
-        // Add a small random perturbation for variety
-        const perturbation = 0.1;
+        const perturbation = 3 + Math.random() * 2; // Random perturbation between 3 and 5
         Matter.Body.setVelocity(pair.bodyA, {
           x: pair.bodyA.velocity.x + (Math.random() - 0.5) * perturbation,
           y: pair.bodyA.velocity.y + (Math.random() - 0.5) * perturbation
@@ -178,6 +172,16 @@ export default function UsersDashboard() {
         Matter.Body.setVelocity(pair.bodyB, {
           x: pair.bodyB.velocity.x + (Math.random() - 0.5) * perturbation,
           y: pair.bodyB.velocity.y + (Math.random() - 0.5) * perturbation
+        });
+
+        const repulsionForce = 0.5 + Math.random() * 0.5; // Random repulsion force between 0.5 and 1
+        Matter.Body.applyForce(pair.bodyA, pair.bodyA.position, {
+          x: -normal.x * repulsionForce,
+          y: -normal.y * repulsionForce
+        });
+        Matter.Body.applyForce(pair.bodyB, pair.bodyB.position, {
+          x: normal.x * repulsionForce,
+          y: normal.y * repulsionForce
         });
       }
     });
@@ -201,12 +205,29 @@ export default function UsersDashboard() {
       const body = engineRef.current?.world.bodies.find(b => b.id === ball.id);
       if (!body) return ball
 
-      const SPEED_MULTIPLIER = BASE_SPEED / body.speed
+      const currentSpeed = Math.sqrt(body.velocity.x ** 2 + body.velocity.y ** 2);
+      let SPEED_MULTIPLIER = BASE_SPEED / currentSpeed;
+
+      // Add some randomness to the speed
+      SPEED_MULTIPLIER *= 0.9 + Math.random() * 0.2; // Random multiplier between 0.9 and 1.1
+
+      // Ensure the speed stays within MIN_SPEED and MAX_SPEED
+      const newSpeed = Math.min(Math.max(currentSpeed * SPEED_MULTIPLIER, MIN_SPEED), MAX_SPEED);
+      const speedRatio = newSpeed / currentSpeed;
 
       Matter.Body.setVelocity(body, {
-        x: body.velocity.x * SPEED_MULTIPLIER,
-        y: body.velocity.y * SPEED_MULTIPLIER
+        x: body.velocity.x * speedRatio,
+        y: body.velocity.y * speedRatio
       });
+
+      // Occasionally add a small random force
+      if (Math.random() < 0.05) { // 5% chance each frame
+        const randomForce = {
+          x: (Math.random() - 0.5) * 0.001,
+          y: (Math.random() - 0.5) * 0.001
+        };
+        Matter.Body.applyForce(body, body.position, randomForce);
+      }
 
       return {
         ...ball,
