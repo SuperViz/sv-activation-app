@@ -55,7 +55,10 @@ html, body {
   }
   
   .tvBg {
-    background: radial-gradient(58.89% 72.1% at 64.57% 48.7%, rgba(0, 0, 0, 0.00) 0%, #000 100%), linear-gradient(0deg, #1F1F1F 0%, #1F1F1F 100%), linear-gradient(0deg, #26242A 0%, #26242A 100%), #26242A;
+    background: radial-gradient(58.89% 72.1% at 64.57% 48.7%, rgba(0, 0, 0, 0.00) 0%, #000 100%), 
+                linear-gradient(0deg, #1F1F1F 0%, #1F1F1F 100%), 
+                linear-gradient(0deg, #26242A 0%, #26242A 100%), 
+                #26242A;
   }
   
   .spin {
@@ -71,4 +74,5 @@ html, body {
       transform: rotate(360deg);
     }
   }
+
 }

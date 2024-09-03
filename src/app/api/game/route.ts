@@ -117,7 +117,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const existName = await checkForExistingName(combination.name)
-
     const element = await db.element.create({
       data: {
         id: combination.id,
@@ -134,51 +133,52 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         element: element,
         isNew: false
       })
-    }
-
-    const activation = await db.activation.findFirst({
-      where: {
-        name: ActivationType.GAME,
-        userId: user.id
-      }
-    })
-
-    if (!activation) {
-      return NextResponse.json({ message: 'Activation Doesn\'t exists ' }, { status: 400 })
-    }
-
-    if (activation.quantity === 10) {
-      return NextResponse.json({ message: 'Game Over' }, { status: 400 })
-    }
-
-    const quantity = activation.quantity + 1
-
-    await db.activation.update({
-      data: {
-        quantity: quantity
-      },
-      where: {
-        id: activation.id
-      }
-    })
-
-    await Promise.all([
-      publishEvent('default', 'activation.game.update', {
-        userId: user.id,
-        points: quantity
-      }),
-
-      publishEvent('game', 'new.element', {
-        element,
-        user,
-        points: quantity
+    } else {
+      const activation = await db.activation.findFirst({
+        where: {
+          name: ActivationType.GAME,
+          userId: user.id
+        }
       })
-    ])
 
-    return NextResponse.json({
-      element: element,
-      isNew: true
-    })
+      if (!activation) {
+        return NextResponse.json({ message: 'Activation Doesn\'t exists ' }, { status: 400 })
+      }
+
+      const isOver = activation.quantity === 10
+      if (isOver) {
+        return NextResponse.json({ message: 'Game Over' }, { status: 400 })
+      }
+
+      const quantity = activation.quantity + 1
+      await db.activation.update({
+        data: {
+          quantity: quantity,
+          completed: isOver
+        },
+        where: {
+          id: activation.id
+        }
+      })
+
+      await Promise.all([
+        publishEvent('default', 'activation.game.update', {
+          userId: user.id,
+          points: quantity
+        }),
+
+        publishEvent('game', 'new.element', {
+          element,
+          user,
+          points: quantity
+        })
+      ])
+
+      return NextResponse.json({
+        element: element,
+        isNew: true
+      })
+    }
   } catch (error) {
     console.log(error)
 

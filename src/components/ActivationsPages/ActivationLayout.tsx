@@ -1,6 +1,5 @@
 import Image from "next/image";
 import * as React from "react";
-import ActivationCall from "@/app/activations/ActivationCall";
 import Link from 'next/link';
 import { ActivationTypePage } from "@/global/global.types";
 
@@ -13,8 +12,8 @@ export default function ActivationLayout({
 }>) {
   return (
     <div className={`flex flex-col w-screen h-dvh mobileBg`}>
-      <button 
-        className='flex items-center w-full px-7 py-5 bg-[#C9C4D11A]' 
+      <button
+        className='flex items-center w-full px-7 py-5 bg-[#C9C4D11A]'
         onClick={() => {
           setPage(ActivationTypePage.LINKS)
         }}
@@ -25,7 +24,7 @@ export default function ActivationLayout({
           <Image src="/logo-sm.svg" width={109} height={80} alt="Logo Superviz" />
         </Link>
       </button>
-      <div className='flex flex-col w-full flex-grow px-4 py-4'>
+      <div className='flex flex-col w-full flex-grow px-4 py-4 overflow-y-auto'>
         {children}
       </div>
     </div>
