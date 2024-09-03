@@ -1,0 +1,15 @@
+.user-canva {
+	position: relative;
+
+	.px-10 {
+		z-index: 99;
+	}
+
+	.walls {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		z-index: 0;
+		border-radius: 2rem;
+	}
+}

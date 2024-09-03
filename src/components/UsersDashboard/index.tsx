@@ -419,7 +419,7 @@ export default function UsersDashboard() {
   }, [hasJoinedRoom]);
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden w-full h-full">
+    <div ref={containerRef} className="walls relative overflow-hidden w-full h-full">
       {balls.sort(ball => ball.user.isOnline ? 1 : 0).filter((_, index) => index < 75).map((ball) => (
         <div
           key={ball.id}
