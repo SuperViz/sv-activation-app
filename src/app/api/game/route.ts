@@ -116,6 +116,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       })
     }
 
+    const existName = await checkForExistingName(combination.name)
+
     const element = await db.element.create({
       data: {
         id: combination.id,
@@ -127,7 +129,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     })
 
-    const existName = await checkForExistingName(element.name)
     if (existName) {
       return NextResponse.json({
         element: element,
