@@ -32,7 +32,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
 
     if (!user) {
-      return NextResponse.json({ message: 'User Doesn\'t exists ' }, { status: 404 })
+      return NextResponse.json({ message: 'User Doesn\'t exists ' }, { status: 200 })
     }
 
     const activation = await db.activation.findFirst({
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
 
     if (!activation) {
-      return NextResponse.json({ message: 'Activation Doesn\'t exists ' }, { status: 404 })
+      return NextResponse.json({ message: 'Activation Doesn\'t exists ' }, { status: 200 })
     }
 
     await db.activation.update({
