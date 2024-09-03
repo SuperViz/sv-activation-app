@@ -145,15 +145,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ message: 'Activation Doesn\'t exists ' }, { status: 400 })
       }
 
-      if (activation.quantity === 10) {
+      const isOver = activation.quantity === 10
+      if (isOver) {
         return NextResponse.json({ message: 'Game Over' }, { status: 400 })
       }
 
       const quantity = activation.quantity + 1
-
       await db.activation.update({
         data: {
-          quantity: quantity
+          quantity: quantity,
+          completed: isOver
         },
         where: {
           id: activation.id
