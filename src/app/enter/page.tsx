@@ -52,6 +52,10 @@ export default function Enter() {
   }
 
   const handleSubmit = async () => {
+    let existingSave = localStorage.getItem("saved_game");
+    if (existingSave)
+      localStorage.removeItem("saved_game");
+
     await createUser(formData)
       .catch((error) => {
         console.error('Erro interno', error)
