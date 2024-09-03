@@ -195,6 +195,28 @@
 
 .GAME {
   border: none;
+  $activity-0: conic-gradient(
+                  rgb(149, 122, 255, 0.35) 0% 8%,
+                  transparent 8% 10%,
+                  rgb(149, 122, 255, 0.35) 10% 18%,
+                  transparent 18% 20%,
+                  rgb(149, 122, 255, 0.35) 20% 28%,
+                  transparent 28% 30%,
+                  rgb(149, 122, 255, 0.35) 30% 38%,
+                  transparent 38% 40%,
+                  rgb(149, 122, 255, 0.35) 40% 48%,
+                  transparent 48% 50%,
+                  rgb(149, 122, 255, 0.35) 50% 58%,
+                  transparent 58% 60%,
+                  rgb(149, 122, 255, 0.35) 60% 68%,
+                  transparent 68% 70%,
+                  rgb(149, 122, 255, 0.35) 70% 78%,
+                  transparent 78% 80%,
+                  rgb(149, 122, 255, 0.35) 80% 88%,
+                  transparent 88% 90%,
+                  rgb(149, 122, 255, 0.35) 90% 98%,
+                  transparent 98% 100%
+  );
   $activity-1: conic-gradient(
                   rgb(149, 122, 255) 0% 8%,
                   transparent 8% 10%,
@@ -416,6 +438,9 @@
                   transparent 98% 100%
   );
   
+  &.GAME-0 {
+    background-image: $activity-0;
+  }
   &.GAME-1 {
     background-image: $activity-1;
   }

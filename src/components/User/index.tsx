@@ -32,7 +32,7 @@ function TVActivations({ userActivations }: { userActivations: IUserActivation[]
     }
 
     if (userActivations[index].name === ActivationType.GAME) {
-      return `GAME GAME-${userActivations[index].quantity || 1}`
+      return `GAME GAME-${userActivations[index].quantity || 0}`
     }
 
     if (userActivations[index].completed) {
@@ -80,7 +80,7 @@ function MobileActivations({ userActivations }: { userActivations: IUserActivati
     }
 
     if (userActivations[index].name === ActivationType.GAME) {
-      return `GAME GAME-${userActivations[index].quantity || 1}`
+      return `GAME GAME-${userActivations[index].quantity || 0}`
     }
 
     if (userActivations[index].completed) {
