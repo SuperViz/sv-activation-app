@@ -16,7 +16,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
   const gameOverAt = 9;
 
   const [elements, setElements] = useState<IElement[]>([]);
-  const [gameOver, setGameOver] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
 
   const { subscribe } = useRealtime('game');
 

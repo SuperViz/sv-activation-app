@@ -1,5 +1,6 @@
 div.game {
 	flex-grow: 1;
+	margin: 0 -1rem;
 
 	.game-over {
 		text-align: center;
@@ -44,7 +45,7 @@ div.game {
 				border: 3px solid #666;
 				border-radius: .5rem;
 				background: #111;
-				padding: .8rem 1rem;
+				padding: 0.8rem .7rem;
 				margin: .5rem .3rem;
 				display: block;
 				line-height: 100%;
@@ -70,6 +71,10 @@ div.game {
 						top: -1px;
 						right: -8px;
 					}
+				}
+
+				&.selected {
+					border-color: #999;
 				}
 
 				span:first-of-type {

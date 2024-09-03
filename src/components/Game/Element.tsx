@@ -1,5 +1,5 @@
 import { IElement } from '../../../types.game';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface IElementOnBoardProps {
 	element: IElement;
@@ -8,19 +8,23 @@ export interface IElementOnBoardProps {
 
 export function Element({ element, onContextMenu }: IElementOnBoardProps) {
 	const [loading, setLoading] = useState(false);
-	const classList: string[] = ["element", "dragging"];
+	const [classList, setClassList] = useState<string[]>(["element", "dragging"]);
 
-	if (element.isNew) classList.push("isNew");
-
-	if (loading) classList.push("loading");
+	useEffect(() => {
+		let updatedClassList = ["element", "dragging"];
+		if (element.isNew) updatedClassList.push("isNew");
+		if (loading) updatedClassList.push("loading");
+		setClassList(updatedClassList);
+	}, [element.isNew, loading]);
 
 	const handleContextMenu = (event: React.MouseEvent<HTMLElement>) => {
 		if (loading) return;
 
 		event.preventDefault();
 
-		if (onContextMenu)
-			onContextMenu(element);
+		setClassList(prevClassList => [...prevClassList, "selected"]);
+
+		if (onContextMenu) onContextMenu(element);
 	}
 
 	return (
@@ -31,6 +35,7 @@ export function Element({ element, onContextMenu }: IElementOnBoardProps) {
 				data-element={element.name}
 				onContextMenu={handleContextMenu}
 				onDoubleClick={handleContextMenu}
+				onClick={handleContextMenu}
 			>
 				<span>{element.emoji}</span>
 				<span>
