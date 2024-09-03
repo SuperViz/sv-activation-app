@@ -53,6 +53,7 @@ export default function UserPageContent({ user, setUser, setPage }: { user: IUse
     const userId = message.data.userId;
     const points = message.data.points;
 
+    let copyUser = { ...user };
     if (user.id === userId) {
       user.activations.forEach(activation => {
         if (activation.name === ActivationType.GAME) {
@@ -60,6 +61,7 @@ export default function UserPageContent({ user, setUser, setPage }: { user: IUse
         }
       })
     }
+    setUser(copyUser);
   }, []);
 
   React.useEffect(() => {

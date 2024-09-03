@@ -9,7 +9,6 @@ import { useRealtime, useRealtimeParticipant, useSuperviz } from '@superviz/reac
 import { ActivationType } from '@/global/global.types';
 import { getOnlineUsersIds, getUsers } from '@/app/services/getUserData';
 import { toast } from 'react-toastify';
-import { v4 as uuid } from 'uuid';
 import 'react-toastify/dist/ReactToastify.css';
 
 const BASE_SPEED = .5;
@@ -47,19 +46,19 @@ export default function UsersDashboard() {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
     const userActivationDiameter = 194;
-  
+
     const size = windowWidth > 3000 ? userActivationDiameter / 2 : userActivationDiameter / 4;
-    
+
     // Calculate the inner area (80% of the container)
     const innerWidth = containerWidth * 1;
     const innerHeight = containerHeight * 1;
     const offsetX = (containerWidth - innerWidth) / 2;
     const offsetY = (containerHeight - innerHeight) / 2;
-  
+
     // Adjust the position calculation to ensure the ball is within the inner walls
     const x = offsetX + size + Math.random() * (innerWidth - size * 2);
     const y = offsetY + size + Math.random() * (innerHeight - size * 2);
-    
+
     const ball = Matter.Bodies.circle(
       x,
       y,
@@ -71,16 +70,16 @@ export default function UsersDashboard() {
         mass: 1,
       }
     );
-  
+
     Matter.World.add(engineRef.current!.world, ball);
-  
+
     const direction = Math.random() * Math.PI * 2;
-  
+
     Matter.Body.setVelocity(ball, {
       x: Math.sin(direction) * BASE_SPEED,
       y: Math.cos(direction) * BASE_SPEED
     });
-  
+
     return {
       id: ball.id,
       size: size * 2,
@@ -106,7 +105,7 @@ export default function UsersDashboard() {
     const offsetY = (containerHeight - innerHeight) / 2;
 
     const wallThickness = 10; // Increased thickness for visibility
-    const wallOptions = { 
+    const wallOptions = {
       isStatic: true,
       render: {
         fillStyle: 'rgba(255, 255, 255, 0.5)' // Semi-transparent white
@@ -125,7 +124,7 @@ export default function UsersDashboard() {
     ];
 
     Matter.World.add(engine.world, walls);
-  
+
     // Create balls
     const newBalls: Ball[] = [];
     for (const user of users) {
@@ -137,38 +136,38 @@ export default function UsersDashboard() {
       const pairs = event.pairs;
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
-        
+
         // Calculate the collision normal
         const normal = pair.collision.normal;
-        
+
         // Calculate the relative velocity
         const relativeVelocity = {
           x: pair.bodyB.velocity.x - pair.bodyA.velocity.x,
           y: pair.bodyB.velocity.y - pair.bodyA.velocity.y
         };
-        
+
         // Calculate the dot product of relative velocity and normal
         const dotProduct = relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
-        
+
         // Calculate the impulse scalar
         const impulseScalar = -(1 + 0.5) * dotProduct / (pair.bodyA.inverseMass + pair.bodyB.inverseMass);
-        
+
         // Apply impulse to both bodies
         const impulse = {
           x: normal.x * impulseScalar,
           y: normal.y * impulseScalar
         };
-        
+
         Matter.Body.setVelocity(pair.bodyA, {
           x: pair.bodyA.velocity.x - impulse.x * pair.bodyA.inverseMass,
           y: pair.bodyA.velocity.y - impulse.y * pair.bodyA.inverseMass
         });
-        
+
         Matter.Body.setVelocity(pair.bodyB, {
           x: pair.bodyB.velocity.x + impulse.x * pair.bodyB.inverseMass,
           y: pair.bodyB.velocity.y + impulse.y * pair.bodyB.inverseMass
         });
-        
+
         // Add a small random perturbation for variety
         const perturbation = 0.1;
         Matter.Body.setVelocity(pair.bodyA, {

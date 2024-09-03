@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Element } from '@/components/Game';
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
 import './GameActivationPlayLayout.scss';
@@ -8,6 +8,7 @@ import { ActivationTypePage } from '@/global/global.types';
 import ActivationLayout from './ActivationLayout';
 import { useRealtime } from '@superviz/react-sdk';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function GameActivationPlayLayout({ setPage }: { setPage: (page: ActivationTypePage) => void }) {
   const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
@@ -106,6 +107,8 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
     const userFromMessage = message.data.user;
     const element = message.data.element;
 
+    if (userFromMessage.email === JSON.parse(localStorage.getItem(USERDATA_KEY) as string)) return;
+
     toast(`${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`, {
       position: 'bottom-left',
       autoClose: 5000,
@@ -149,7 +152,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
                   flexWrap: 'wrap',
                 }} >
                 {elements.map((element, index) => renderElement(element, index, provided))}
-                {provided.placeholder}
+                {/* {provided.placeholder} */}
               </div>
             )}
           </Droppable>
