@@ -18,7 +18,7 @@ export default function Enter() {
     {
       id: 'name',
       type: 'text',
-      question: 'Qual seu nome completo?',
+      question: 'Como gostaria de ser chamado(a)?',
     },
   ]
   

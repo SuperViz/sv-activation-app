@@ -8,7 +8,6 @@ export function TVUser({ user }: { user: IUser }) {
   const firstLetter = user.name.at(0) ?? 'U'
   const activationsNumber = user.activations.length
   const userHasStar = activationsNumber === Object.keys(ActivationColor).length && user.activations.every(activation => activation.completed)
-  const userName = user.name.split(' ')[0]
   
   return (
     <div className={`flex flex-col items-center justify-center ${user.isOnline ? 'opacity-100'  : 'opacity-20'}`} >
@@ -20,7 +19,7 @@ export function TVUser({ user }: { user: IUser }) {
           <span className="text-[#26242A] text-lg tv:text-[2.25rem] font-black">{firstLetter.toUpperCase()}</span>
         </div>
       </div>
-      <p className="text-[1rem] tv:text-[2rem] mt-1.5">{userName}</p>
+      <p className="text-[1rem] tv:text-[2rem] mt-1.5">{user.name}</p>
     </div>
   )
 }
@@ -56,7 +55,6 @@ export function MobileUser({ user }: { user: IUser }) {
   const firstLetter = user.name.at(0) ?? 'U'
   const activationsNumber = user.activations.length
   const userHasStar = activationsNumber === Object.keys(ActivationColor).length && user.activations.every(activation => activation.completed)
-  const userName = user.name.split(' ')[0]
 
   return (
     <div className={`flex flex-col items-center justify-center`} >
@@ -68,7 +66,7 @@ export function MobileUser({ user }: { user: IUser }) {
           <span className="text-[#26242A] text-lg tv:text-[2.25rem] font-black">{firstLetter.toUpperCase()}</span>
         </div>
       </div>
-      <p className="text-[1rem] mt-1.5">{userName}</p>
+      <p className="text-[1rem] mt-1.5">{user.name}</p>
     </div>
   )
 }
