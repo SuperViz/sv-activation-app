@@ -132,13 +132,27 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
     getSavedElements();
   }, []);
 
+  function mapAndInvoke(onDragEnd: (result: any) => void) {
+    return function (result: any): void {
+      onDragEnd(result);
+    };
+  }
+
   return (
     <ActivationLayout setPage={setPage}>
       <div className='game'>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="elements" isCombineEnabled>
+        <DragDropContext onDragEnd={mapAndInvoke(onDragEnd)}>
+          <Droppable droppableId="elements" isCombineEnabled direction={'horizontal'}>
             {(provided: any) => (
-              <div className="elements" {...provided.droppableProps} ref={provided.innerRef} >
+              <div
+                className="elements"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                }} >
                 {elements.map((element, index) => renderElement(element, index, provided))}
                 {provided.placeholder}
               </div>
