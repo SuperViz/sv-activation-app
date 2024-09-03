@@ -73,7 +73,7 @@ export default function UserPageContent({ user, setUser, setPage }: { user: IUse
   }, [user, isReady])
 
   return (
-    <div className='flex flex-col w-full h-screen mobileBg'>
+    <div className='flex flex-col w-full h-dvh mobileBg'>
       <div className="relative flex h-full overflow-auto overflow-x-hidden px-8 py-6 flex-col items-center z-10">
         <Link href={'https://superviz.com/codecon-summit'}>
           <Image src="/logo-sm.svg" width={109} height={80} alt="Logo Superviz" />
@@ -83,7 +83,7 @@ export default function UserPageContent({ user, setUser, setPage }: { user: IUse
             <MobileUser user={user} />
           </div>
           <p className="w-full text-center font-normal text-lg">Escolha uma ativação para participar</p>
-          <div className='w-full p-5'>
+          <div className='w-full px-5'>
             {activations.map(activation => (
               <div key={activation.color} className="w-full">
                 <CardLink
