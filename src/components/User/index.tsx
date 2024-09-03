@@ -19,7 +19,7 @@ export function TVUser({ user }: { user: IUser }) {
           <span className="text-[#26242A] text-lg tv:text-[2.25rem] font-black">{firstLetter.toUpperCase()}</span>
         </div>
       </div>
-      <p className="text-[1rem] tv:text-[2rem] mt-1.5">{user.name}</p>
+      <p className="text-[1rem] tv:text-[2rem] mt-1.5 max-w-[12.125rem] break-words">{user.name}</p>
     </div>
   )
 }
@@ -66,7 +66,7 @@ export function MobileUser({ user }: { user: IUser }) {
           <span className="text-[#26242A] text-lg tv:text-[2.25rem] font-black">{firstLetter.toUpperCase()}</span>
         </div>
       </div>
-      <p className="text-[1rem] mt-1.5">{user.name}</p>
+      <p className="text-[1rem] mt-1.5 max-w-[6.5rem] break-words">{user.name}</p>
     </div>
   )
 }
