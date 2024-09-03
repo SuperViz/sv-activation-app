@@ -152,7 +152,7 @@
   &.incomplete {
     border: none;
     background-image: conic-gradient($DISCORD-COLOR, transparent 80%);
-    animation: spin 1s linear infinite;
+    animation: spin 5s linear infinite;
   }
 }
 
