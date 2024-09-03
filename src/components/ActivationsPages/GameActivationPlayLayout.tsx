@@ -73,11 +73,6 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
     });
   }
 
-  function removeElementFromBoard(element: IElement) {
-    const newElements = elements.filter(el => el.id !== element.id);
-    setElements(newElements);
-  }
-
   function onDragEnd(result: any) {
     console.log('onDragEnd', result);
     if (result.combine) {
@@ -100,7 +95,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
           >
             <Element
               element={element}
-              onContextMenu={removeElementFromBoard} />
+              onContextMenu={() => console.log('juntar elemento com ele mesmo?')} />
           </div>
         )}
       </Draggable>

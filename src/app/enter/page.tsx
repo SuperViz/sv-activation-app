@@ -18,7 +18,7 @@ export default function Enter() {
     {
       id: 'name',
       type: 'text',
-      question: 'Qual seu nome completo?',
+      question: 'Como gostaria de ser chamado(a)?',
     },
   ]
   
@@ -60,7 +60,7 @@ export default function Enter() {
   }
   
   return (
-    <form className="w-full h-full relative overflow-hidden flex flex-col justify-end px-1">
+    <form className="w-full h-full relative overflow-hidden flex flex-col justify-end">
       {questions.map((question, index) => {
         return (
           <div 
