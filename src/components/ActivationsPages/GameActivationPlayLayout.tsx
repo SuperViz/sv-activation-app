@@ -73,11 +73,6 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
     });
   }
 
-  function removeElementFromBoard(element: IElement) {
-    const newElements = elements.filter(el => el.id !== element.id);
-    setElements(newElements);
-  }
-
   function onDragEnd(result: any) {
     console.log('onDragEnd', result);
     if (result.combine) {
@@ -100,7 +95,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
           >
             <Element
               element={element}
-              onContextMenu={removeElementFromBoard} />
+              onContextMenu={() => console.log('juntar elemento com ele mesmo?')} />
           </div>
         )}
       </Draggable>
@@ -132,13 +127,27 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
     getSavedElements();
   }, []);
 
+  function mapAndInvoke(onDragEnd: (result: any) => void) {
+    return function (result: any): void {
+      onDragEnd(result);
+    };
+  }
+
   return (
     <ActivationLayout setPage={setPage}>
       <div className='game'>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="elements" isCombineEnabled>
+        <DragDropContext onDragEnd={mapAndInvoke(onDragEnd)}>
+          <Droppable droppableId="elements" isCombineEnabled direction={'horizontal'}>
             {(provided: any) => (
-              <div className="elements" {...provided.droppableProps} ref={provided.innerRef} >
+              <div
+                className="elements"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                }} >
                 {elements.map((element, index) => renderElement(element, index, provided))}
                 {provided.placeholder}
               </div>

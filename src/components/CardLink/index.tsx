@@ -3,7 +3,7 @@
 import { createActivation } from '@/app/services/createActivation';
 import { IActivation, IUser, IUserActivation } from "../../../types";
 import ProgressIndicator from "@/components/CardLink/ProgressIndicator";
-import { ActivationTypePage } from '@/global/global.types';
+import {ActivationType, ActivationTypePage} from '@/global/global.types';
 
 interface ILinkProps {
   activation: IActivation
@@ -55,8 +55,8 @@ export default function CardLink({ activation, userActivation, user, setPage }: 
       </div>
       {userCompletedActivation ?
         completedCheckmark() :
-        userActivation?.quantity ?
-          <ProgressIndicator quantity={userActivation.quantity} color={activation.color} /> :
+        activation.id === ActivationType.GAME && userActivation ?
+          <ProgressIndicator quantity={userActivation.quantity || 0} color={activation.color} /> :
           <></>
       }
     </button>

@@ -17,7 +17,7 @@ export default function ActivationLayout({
   };
 
   return (
-    <div className={`flex flex-col w-screen h-screen mobileBg`}>
+    <div className={`flex flex-col w-screen h-dvh mobileBg`}>
       <a className='flex items-center w-full px-7 py-5 bg-[#C9C4D11A]' href={`/userPage`}>
         <Image src="/arrow_to_left.svg" alt="voltar" width={18} height={0} />
         <p className='ml-2 font-bold text-xs text-white'>voltar</p>

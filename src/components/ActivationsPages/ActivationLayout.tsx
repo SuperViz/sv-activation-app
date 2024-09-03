@@ -12,7 +12,7 @@ export default function ActivationLayout({
   setPage: (page: ActivationTypePage) => void
 }>) {
   return (
-    <div className={`flex flex-col w-screen h-screen mobileBg`}>
+    <div className={`flex flex-col w-screen h-dvh mobileBg`}>
       <button 
         className='flex items-center w-full px-7 py-5 bg-[#C9C4D11A]' 
         onClick={() => {
