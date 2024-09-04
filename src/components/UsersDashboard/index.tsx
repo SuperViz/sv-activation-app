@@ -262,6 +262,9 @@ export default function UsersDashboard() {
 
   function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
     const user = { ...users.find(user => user.id === userId) } as IUser;
+
+    console.log(user)
+
     if (!user) return;
 
     if (!completed && !user.activations.some(activation => activation.name === activationName)) {
@@ -361,6 +364,8 @@ export default function UsersDashboard() {
     const userId = message.data.userId;
     const activationName = message.data.activation;
 
+    console.log('111', message)
+
     completeActivation(userId, activationName, false);
   }
 
@@ -371,16 +376,25 @@ export default function UsersDashboard() {
     completeActivation(userId, activationName, true);
   }
 
-  function handleParticipantUpdate(message: any) {
+  const handleParticipantUpdate = useCallback((message: { data: IUser }) => {
     const userExists = users.some((user) => message.data?.id === user?.id);
 
     if (!userExists) {
-      createUser(message.data);
+      createUser({
+        ...message.data,
+        activations: message.data?.activations ?? [],
+      });
       setUsers((previous) => {
         return [...previous, message.data];
       });
     }
-  }
+    
+    const user = message.data;
+    
+    setUsers(prevUsers => prevUsers.map(u => u.id === user.id ? user : u));
+    setBalls(prevBalls => prevBalls.map(ball => ball.user.id === user.id ? { ...ball, user } : ball));
+    ballsRef.current = ballsRef.current.map(ball => ball.user.id === user.id ? { ...ball, user } : ball);
+  }, [users, balls, ballsRef])
 
   function createUser(user: IUser) {
     const ball = createBall(user);
