@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from '@/lib/prisma'
 import { ActivationTypes } from "@prisma/client"
 
-export const fetchCache = 'force-no-store'
 
 interface Coupon {
   userId: string
@@ -59,3 +58,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
   }
 }
+
+export const fetchCache = 'force-no-store'
+export const revalidate = 0;
