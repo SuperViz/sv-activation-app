@@ -238,8 +238,8 @@ export default function UsersDashboard() {
         body.velocity.x ** 2 + body.velocity.y ** 2
       );
       let SPEED_MULTIPLIER = BASE_SPEED / currentSpeed;
-      
-      SPEED_MULTIPLIER *= 0.9 + Math.random() * 0.2; 
+
+      SPEED_MULTIPLIER *= 0.9 + Math.random() * 0.2;
 
       Matter.Body.setVelocity(body, {
         x: body.velocity.x * SPEED_MULTIPLIER,
@@ -296,7 +296,7 @@ export default function UsersDashboard() {
   };
 
   function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
-    const user = {...users.find(user => user.id === userId)} as IUser;
+    const user = { ...users.find(user => user.id === userId) } as IUser;
     if (!user) return;
 
     if (!completed && !user.activations.some(activation => activation.name === activationName)) {
@@ -309,7 +309,7 @@ export default function UsersDashboard() {
       user.activations.push(activation);
     } else {
       const activation = user.activations.find(activation => activation.name === activationName);
-      if (activation) 
+      if (activation)
         activation.completed = true;
     }
 
@@ -334,6 +334,7 @@ export default function UsersDashboard() {
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
+
           closeButton: false,
           progress: undefined,
           theme: "dark",
@@ -436,7 +437,6 @@ export default function UsersDashboard() {
     fetchUsers();
     initialize();
 
-    // TODO: Add new user to the balls array
     subscribe("activation.start", handleActivationStart);
     subscribe("activation.complete", handleActivationComplete);
     gameSubscribe("new.element", handleGameUpdate);
