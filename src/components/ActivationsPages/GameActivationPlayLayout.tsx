@@ -108,7 +108,7 @@ export default function GameActivationPlayLayout({
     const indexB = elements.findIndex((el) => el.id === elementB.id);
 
     fetch("/api/game", {
-      headers: { cache: 'no-store' },
+      headers: { cache: "no-store" },
       method: "POST",
       body: JSON.stringify({
         elementA: elementA.name,
@@ -160,9 +160,10 @@ export default function GameActivationPlayLayout({
           >
             <Element
               element={element}
-              onContextMenu={() =>
-                setSelectedElements((prev) => [...prev, element])
-              }
+              onContextMenu={() => {
+                if (gameOver) return;
+                setSelectedElements((prev) => [...prev, element]);
+              }}
               selectedElements={selectedElements}
             />
           </div>
