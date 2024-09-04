@@ -263,8 +263,6 @@ export default function UsersDashboard() {
   function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
     const user = { ...users.find(user => user.id === userId) } as IUser;
 
-    console.log(user)
-
     if (!user) return;
 
     if (!completed && !user.activations.some(activation => activation.name === activationName)) {
@@ -364,8 +362,6 @@ export default function UsersDashboard() {
     const userId = message.data.userId;
     const activationName = message.data.activation;
 
-    console.log('111', message)
-
     completeActivation(userId, activationName, false);
   }
 
@@ -388,7 +384,7 @@ export default function UsersDashboard() {
         return [...previous, message.data];
       });
     }
-    
+
     const user = message.data;
     
     setUsers(prevUsers => prevUsers.map(u => u.id === user.id ? user : u));
