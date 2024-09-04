@@ -23,3 +23,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     })
   }
 }
+
+
+export const fetchCache = 'force-no-store'
+export const revalidate = 0;
