@@ -108,6 +108,7 @@ export default function GameActivationPlayLayout({
     const indexB = elements.findIndex((el) => el.id === elementB.id);
 
     fetch("/api/game", {
+      headers: { cache: 'no-store' },
       method: "POST",
       body: JSON.stringify({
         elementA: elementA.name,

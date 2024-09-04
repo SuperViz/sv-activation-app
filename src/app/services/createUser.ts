@@ -7,6 +7,7 @@ export async function createUser(
   formData: Record<string, string>
 ): Promise<void> {
   await fetch("/api/user", {
+    headers: { cache: "no-store" },
     method: "POST",
     body: JSON.stringify(formData),
   })

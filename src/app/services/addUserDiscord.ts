@@ -2,6 +2,7 @@ import { getUserData } from './getUserData';
 
 export async function addUserDiscord(formData: Record<string, string>): Promise<void> {
   await fetch('/api/user', {
+    headers: { cache: 'no-store' },
     method: 'PATCH',
     body: JSON.stringify(formData),
   })
