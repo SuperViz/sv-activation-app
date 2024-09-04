@@ -41,7 +41,7 @@ export default function GameOnboarding({ setPage }: { setPage: (page: Activation
 						<div className='game-title'>
 							<h1>Super<span>{'<Craft>'}</span></h1>
 							<p>Combine e crie elementos</p>
-							<p>🔥 💧 🍃 🌎</p>
+							<p>🔥 💧 🍃 🌎 💩 ☕ 🙍</p>
 
 							{isOnboardingFinished && (
 								<button onClick={moveNext}>Visualizar como jogar novamente</button>
@@ -66,7 +66,7 @@ export default function GameOnboarding({ setPage }: { setPage: (page: Activation
 
 						<div className='step-description'>
 							<h2>Como jogar</h2>
-							<p>Todos os jogadores começam com elementos básicos como Água, Vento, Terra e Fogo. Arraste os elementos e os combine para criar novos.</p>
+							<p>Todos os jogadores começam com elementos básicos como Água, Vento, Terra, Fogo, Café, JavaScript e Desenvolvedor. Arraste os elementos e os combine para criar novos.</p>
 						</div>
 
 						<Button text={'Próximo'} type={'button'} onClick={moveNext} />

@@ -22,8 +22,6 @@ export default function GameActivationPlayLayout({
 }) {
   const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
-  const gameOverAt = 90;
-
   const [elements, setElements] = useState<IElement[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [selectedElements, setSelectedElements] = useState<IElement[]>([]);
@@ -37,11 +35,11 @@ export default function GameActivationPlayLayout({
     }
   }, [selectedElements]);
 
-  const checkGameOver = () => {
-    if (elements.filter((el) => el.isNew).length === gameOverAt) {
-      setGameOver(true);
-    }
-  };
+  const finishGame = () => {
+    console.log('Game over!');
+    localStorage.setItem('game_completed', 'true');
+    setGameOver(true);
+  }
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -50,8 +48,9 @@ export default function GameActivationPlayLayout({
       setElements(savedElements);
     }
 
-    checkGameOver();
-  };
+    if (localStorage.getItem('game_completed'))
+      setGameOver(true);
+  }
 
   const saveNewElements = (elementsToSave: IElement[]) => {
     localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
@@ -78,12 +77,12 @@ export default function GameActivationPlayLayout({
     }
 
     const newElements = [...elements];
-    newElements.splice(index + 1, 0, {
+    newElements.push({
       emoji: element.emoji,
       name: element.name,
       id: element.id,
       isNew: isNew,
-    });
+    })
 
     setElements((elements) => {
       return [
@@ -103,9 +102,7 @@ export default function GameActivationPlayLayout({
     });
 
     saveNewElements(newElements);
-
-    checkGameOver();
-  };
+  }
 
   const combineElements = (elementA: IElement, elementB: IElement) => {
     const indexB = elements.findIndex((el) => el.id === elementB.id);
@@ -122,10 +119,19 @@ export default function GameActivationPlayLayout({
       .then((data) => {
         addNewElement(indexB, data.element, data.isNew);
       })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+    }).then(res => res.json()).then(data => {
+      console.log('new element', data);
+      if (data.points >= 10) {
+        finishGame();
+      }
+
+      if (data.element) {
+        addNewElement(indexB, data.element, data.isNew);
+      }
+    }).catch(err => {
+      console.error(err);
+    });
+  }
 
   function onDragEnd(result: any) {
     if (result.combine) {
