@@ -35,6 +35,7 @@ export function getOnlineUsersIds(): Promise<string[]> {
       method: "GET",
       headers: {
         apiKey: DEVELOPER_KEY,
+        cache: "no-store",
       },
     }
   )
