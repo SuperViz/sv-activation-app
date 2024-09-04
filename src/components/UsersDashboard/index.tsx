@@ -326,11 +326,9 @@ export default function UsersDashboard() {
       const points = message.data.points;
 
       toast(
-        `${element.emoji} ${
-          userFromMessage?.name
-        } acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
+        `${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
         {
-          position: "bottom-left",
+          position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
