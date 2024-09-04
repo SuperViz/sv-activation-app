@@ -1,88 +1,107 @@
 div.game {
-	flex-grow: 1;
-	margin: 0 -1rem;
+  flex-grow: 1;
+  margin: 0 -1rem;
 
-	.game-over {
-		text-align: center;
-		font-family: Roboto, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-		margin: 1rem 0 0;
+  .game-over {
+    text-align: center;
+    font-family: Roboto, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 1rem 0 0;
 
-		h1 {
-			color: #957AFF;
-			font-size: 1.5rem;
-			margin-bottom: 1.5rem;
-			font-weight: 900;
-		}
+    h1 {
+      color: #957aff;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 900;
+    }
 
-		p {
-			font-size: 1.5rem;
-			font-weight: 400;
-			margin-bottom: 1rem;
-			line-height: 115%;
-		}
-	}
+    p {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+      line-height: 115%;
+    }
+  }
 
-	.elements {
-		justify-content: center;
-		user-select: none;
+  .elements {
+    justify-content: center;
+    user-select: none;
 
-		.element-wrapper {
-			position: relative;
+    > :not(*[style*="position: fixed"]) {
+      transform: none !important;
+    }
 
-			.new-element {
-				position: absolute;
-				background: linear-gradient(170deg, #4cd964, #5ac8fa, #007aff, #6210CC, #ff2d55);
-				width: calc(100% - .6rem);
-				left: .3rem;
-				border-radius: .5rem;
-				height: calc(2.6rem + 6px);
-				background-clip: padding-box !important;
-				box-sizing: border-box;
-			}
+    :is(*[style*="position: fixed"]) {
+      pointer-events: none;
+    }
 
-			.element {
-				position: relative;
-				border: 3px solid #666;
-				border-radius: .5rem;
-				background: #111;
-				padding: 0.8rem .7rem;
-				margin: .5rem .3rem;
-				display: block;
-				line-height: 100%;
-				width: fit-content;
-				height: calc(2.6rem + 6px);
-				z-index: 1;
-				font-family: Roboto, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    .element-wrapper {
+      position: relative;
 
-				&.isNew {
-					background-clip: padding-box !important;
-					box-sizing: border-box;
-					border-color: transparent;
+      .new-element {
+        position: absolute;
+        background: linear-gradient(
+          170deg,
+          #4cd964,
+          #5ac8fa,
+          #007aff,
+          #6210cc,
+          #ff2d55
+        );
+        width: calc(100% - 0.6rem);
+        left: 0.3rem;
+        border-radius: 0.5rem;
+        height: calc(2.6rem + 6px);
+        background-clip: padding-box !important;
+        box-sizing: border-box;
+      }
 
-					.points {
-						color: #957AFF;
-						font-weight: 900;
-						font-size: .7rem;
-						padding: 5px;
-						border: 2px solid #957AFF;
-						border-radius: 50%;
-						margin: 0 0 0 .8rem;
-						position: relative;
-						top: -1px;
-						right: -8px;
-					}
-				}
+      .element {
+        position: relative;
+        border: 3px solid #666;
+        border-radius: 0.5rem;
+        background: #111;
+        padding: 0.8rem 0.7rem;
+        margin: 0.5rem 0.3rem;
+        display: block;
+        line-height: 100%;
+        width: fit-content;
+        height: calc(2.6rem + 6px);
+        z-index: 1;
+        font-family: Roboto, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
-				&.selected {
-					border-color: #999;
-				}
+        &.isNew {
+          background-clip: padding-box !important;
+          box-sizing: border-box;
+          border-color: transparent;
 
-				span:first-of-type {
-					width: 1em;
-					height: 1em;
-					margin-right: .5rem;
-				}
-			}
-		}
-	}
+          .points {
+            color: #957aff;
+            font-weight: 900;
+            font-size: 0.7rem;
+            padding: 5px;
+            border: 2px solid #957aff;
+            border-radius: 50%;
+            margin: 0 0 0 0.8rem;
+            position: relative;
+            top: -1px;
+            right: -8px;
+          }
+        }
+
+        &.selected {
+          border-color: #fff;
+        }
+
+        &.most-recent {
+          border-color: #6210cc;
+        }
+
+        span:first-of-type {
+          width: 1em;
+          height: 1em;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
 }
