@@ -14,6 +14,9 @@ import ActivationLayout from "./ActivationLayout";
 import { useRealtime } from "@superviz/react-sdk";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getUserData, updateUser } from "@/app/services/getUserData";
+
+const randomTimes = [2, 5, 8];
 
 export default function GameActivationPlayLayout({
   setPage,
@@ -25,6 +28,7 @@ export default function GameActivationPlayLayout({
   const [elements, setElements] = useState<IElement[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [selectedElements, setSelectedElements] = useState<IElement[]>([]);
+  const repeatedTries = useRef(0);
 
   const { subscribe } = useRealtime("game");
 
@@ -44,7 +48,7 @@ export default function GameActivationPlayLayout({
     let existingSave = localStorage.getItem("saved_game");
     if (existingSave) {
       const savedElements = JSON.parse(existingSave) as IElement[];
-      setElements(savedElements);
+      setElements(savedElements.map((el) => ({ ...el, isMostRecent: false })));
     }
 
     if (localStorage.getItem("game_completed")) setGameOver(true);
@@ -54,8 +58,58 @@ export default function GameActivationPlayLayout({
     localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
   };
 
-  const addNewElement = (index: number, element: IElement, isNew: boolean) => {
+  const addNewElement = async (
+    index: number,
+    element: IElement,
+    isNew: boolean
+  ) => {
     if (elements.find((el) => el.name === element.name)) {
+      repeatedTries.current += 1;
+
+      if (randomTimes.includes(repeatedTries.current)) {
+        console.log("includes", randomTimes, repeatedTries.current);
+        try {
+          const user = await getUserData(
+            JSON.parse(localStorage.getItem(USERDATA_KEY) as string)
+          );
+
+          if (user?.timesRevoked! <= 2) {
+            updateUser(user.email, {
+              timesRevoked: user?.timesRevoked! + 1,
+            });
+
+            // const response = await fetch(
+            //   "https://codecodes-api-78be231ef650.herokuapp.com/token/partner",
+            //   {
+            //     method: "POST",
+            //     headers: {
+            //       "x-partnerApiKey": "aa7da574-3ab2-4911-b2af-73afc22df46f",
+            //     },
+            //   }
+            // );
+
+            // const {
+            //   data: { code },
+            // } = await response.json();
+
+            const code = "123456";
+            toast(`Você descobriu um Code-Code! Anote: ${code}`, {
+              autoClose: 15000,
+              position: "top-center",
+              pauseOnFocusLoss: true,
+              style: {
+                top: "20px",
+                height: "80px",
+                fontWeight: "bold",
+                width: "340px",
+              },
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
       setElements((elements) => {
         return elements.map((el) => {
           if (el.name === element.name) {
@@ -96,7 +150,7 @@ export default function GameActivationPlayLayout({
           name: element.name,
           id: element.id,
           isNew: isNew,
-          isMostRecent: !isNew,
+          isMostRecent: true,
         },
       ];
     });
@@ -107,8 +161,8 @@ export default function GameActivationPlayLayout({
   const combineElements = (elementA: IElement, elementB: IElement) => {
     const indexB = elements.findIndex((el) => el.id === elementB.id);
 
-    fetch("/api/game", {
-      headers: { cache: 'no-store' },
+    const fetchPromise = fetch("/api/game", {
+      headers: { cache: "no-store" },
       method: "POST",
       body: JSON.stringify({
         elementA: elementA.name,
@@ -125,11 +179,21 @@ export default function GameActivationPlayLayout({
 
         if (data.element) {
           addNewElement(indexB, data.element, data.isNew);
+          return data.element.name;
         }
       })
       .catch((err) => {
         console.error(err);
       });
+
+    toast.promise(fetchPromise, {
+      pending: "Combinando elementos...",
+      success: {
+        render({ data }) {
+          return `Você descobriu ${data}!`;
+        },
+      },
+    });
   };
 
   function onDragEnd(result: any) {
@@ -160,9 +224,10 @@ export default function GameActivationPlayLayout({
           >
             <Element
               element={element}
-              onContextMenu={() =>
-                setSelectedElements((prev) => [...prev, element])
-              }
+              onContextMenu={() => {
+                if (gameOver) return;
+                setSelectedElements((prev) => [...prev, element]);
+              }}
               selectedElements={selectedElements}
             />
           </div>
@@ -255,7 +320,7 @@ export default function GameActivationPlayLayout({
           </Droppable>
         </DragDropContext>
       </div>
-      <ToastContainer />
+      <ToastContainer stacked position="bottom-center" />
     </ActivationLayout>
   );
 }

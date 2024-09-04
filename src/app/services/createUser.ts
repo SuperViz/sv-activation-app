@@ -1,20 +1,21 @@
 import { IUser } from "../../../types";
-import { getUserData } from './getUserData';
+import { getUserData } from "./getUserData";
 
-const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string
+const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
-export async function createUser(formData: Record<string, string>): Promise<void> {
-
-  await fetch('/api/user', {
-    headers: { cache: 'no-store' },
-    method: 'POST',
+export async function createUser(
+  formData: Record<string, string>
+): Promise<void> {
+  await fetch("/api/user", {
+    headers: { cache: "no-store" },
+    method: "POST",
     body: JSON.stringify(formData),
   })
     .then(async (res) => {
       if (res.status === 409) {
-        return await getUserData(formData['email']);
+        return await getUserData(formData["email"]);
       } else if (!res.ok) {
-        throw new Error('Erro');
+        throw new Error("Erro");
       }
 
       const response = await res.json();
@@ -22,6 +23,6 @@ export async function createUser(formData: Record<string, string>): Promise<void
       return response.data.user as IUser;
     })
     .then((userData) => {
-      localStorage.setItem(USERDATA_KEY, JSON.stringify(userData.email))
-    })
+      localStorage.setItem(USERDATA_KEY, JSON.stringify(userData.email));
+    });
 }

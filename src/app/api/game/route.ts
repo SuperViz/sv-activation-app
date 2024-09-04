@@ -116,6 +116,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const isOver = activation.quantity >= 10
     if (isOver) {
+      await db.activation.update({
+        data: {
+          quantity: 10,
+          completed: true
+        },
+        where: {
+          id: activation.id
+        }
+      })
       return NextResponse.json({ isOver: true, points: activation.quantity })
     }
 
