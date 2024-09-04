@@ -160,55 +160,20 @@ export default function UsersDashboard() {
       newBalls.push(createBall(user));
     }
 
-    Matter.Events.on(engine, "collisionStart", (event) => {
+    Matter.Events.on(engine, 'collisionStart', (event) => {
       const pairs = event.pairs;
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
-        const normal = pair.collision.normal;
-        const relativeVelocity = {
-          x: pair.bodyB.velocity.x - pair.bodyA.velocity.x,
-          y: pair.bodyB.velocity.y - pair.bodyA.velocity.y,
-        };
-        const dotProduct =
-          relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
-
-        const restitution = 0.8 + Math.random() * 0.4; // Random restitution between 0.8 and 1.2
-        const impulseScalar =
-          (-(1 + restitution) * dotProduct) /
-          (pair.bodyA.inverseMass + pair.bodyB.inverseMass);
-        const impulse = {
-          x: normal.x * impulseScalar,
-          y: normal.y * impulseScalar,
-        };
-
+        const randomAngle = (Math.random() - 0.5) * Math.PI;
+        const velocityA = Matter.Vector.rotate(pair.bodyA.velocity, randomAngle);
+        const velocityB = Matter.Vector.rotate(pair.bodyB.velocity, randomAngle);
         Matter.Body.setVelocity(pair.bodyA, {
-          x: pair.bodyA.velocity.x - impulse.x * pair.bodyA.inverseMass,
-          y: pair.bodyA.velocity.y - impulse.y * pair.bodyA.inverseMass,
-        });
-
-        Matter.Body.setVelocity(pair.bodyB, {
-          x: pair.bodyB.velocity.x + impulse.x * pair.bodyB.inverseMass,
-          y: pair.bodyB.velocity.y + impulse.y * pair.bodyB.inverseMass,
-        });
-
-        const perturbation = 3 + Math.random() * 2; // Random perturbation between 3 and 5
-        Matter.Body.setVelocity(pair.bodyA, {
-          x: pair.bodyA.velocity.x + (Math.random() - 0.5) * perturbation,
-          y: pair.bodyA.velocity.y + (Math.random() - 0.5) * perturbation,
+          x: velocityA.x * -1,
+          y: velocityA.y * -1
         });
         Matter.Body.setVelocity(pair.bodyB, {
-          x: pair.bodyB.velocity.x + (Math.random() - 0.5) * perturbation,
-          y: pair.bodyB.velocity.y + (Math.random() - 0.5) * perturbation,
-        });
-
-        const repulsionForce = 0.5 + Math.random() * 0.5; // Random repulsion force between 0.5 and 1
-        Matter.Body.applyForce(pair.bodyA, pair.bodyA.position, {
-          x: -normal.x * repulsionForce,
-          y: -normal.y * repulsionForce,
-        });
-        Matter.Body.applyForce(pair.bodyB, pair.bodyB.position, {
-          x: normal.x * repulsionForce,
-          y: normal.y * repulsionForce,
+          x: velocityB.x * -1,
+          y: velocityB.y * -1
         });
       }
     });

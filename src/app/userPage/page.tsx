@@ -15,12 +15,9 @@ export default function Activations() {
   React.useEffect(() => {
     if(window) {
       const storedEmail = localStorage.getItem(USERDATA_KEY)
+      if(storedEmail === null) return
       
-      if(storedEmail == null) {
-        router.push('/activations/enter')
-      } else {
-        setUserEmail(JSON.parse(storedEmail))
-      }
+      setUserEmail(JSON.parse(storedEmail))
     }
   }, [])
 
