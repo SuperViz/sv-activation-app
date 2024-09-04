@@ -92,6 +92,7 @@ export default function Enter() {
             <Input
               label={question.question}
               id={question.id}
+              setValidField={setValidField}
               onChange={handleChangeInput}
               value={formData[question.id]}
               onKeyDown={onKeyDown}
