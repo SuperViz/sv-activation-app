@@ -75,7 +75,7 @@ export default function UsersDashboard() {
     Matter.World.add(engineRef.current!.world, ball);
 
     const direction = Math.random() * Math.PI * 2;
-    const speed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
+    const speed = BASE_SPEED;
 
     Matter.Body.setVelocity(ball, {
       x: Math.sin(direction) * speed,
@@ -204,17 +204,12 @@ export default function UsersDashboard() {
 
       const currentSpeed = Math.sqrt(body.velocity.x ** 2 + body.velocity.y ** 2);
       let SPEED_MULTIPLIER = BASE_SPEED / currentSpeed;
-
-      // Add some randomness to the speed
-      SPEED_MULTIPLIER *= 0.9 + Math.random() * 0.2; // Random multiplier between 0.9 and 1.1
-
-      // Ensure the speed stays within MIN_SPEED and MAX_SPEED
-      const newSpeed = Math.min(Math.max(currentSpeed * SPEED_MULTIPLIER, MIN_SPEED), MAX_SPEED);
-      const speedRatio = newSpeed / currentSpeed;
+      
+      SPEED_MULTIPLIER *= 0.9 + Math.random() * 0.2; 
 
       Matter.Body.setVelocity(body, {
-        x: body.velocity.x * speedRatio,
-        y: body.velocity.y * speedRatio
+        x: body.velocity.x * SPEED_MULTIPLIER,
+        y: body.velocity.y * SPEED_MULTIPLIER
       });
 
       // Occasionally add a small random force
@@ -266,8 +261,9 @@ export default function UsersDashboard() {
   }
 
   function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
-    const user = users.find(user => user.id === userId);
+    const user = {...users.find(user => user.id === userId)} as IUser;
     if (!user) return;
+
     if (!completed && !user.activations.some(activation => activation.name === activationName)) {
       const activation: IUserActivation = {
         name: activationName,
@@ -278,7 +274,7 @@ export default function UsersDashboard() {
       user.activations.push(activation);
     } else {
       const activation = user.activations.find(activation => activation.name === activationName);
-      if (activation)
+      if (activation) 
         activation.completed = true;
     }
 
