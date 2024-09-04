@@ -69,17 +69,22 @@ div.game {
         z-index: 1;
         font-family: Roboto, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
+        &.most-recent {
+          border-color: #ffffff66;
+          background-color: #270652 !important;
+        }
+
         &.isNew {
           background-clip: padding-box !important;
           box-sizing: border-box;
           border-color: transparent;
 
           .points {
-            color: #957aff;
+            color: #0077ff;
             font-weight: 900;
             font-size: 0.7rem;
             padding: 5px;
-            border: 2px solid #957aff;
+            border: 2px solid #0077ff;
             border-radius: 50%;
             margin: 0 0 0 0.8rem;
             position: relative;
@@ -89,11 +94,7 @@ div.game {
         }
 
         &.selected {
-          border-color: #fff;
-        }
-
-        &.most-recent {
-          border-color: #6210cc;
+          border-color: #fff !important;
         }
 
         span:first-of-type {
