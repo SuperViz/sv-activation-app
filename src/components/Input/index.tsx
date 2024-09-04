@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface IInputProps {
   label: string;
@@ -8,6 +8,7 @@ interface IInputProps {
   value: string;
   type?: string;
   description?: string;
+  setValidField?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export default function Input({
   label,
@@ -17,7 +18,20 @@ export default function Input({
   value,
   description,
   type = "text",
+  setValidField,
 }: IInputProps) {
+  const input = React.useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!input.current || !setValidField) return;
+
+    const interval = setInterval(() => {
+      setValidField(input.current!.validity.valid);
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, [input.current, setValidField]);
+
   return (
     <div className="w-full px-1 flex flex-col align-center">
       <label
@@ -33,6 +47,7 @@ export default function Input({
         required
         type={type}
         id={id}
+        ref={input}
         name={id}
         className="py-6 px-4 text-lg text-white text-center rounded-2xl bg-[#C9C4D114] w-full"
         onChange={(event) => onChange(event)}
