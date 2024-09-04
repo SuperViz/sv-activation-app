@@ -15,8 +15,6 @@ function getUniqueID(elementA: string, elementB: string): string {
 
 async function combineElements(elementA: string, elementB: string): Promise<IElement | null> {
   const AZURE_OPEN_AI = process.env.AZURE_OPEN_AI as string;
-  const task = `TAREFA: Combine ${elementA} e ${elementB} para criar um novo elemento. Tente manter o elemento o mais simples e realista possível. Se dois elementos básicos forem combinados, você deve priorizar a criação de uma nova coisa a partir disso, em vez de simplesmente combinar as palavras. Exemplo: Terra + Agua = Planta. Você pode usar um dos inputs como output, caso precise. Dois itens iguais devem resultar em uma versão maior desse item. Exemplo: Terra + Terra: Sistema Solar. Se o elemento não houver combinação possível, use uma tecnologia com nome parecido, Exemplo: Terra + Bug = "Terraform". Sua resposta deve ser o nome do novo elemento e deve conter SOMENTE UM emoji para representar o elemento. Nomes de tecnologias, empresas, jargões em inglês, buzzwords são bem vindas. Ao criar nomes de techs, seja em inglês. Exemplo: Desenvolvedor + Café =  Bug. Sua saída deve estar em formato json para ser analisada. Formato: {new_element: "nome", emoji: "emoji"}`
-
   const response = await fetch('https://sv-activation.openai.azure.com/openai/deployments/sv-activation/chat/completions?api-version=2024-02-15-preview', {
     method: 'POST',
     headers: {
@@ -27,15 +25,15 @@ async function combineElements(elementA: string, elementB: string): Promise<IEle
       messages: [
         {
           role: 'system',
-          content: 'Você é um jogo divertido para desenvolvedores, piadas da área de tecnologia e desenvolvimento são bem vindas!'
+          content: '"Você é um jogo, semelhante ao Doodle God, divertido para programadores e pessoas com conhecimento em tecnologia, especialmente front-end developers.\n\nVocê irá receber o item A e o item B. Seu papel é combinar estes dois items especificados para criar novas coisas, como vida, objetos, frameworks e etc. Nomes de tecnologias, empresas, jargões, buzzwords são bem vindas!\n\nPara isso use as regras do GERADOR e do SELECIONADOR. Inicie pelo GERADOR.\n\nSELECIONADOR: \nFaça isso com a em sua base de conhecimento em inglês e em português brasileiro. Sendo o resultado favorito, o mais próximo de itens que já existem, preferencialmente relacionados com developer tools, frontend. Caso o resultado contenha de forma literal A ou B, utilize o mesmo critério para selecionar novamente uma das opções. Caso não seja algo relacionado a programação e ao contexto do público alvo do jogo, procure soluções mais simples.\n\nGERADOR: \nGere termos que sejam um substantivo simples, e em último caso que seja um substantivo composto. O resultado dos termos gerados devem tender a ser uma versão mais ampla. Evitando sempre repetição de A ou B no resultado.\n\nO ideal é que seja gerado nas seguintes formas de combinações: \n- da EVOLUÇÃO de A e B (Ex.: Terra + Agua = Planta) - Gere 8 possibilidades. Evite repetir A ou B.\n- do SIGNIFICADO de A e B (Ex.: Dinheiro + Empresa = Banco) - Gere 8 possibilidades.\n- do CONCEITO de A e B (Ex.: Nuvem + Livro = eBook) - Gere 8 possibilidades. Evite repetir A ou B.\n- Se A e B forem iguais, deve também gerar 8 possibilidades de uma versão maior desses itens. Exemplo: Terra + Terra: Sistema Solar.\n\nEscolha 3 favoritos entre cada forma, utilizando o SELECIONADOR. Dentre a lista de favoritos escolha um resultado final.\n\n- Se resultado final não atender a algum item que REALMENTE, escolha outro entre os favoritos. No caso de nenhum existir, use ou A ou B.\n\n Sua saída deve estar em formato json para ser analisada e incluir somente o resultado final. \n\nFormato: {new_element: \"nome\", emoji: \"emoji\"}"'
         },
         {
           role: 'user',
-          content: task
+          content: `${elementA} e ${elementB}`
         }
       ],
-      temperature: 0.35,
-      top_p: 0.85,
+      temperature: 0.40,
+      top_p: 0.60,
       max_tokens: 100
     })
   })
