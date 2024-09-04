@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React from "react";
 import Button from "@/components/Button";
@@ -7,62 +7,63 @@ import { createUser } from "@/app/services/createUser";
 import { useRouter } from "next/navigation";
 
 export default function Enter() {
-  const [step, setStep] = React.useState<number>(0)
-  const router = useRouter()
+  const [step, setStep] = React.useState<number>(0);
+  const router = useRouter();
   const questions = [
     {
-      id: 'email',
-      type: 'email',
-      question: 'Qual seu email?',
-      description: 'Use este e-mail na hora de cadastrar na newsletter e no nosso hackathon para conseguir pontuar!'
+      id: "email",
+      type: "email",
+      question: "Qual seu email?",
+      description:
+        "Use este e-mail na hora de cadastrar na newsletter e no nosso hackathon para conseguir pontuar!",
     },
     {
-      id: 'name',
-      type: 'text',
-      question: 'Como gostaria de ser chamado(a)?',
+      id: "name",
+      type: "text",
+      question: "Como gostaria de ser chamado(a)?",
     },
-  ]
+  ];
 
   const initialValues = questions.reduce((prev, question) => {
     return {
       ...prev,
-      [question.id]: '',
-    }
-  }, {})
+      [question.id]: "",
+    };
+  }, {});
 
-  const [formData, setFormData] = React.useState<Record<string, string>>(initialValues)
-  const [validField, setValidField] = React.useState<boolean>(false)
+  const [formData, setFormData] =
+    React.useState<Record<string, string>>(initialValues);
+  const [validField, setValidField] = React.useState<boolean>(false);
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fieldName = event.target.getAttribute('id') as string
-    const fieldValidity = event.target.validity.valid
-    const value = event.target.value
+    const fieldName = event.target.getAttribute("id") as string;
+    const fieldValidity = event.target.validity.valid;
+    const value = event.target.value;
     setFormData({
       ...formData,
-      [fieldName]: value
-    })
+      [fieldName]: value,
+    });
     if (fieldValidity !== validField) {
-      setValidField(fieldValidity)
+      setValidField(fieldValidity);
     }
-  }
+  };
 
   const handleNext = () => {
-    setStep((prevStep) => prevStep + 1)
-    setValidField(false)
-  }
+    setStep((prevStep) => prevStep + 1);
+    setValidField(false);
+  };
 
   const handleSubmit = async () => {
     let existingSave = localStorage.getItem("saved_game");
-    if (existingSave)
-      localStorage.removeItem("saved_game");
+    if (existingSave) localStorage.removeItem("saved_game");
 
-    await createUser(formData)
-      .catch((error) => {
-        console.error('Erro interno', error)
-      })
+    await createUser(formData).catch((error) => {
+      console.error("Erro interno", error);
+      return;
+    });
 
-    router.push('/userPage')
-  }
+    router.push("/userPage");
+  };
 
   return (
     <form className="w-full h-full relative overflow-hidden flex flex-col justify-end">
@@ -70,12 +71,13 @@ export default function Enter() {
         return (
           <div
             key={question.id}
-            className={`absolute bottom-[40%] left-0 w-full transition-all duration-700 ease-in-out transform ${step === index ?
-              'translate-x-0 opacity-100' :
-              index < step ?
-                '-translate-x-full opacity-0 pointer-events-none' :
-                'translate-x-full opacity-0 pointer-events-none'
-              }`}
+            className={`absolute bottom-[40%] left-0 w-full transition-all duration-700 ease-in-out transform ${
+              step === index
+                ? "translate-x-0 opacity-100"
+                : index < step
+                ? "-translate-x-full opacity-0 pointer-events-none"
+                : "translate-x-full opacity-0 pointer-events-none"
+            }`}
           >
             <Input
               label={question.question}
@@ -86,13 +88,23 @@ export default function Enter() {
               description={question.description}
             />
           </div>
-        )
+        );
       })}
-      {step < (questions.length - 1) ? (
-        <Button text="Próximo" onClick={handleNext} type="button" disabled={!validField} />
+      {step < questions.length - 1 ? (
+        <Button
+          text="Próximo"
+          onClick={handleNext}
+          type="button"
+          disabled={!validField}
+        />
       ) : (
-        <Button text="Começar" onClick={handleSubmit} type="button" disabled={!validField} />
+        <Button
+          text="Começar"
+          onClick={handleSubmit}
+          type="button"
+          disabled={!validField}
+        />
       )}
     </form>
-  )
+  );
 }

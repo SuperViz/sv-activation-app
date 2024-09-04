@@ -1,30 +1,47 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { Element } from '@/components/Game';
-import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
-import './GameActivationPlayLayout.scss';
-import { IElement } from '../../../types.game';
-import { ActivationTypePage } from '@/global/global.types';
-import ActivationLayout from './ActivationLayout';
-import { useRealtime } from '@superviz/react-sdk';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { Element } from "@/components/Game";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  resetServerContext,
+} from "react-beautiful-dnd";
+import "./GameActivationPlayLayout.scss";
+import { IElement } from "../../../types.game";
+import { ActivationTypePage } from "@/global/global.types";
+import ActivationLayout from "./ActivationLayout";
+import { useRealtime } from "@superviz/react-sdk";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function GameActivationPlayLayout({ setPage }: { setPage: (page: ActivationTypePage) => void }) {
+export default function GameActivationPlayLayout({
+  setPage,
+}: {
+  setPage: (page: ActivationTypePage) => void;
+}) {
   const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
-  const gameOverAt = 9;
+  const gameOverAt = 90;
 
   const [elements, setElements] = useState<IElement[]>([]);
   const [gameOver, setGameOver] = useState(false);
+  const [selectedElements, setSelectedElements] = useState<IElement[]>([]);
 
-  const { subscribe } = useRealtime('game');
+  const { subscribe } = useRealtime("game");
+
+  useEffect(() => {
+    if (selectedElements.length === 2) {
+      combineElements(selectedElements[0], selectedElements[1]);
+      setSelectedElements([]);
+    }
+  }, [selectedElements]);
 
   const checkGameOver = () => {
-    if (elements.filter(el => el.isNew).length === gameOverAt) {
+    if (elements.filter((el) => el.isNew).length === gameOverAt) {
       setGameOver(true);
     }
-  }
+  };
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -34,14 +51,31 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
     }
 
     checkGameOver();
-  }
+  };
 
   const saveNewElements = (elementsToSave: IElement[]) => {
     localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
-  }
+  };
 
   const addNewElement = (index: number, element: IElement, isNew: boolean) => {
-    if (elements.find(el => el.name === element.name)) return;
+    if (elements.find((el) => el.name === element.name)) {
+      setElements((elements) => {
+        return elements.map((el) => {
+          if (el.name === element.name) {
+            return {
+              ...el,
+              isMostRecent: true,
+            };
+          }
+          return {
+            ...el,
+            isMostRecent: false,
+          };
+        });
+      });
+
+      return;
+    }
 
     const newElements = [...elements];
     newElements.splice(index + 1, 0, {
@@ -51,33 +85,54 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
       isNew: isNew,
     });
 
-    setElements(newElements);
+    setElements((elements) => {
+      return [
+        ...elements.map((el) => {
+          return {
+            ...el,
+            isMostRecent: false,
+          };
+        }),
+        {
+          emoji: element.emoji,
+          name: element.name,
+          id: element.id,
+          isNew: isNew,
+        },
+      ];
+    });
+
     saveNewElements(newElements);
 
     checkGameOver();
-  }
+  };
 
   const combineElements = (elementA: IElement, elementB: IElement) => {
-    const indexB = elements.findIndex(el => el.id === elementB.id);
+    const indexB = elements.findIndex((el) => el.id === elementB.id);
 
-    fetch('/api/game', {
-      method: 'POST',
+    fetch("/api/game", {
+      method: "POST",
       body: JSON.stringify({
         elementA: elementA.name,
         elementB: elementB.name,
         email: JSON.parse(localStorage.getItem(USERDATA_KEY) as string),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        addNewElement(indexB, data.element, data.isNew);
       })
-    }).then(res => res.json()).then(data => {
-      addNewElement(indexB, data.element, data.isNew);
-    }).catch(err => {
-      console.error(err);
-    });
-  }
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   function onDragEnd(result: any) {
     if (result.combine) {
-      const elementA = elements.find(el => el.id === result.draggableId);
-      const elementB = elements.find(el => el.id === result.combine.draggableId);
+      const elementA = elements.find((el) => el.id === result.draggableId);
+      const elementB = elements.find(
+        (el) => el.id === result.combine.draggableId
+      );
 
       if (!elementA || !elementB) return;
       combineElements(elementA, elementB);
@@ -86,7 +141,12 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
 
   const renderElement = (element: IElement, index: number, provided: any) => {
     return (
-      <Draggable isDragDisabled={gameOver} key={element.id} index={index} draggableId={element.id}>
+      <Draggable
+        isDragDisabled={gameOver}
+        key={element.id}
+        index={index}
+        draggableId={element.id}
+      >
         {(provided: any) => (
           <div
             ref={provided.innerRef}
@@ -95,30 +155,43 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
           >
             <Element
               element={element}
-              onContextMenu={() => console.log('juntar elemento com ele mesmo?')} />
+              onContextMenu={() =>
+                setSelectedElements((prev) => [...prev, element])
+              }
+              selectedElements={selectedElements}
+            />
           </div>
         )}
       </Draggable>
-    )
-  }
+    );
+  };
 
   const handleGameUpdate = (message: any) => {
     const userFromMessage = message.data.user;
     const element = message.data.element;
 
-    if (userFromMessage.email === JSON.parse(localStorage.getItem(USERDATA_KEY) as string)) return;
+    if (
+      userFromMessage.email ===
+      JSON.parse(localStorage.getItem(USERDATA_KEY) as string)
+    )
+      return;
 
-    toast(`${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`, {
-      position: 'bottom-left',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      closeButton: false,
-      progress: undefined,
-      theme: "dark",
-    });
+    toast(
+      `${element.emoji} ${
+        userFromMessage?.name
+      } acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
+      {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        closeButton: false,
+        progress: undefined,
+        theme: "dark",
+      }
+    );
   };
 
   resetServerContext();
@@ -136,27 +209,42 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
 
   return (
     <ActivationLayout setPage={setPage}>
-      <div className='game'>
-        {gameOver && (<div className='game-over'><h1>Parabéns!</h1><p>Você já descobriu 10 elementos novos!</p></div>)}
+      <div className="game">
+        {gameOver && (
+          <div className="game-over">
+            <h1>Parabéns!</h1>
+            <p>Você já descobriu 10 elementos novos!</p>
+          </div>
+        )}
         <DragDropContext onDragEnd={mapAndInvoke(onDragEnd)}>
-          <Droppable droppableId="elements" isCombineEnabled direction={'horizontal'}>
+          <Droppable
+            droppableId="elements"
+            isCombineEnabled
+            direction={"horizontal"}
+          >
             {(provided: any) => (
               <div
                 className="elements"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                }} >
-                {elements.filter(el => el.isNew).length === gameOverAt
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {elements.filter((el) => el.isNew).length === gameOverAt
                   ? elements
-                    .slice()
-                    .sort((a, b) => (a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1))
-                    .map((element, index) => renderElement(element, index, provided))
-                  : elements.map((element, index) => renderElement(element, index, provided))
-                }
+                      .slice()
+                      .sort((a, b) =>
+                        a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
+                      )
+                      .map((element, index) =>
+                        renderElement(element, index, provided)
+                      )
+                  : elements.map((element, index) =>
+                      renderElement(element, index, provided)
+                    )}
               </div>
             )}
           </Droppable>
@@ -165,4 +253,4 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
       <ToastContainer />
     </ActivationLayout>
   );
-};
+}
