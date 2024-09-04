@@ -316,50 +316,80 @@ export default function UsersDashboard() {
     setUsersToNewState(user);
   }
 
-  const handleGameUpdate = useCallback(
-    (message: any) => {
-      if (started.current) return;
-      started.current = true;
-
-      const userFromMessage = message.data.user;
-      const element = message.data.element;
-      const points = message.data.points;
-
+  const handleGameUpdate = useCallback((message: any) => {
+    const userFromMessage: IUser = message.data.user;
+    const element = message.data.element;
+    const points = message.data.points;
+  
+    const elementId = `${userFromMessage.email}-${element.name}`;
+    
+    if(!toast.isActive(elementId)) {
       toast(
         `${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
         {
+          toastId: elementId,
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
-
           closeButton: false,
           progress: undefined,
           theme: "dark",
         }
-      );
-
-      const user = users.find((user) => user.id === userFromMessage.id);
-      if (!user) return;
-
-      user.activations.forEach((activation) => {
-        if (activation.name === ActivationType.GAME) {
-          activation.quantity = points;
+      ); 
+    }
+  
+    setUsers((prevUsers) => {
+      const updatedUsers = prevUsers.map((user) => {
+        if (user.id === userFromMessage.id) {
+          const updatedActivations = user.activations.map((activation) => {
+            if (activation.name === ActivationType.GAME) {
+              return { ...activation, quantity: points };
+            }
+            return activation;
+          });
+          return { ...user, activations: updatedActivations };
         }
+        return user;
       });
-
-      setUsersToNewState(user);
-    },
-    [users]
-  );
+  
+      // Update balls state and ballsRef in a single operation
+      const updatedBalls = ballsRef.current.map((ball) => {
+        if (ball.user.id === userFromMessage.id) {
+          const updatedUser = updatedUsers.find(u => u.id === userFromMessage.id)!;
+          return { ...ball, user: updatedUser };
+        }
+        return ball;
+      });
+  
+      ballsRef.current = updatedBalls;
+      setBalls(updatedBalls);
+  
+      return updatedUsers;
+    });
+  }, []); // Remove dependencies
 
   function handleParticipantStatusChange(userId: string, isOnline: boolean) {
-    const user = users.find((user) => user.id === userId);
-    if (!user) return;
-
-    user.isOnline = isOnline;
+    setUsers((prevUsers) => {
+      const updatedUsers = prevUsers.map((u) => 
+        u.id === userId ? { ...u, isOnline } : u
+      );
+  
+      const updatedBalls = ballsRef.current.map((ball) => {
+        if (ball.user.id === userId) {
+          const updatedUser = updatedUsers.find(u => u.id === userId)!;
+          return { ...ball, user: updatedUser };
+        }
+        return ball;
+      });
+  
+      ballsRef.current = updatedBalls;
+      setBalls(updatedBalls);
+  
+      return updatedUsers;
+    });
   }
 
   function handleActivationStart(message: any) {
@@ -410,32 +440,37 @@ export default function UsersDashboard() {
               };
             }
           );
-
+  
           return {
             id: user.id,
             name: user.name,
             email: user.email,
             discordUser: user.discordUser,
             activations: activations,
+            isOnline: false, 
           };
         });
-        setUsers(users);
+        
+        return users;
       })
-      .then(() => {
-        getOnlineUsersIds().then((onlineUsersIds: string[]) => {
-          if (onlineUsersIds.length === 0) return;
-          users.forEach((user) => {
-            if (onlineUsersIds.includes(user.id)) {
-              user.isOnline = true;
-            }
-          });
+      .then((users) => {
+        return getOnlineUsersIds().then((onlineUsersIds: string[]) => {
+          if (onlineUsersIds.length === 0) return users;
+          
+          return users.map(user => ({
+            ...user,
+            isOnline: onlineUsersIds.includes(user.id)
+          }));
         });
+      })
+      .then((updatedUsers) => {
+        setUsers(updatedUsers); 
+        initialize();
       });
   }
 
   useEffect(() => {
     fetchUsers();
-    initialize();
 
     subscribe("activation.start", handleActivationStart);
     subscribe("activation.complete", handleActivationComplete);
