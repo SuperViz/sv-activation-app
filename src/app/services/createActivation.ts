@@ -7,6 +7,7 @@ interface ICreateActivationProps {
 
 export async function createActivation(props: ICreateActivationProps): Promise<void> {
   await fetch('/api/user/activation', {
+    headers: { cache: 'no-store' },
     method: 'POST',
     body: JSON.stringify(props),
   })
