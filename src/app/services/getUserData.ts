@@ -5,9 +5,7 @@ export async function getUserData(email: string): Promise<IUserResponse> {
 
   return await fetch(`/api/user?${params}`, {
     headers: { 
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
+      cache: 'no-store'
     }
   })
     .then(async (res) => {
@@ -20,9 +18,7 @@ export async function getUserData(email: string): Promise<IUserResponse> {
 export function getUsers(): Promise<IUserResponse[]> {
   return fetch(`/api/users`, {
     headers: { 
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
+     cache: 'no-store'
     }
   })
     .then((res) => {
