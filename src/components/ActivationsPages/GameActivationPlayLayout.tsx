@@ -44,7 +44,7 @@ export default function GameActivationPlayLayout({
     let existingSave = localStorage.getItem("saved_game");
     if (existingSave) {
       const savedElements = JSON.parse(existingSave) as IElement[];
-      setElements(savedElements);
+      setElements(savedElements.map((el) => ({ ...el, isMostRecent: false })));
     }
 
     if (localStorage.getItem("game_completed")) setGameOver(true);
@@ -96,7 +96,7 @@ export default function GameActivationPlayLayout({
           name: element.name,
           id: element.id,
           isNew: isNew,
-          isMostRecent: !isNew,
+          isMostRecent: true,
         },
       ];
     });
