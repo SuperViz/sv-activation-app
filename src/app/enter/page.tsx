@@ -48,6 +48,16 @@ export default function Enter() {
     }
   };
 
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      if (step < questions.length - 1) {
+        handleNext();
+      } else {
+        handleSubmit();
+      }
+    }
+  };
+
   const handleNext = () => {
     setStep((prevStep) => prevStep + 1);
     setValidField(false);
@@ -84,6 +94,7 @@ export default function Enter() {
               id={question.id}
               onChange={handleChangeInput}
               value={formData[question.id]}
+              onKeyDown={onKeyDown}
               type={question.type}
               description={question.description}
             />
