@@ -254,7 +254,7 @@ export default function GameActivationPlayLayout({
           </Droppable>
         </DragDropContext>
       </div>
-      <ToastContainer />
+      <ToastContainer stacked position="bottom-center" />
     </ActivationLayout>
   );
 }
