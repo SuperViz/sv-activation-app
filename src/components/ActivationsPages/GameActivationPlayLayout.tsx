@@ -13,17 +13,15 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function GameActivationPlayLayout({ setPage }: { setPage: (page: ActivationTypePage) => void }) {
   const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
-  const gameOverAt = 9;
-
   const [elements, setElements] = useState<IElement[]>([]);
   const [gameOver, setGameOver] = useState(false);
 
   const { subscribe } = useRealtime('game');
 
-  const checkGameOver = () => {
-    if (elements.filter(el => el.isNew).length === gameOverAt) {
-      setGameOver(true);
-    }
+  const finishGame = () => {
+    console.log('Game over!');
+    localStorage.setItem('game_completed', 'true');
+    setGameOver(true);
   }
 
   const getSavedElements = () => {
@@ -33,7 +31,8 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
       setElements(savedElements);
     }
 
-    checkGameOver();
+    if (localStorage.getItem('game_completed'))
+      setGameOver(true);
   }
 
   const saveNewElements = (elementsToSave: IElement[]) => {
@@ -42,19 +41,18 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
 
   const addNewElement = (index: number, element: IElement, isNew: boolean) => {
     if (elements.find(el => el.name === element.name)) return;
+    if (elements.find(el => el.id === element.id)) return;
 
     const newElements = [...elements];
-    newElements.splice(index + 1, 0, {
+    newElements.push({
       emoji: element.emoji,
       name: element.name,
       id: element.id,
       isNew: isNew,
-    });
+    })
 
     setElements(newElements);
     saveNewElements(newElements);
-
-    checkGameOver();
   }
 
   const combineElements = (elementA: IElement, elementB: IElement) => {
@@ -68,7 +66,14 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
         email: JSON.parse(localStorage.getItem(USERDATA_KEY) as string),
       })
     }).then(res => res.json()).then(data => {
-      addNewElement(indexB, data.element, data.isNew);
+      console.log('new element', data);
+      if (data.points >= 10) {
+        finishGame();
+      }
+
+      if (data.element) {
+        addNewElement(indexB, data.element, data.isNew);
+      }
     }).catch(err => {
       console.error(err);
     });
@@ -150,7 +155,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
                   flexDirection: 'row',
                   flexWrap: 'wrap',
                 }} >
-                {elements.filter(el => el.isNew).length === gameOverAt
+                {gameOver
                   ? elements
                     .slice()
                     .sort((a, b) => (a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1))

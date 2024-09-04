@@ -420,7 +420,17 @@ export default function UsersDashboard() {
 
   return (
     <div ref={containerRef} className="walls relative overflow-hidden w-full h-full">
-      {balls.sort(ball => ball.user.isOnline ? 1 : 0).filter((_, index) => index < 75).map((ball) => (
+      {balls.sort((a, b) => {
+        if (a.user.isOnline && !b.user.isOnline) return -1;
+        if (!a.user.isOnline && b.user.isOnline) return 1;
+
+        const aIncompleteActivations = a.user.activations.filter(activation => !activation.completed).length;
+        const bIncompleteActivations = b.user.activations.filter(activation => !activation.completed).length;
+
+        if (aIncompleteActivations >= 2 && bIncompleteActivations < 2) return 1;
+        if (aIncompleteActivations < 2 && bIncompleteActivations >= 2) return -1;
+        return 0;
+      }).filter((_, index) => index < 75).map((ball) => (
         <div
           key={ball.id}
           className="absolute"
