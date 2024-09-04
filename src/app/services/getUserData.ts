@@ -1,48 +1,88 @@
 import { IUserResponse } from "../../../types";
 
 export async function getUserData(email: string): Promise<IUserResponse> {
-  const params = new URLSearchParams({ email: email })
+  const params = new URLSearchParams({ email: email });
 
   return await fetch(`/api/user?${params}`, {
-    headers: { 
-      cache: 'no-store'
-    }
+    headers: {
+      cache: "no-store",
+    },
   })
     .then(async (res) => {
-      return await res.json()
+      return await res.json();
     })
-    .then(res => res.data.user)
+    .then((res) => res.data.user);
 }
-
 
 export function getUsers(): Promise<IUserResponse[]> {
   return fetch(`/api/users`, {
-    headers: { 
-     cache: 'no-store'
-    }
+    headers: {
+      cache: "no-store",
+    },
   })
     .then((res) => {
-      return res.json()
+      return res.json();
     })
-    .then(res => res.data.users)
+    .then((res) => res.data.users);
 }
 
 export function getOnlineUsersIds(): Promise<string[]> {
   const ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string;
   const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
-  return fetch(`https://nodeapi.superviz.com/realtime/participants/${ROOM_ID}/default`, {
-    method: 'GET',
-    headers: {
-      'apiKey': DEVELOPER_KEY,
+  return fetch(
+    `https://nodeapi.superviz.com/realtime/participants/${ROOM_ID}/default`,
+    {
+      method: "GET",
+      headers: {
+        apiKey: DEVELOPER_KEY,
+      },
     }
+  )
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      return res.map((user: any) => user.id);
+    })
+    .catch((err) => {
+      return [];
+    });
+}
+
+export function patchUser(email: string, data: Partial<IUserResponse>) {
+  return fetch(`/api/user`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      ...data,
+    }),
   })
     .then((res) => {
-      return res.json()
+      return res.json();
     })
-    .then(res => {
-      return res.map((user: any) => user.id)
+    .then((res) => {
+      return res;
+    });
+}
+
+export function updateUser(email: string, data: Partial<IUserResponse>) {
+  return fetch(`/api/user`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      ...data,
+    }),
+  })
+    .then((res) => {
+      return res.json();
     })
-    .catch(err => {
-      return []
-    })
+    .then((res) => {
+      return res;
+    });
 }

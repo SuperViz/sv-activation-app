@@ -14,6 +14,9 @@ import ActivationLayout from "./ActivationLayout";
 import { useRealtime } from "@superviz/react-sdk";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getUserData, updateUser } from "@/app/services/getUserData";
+
+const randomTimes = [2, 5, 8];
 
 export default function GameActivationPlayLayout({
   setPage,
@@ -25,6 +28,7 @@ export default function GameActivationPlayLayout({
   const [elements, setElements] = useState<IElement[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [selectedElements, setSelectedElements] = useState<IElement[]>([]);
+  const repeatedTries = useRef(0);
 
   const { subscribe } = useRealtime("game");
 
@@ -54,8 +58,58 @@ export default function GameActivationPlayLayout({
     localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
   };
 
-  const addNewElement = (index: number, element: IElement, isNew: boolean) => {
+  const addNewElement = async (
+    index: number,
+    element: IElement,
+    isNew: boolean
+  ) => {
     if (elements.find((el) => el.name === element.name)) {
+      repeatedTries.current += 1;
+
+      if (randomTimes.includes(repeatedTries.current)) {
+        console.log("includes", randomTimes, repeatedTries.current);
+        try {
+          const user = await getUserData(
+            JSON.parse(localStorage.getItem(USERDATA_KEY) as string)
+          );
+
+          if (user?.timesRevoked! <= 2) {
+            updateUser(user.email, {
+              timesRevoked: user?.timesRevoked! + 1,
+            });
+
+            // const response = await fetch(
+            //   "https://codecodes-api-78be231ef650.herokuapp.com/token/partner",
+            //   {
+            //     method: "POST",
+            //     headers: {
+            //       "x-partnerApiKey": "aa7da574-3ab2-4911-b2af-73afc22df46f",
+            //     },
+            //   }
+            // );
+
+            // const {
+            //   data: { code },
+            // } = await response.json();
+
+            const code = "123456";
+            toast(`Você descobriu um Code-Code! Anote: ${code}`, {
+              autoClose: 15000,
+              position: "top-center",
+              pauseOnFocusLoss: true,
+              style: {
+                top: "20px",
+                height: "80px",
+                fontWeight: "bold",
+                width: "340px",
+              },
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
       setElements((elements) => {
         return elements.map((el) => {
           if (el.name === element.name) {
@@ -133,7 +187,7 @@ export default function GameActivationPlayLayout({
       });
 
     toast.promise(fetchPromise, {
-      pending: "Combining elements",
+      pending: "Combinando elementos...",
       success: {
         render({ data }) {
           return `Você descobriu ${data}!`;

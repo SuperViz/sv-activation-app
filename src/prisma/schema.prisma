@@ -15,6 +15,7 @@ model User {
   email       String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  timesRevoked    Int @default(0)
 
   activations Activation[]
 
@@ -29,7 +30,7 @@ model Activation {
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   quantity  Int             @default(0)
-  User      User            @relation(fields: [userId], references: [id])
+  User      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("activations")
 }
