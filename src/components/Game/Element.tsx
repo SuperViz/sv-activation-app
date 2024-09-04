@@ -43,9 +43,7 @@ export function Element({
 
   return (
     <div className="element-wrapper">
-      {element.isNew && !element.isMostRecent && (
-        <div className="new-element"></div>
-      )}
+      {element.isNew && <div className="new-element"></div>}
       <div
         className={classList.join(" ")}
         id={element.id}

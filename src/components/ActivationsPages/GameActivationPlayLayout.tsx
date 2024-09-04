@@ -31,15 +31,14 @@ export default function GameActivationPlayLayout({
   useEffect(() => {
     if (selectedElements.length === 2) {
       combineElements(selectedElements[0], selectedElements[1]);
-      setSelectedElements([]);
     }
   }, [selectedElements]);
 
   const finishGame = () => {
-    console.log('Game over!');
-    localStorage.setItem('game_completed', 'true');
+    console.log("Game over!");
+    localStorage.setItem("game_completed", "true");
     setGameOver(true);
-  }
+  };
 
   const getSavedElements = () => {
     let existingSave = localStorage.getItem("saved_game");
@@ -48,9 +47,8 @@ export default function GameActivationPlayLayout({
       setElements(savedElements);
     }
 
-    if (localStorage.getItem('game_completed'))
-      setGameOver(true);
-  }
+    if (localStorage.getItem("game_completed")) setGameOver(true);
+  };
 
   const saveNewElements = (elementsToSave: IElement[]) => {
     localStorage.setItem("saved_game", JSON.stringify(elementsToSave));
@@ -66,6 +64,7 @@ export default function GameActivationPlayLayout({
               isMostRecent: true,
             };
           }
+
           return {
             ...el,
             isMostRecent: false,
@@ -82,7 +81,7 @@ export default function GameActivationPlayLayout({
       name: element.name,
       id: element.id,
       isNew: isNew,
-    })
+    });
 
     setElements((elements) => {
       return [
@@ -97,12 +96,13 @@ export default function GameActivationPlayLayout({
           name: element.name,
           id: element.id,
           isNew: isNew,
+          isMostRecent: !isNew,
         },
       ];
     });
 
     saveNewElements(newElements);
-  }
+  };
 
   const combineElements = (elementA: IElement, elementB: IElement) => {
     const indexB = elements.findIndex((el) => el.id === elementB.id);
@@ -117,21 +117,19 @@ export default function GameActivationPlayLayout({
     })
       .then((res) => res.json())
       .then((data) => {
-        addNewElement(indexB, data.element, data.isNew);
-      })
-    }).then(res => res.json()).then(data => {
-      console.log('new element', data);
-      if (data.points >= 10) {
-        finishGame();
-      }
+        setSelectedElements([]);
+        if (data.points >= 10) {
+          finishGame();
+        }
 
-      if (data.element) {
-        addNewElement(indexB, data.element, data.isNew);
-      }
-    }).catch(err => {
-      console.error(err);
-    });
-  }
+        if (data.element) {
+          addNewElement(indexB, data.element, data.isNew);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   function onDragEnd(result: any) {
     if (result.combine) {
@@ -239,7 +237,7 @@ export default function GameActivationPlayLayout({
                   flexWrap: "wrap",
                 }}
               >
-                {elements.filter((el) => el.isNew).length === gameOverAt
+                {gameOver
                   ? elements
                       .slice()
                       .sort((a, b) =>
