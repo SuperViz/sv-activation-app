@@ -8,8 +8,6 @@ import { z } from "zod";
 import { EditUserDTO } from "@/app/api/user/dto/edit-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 
-export const fetchCache = "force-no-store";
-
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.text();
@@ -186,3 +184,6 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     { status: 200 }
   );
 }
+
+export const fetchCache = 'force-no-store'
+export const revalidate = 0;

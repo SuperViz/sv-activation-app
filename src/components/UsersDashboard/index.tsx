@@ -160,55 +160,20 @@ export default function UsersDashboard() {
       newBalls.push(createBall(user));
     }
 
-    Matter.Events.on(engine, "collisionStart", (event) => {
+    Matter.Events.on(engine, 'collisionStart', (event) => {
       const pairs = event.pairs;
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
-        const normal = pair.collision.normal;
-        const relativeVelocity = {
-          x: pair.bodyB.velocity.x - pair.bodyA.velocity.x,
-          y: pair.bodyB.velocity.y - pair.bodyA.velocity.y,
-        };
-        const dotProduct =
-          relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
-
-        const restitution = 0.8 + Math.random() * 0.4; // Random restitution between 0.8 and 1.2
-        const impulseScalar =
-          (-(1 + restitution) * dotProduct) /
-          (pair.bodyA.inverseMass + pair.bodyB.inverseMass);
-        const impulse = {
-          x: normal.x * impulseScalar,
-          y: normal.y * impulseScalar,
-        };
-
+        const randomAngle = (Math.random() - 0.5) * Math.PI;
+        const velocityA = Matter.Vector.rotate(pair.bodyA.velocity, randomAngle);
+        const velocityB = Matter.Vector.rotate(pair.bodyB.velocity, randomAngle);
         Matter.Body.setVelocity(pair.bodyA, {
-          x: pair.bodyA.velocity.x - impulse.x * pair.bodyA.inverseMass,
-          y: pair.bodyA.velocity.y - impulse.y * pair.bodyA.inverseMass,
-        });
-
-        Matter.Body.setVelocity(pair.bodyB, {
-          x: pair.bodyB.velocity.x + impulse.x * pair.bodyB.inverseMass,
-          y: pair.bodyB.velocity.y + impulse.y * pair.bodyB.inverseMass,
-        });
-
-        const perturbation = 3 + Math.random() * 2; // Random perturbation between 3 and 5
-        Matter.Body.setVelocity(pair.bodyA, {
-          x: pair.bodyA.velocity.x + (Math.random() - 0.5) * perturbation,
-          y: pair.bodyA.velocity.y + (Math.random() - 0.5) * perturbation,
+          x: velocityA.x * -1,
+          y: velocityA.y * -1
         });
         Matter.Body.setVelocity(pair.bodyB, {
-          x: pair.bodyB.velocity.x + (Math.random() - 0.5) * perturbation,
-          y: pair.bodyB.velocity.y + (Math.random() - 0.5) * perturbation,
-        });
-
-        const repulsionForce = 0.5 + Math.random() * 0.5; // Random repulsion force between 0.5 and 1
-        Matter.Body.applyForce(pair.bodyA, pair.bodyA.position, {
-          x: -normal.x * repulsionForce,
-          y: -normal.y * repulsionForce,
-        });
-        Matter.Body.applyForce(pair.bodyB, pair.bodyB.position, {
-          x: normal.x * repulsionForce,
-          y: normal.y * repulsionForce,
+          x: velocityB.x * -1,
+          y: velocityB.y * -1
         });
       }
     });
@@ -297,6 +262,7 @@ export default function UsersDashboard() {
 
   function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
     const user = { ...users.find(user => user.id === userId) } as IUser;
+
     if (!user) return;
 
     if (!completed && !user.activations.some(activation => activation.name === activationName)) {
@@ -316,50 +282,80 @@ export default function UsersDashboard() {
     setUsersToNewState(user);
   }
 
-  const handleGameUpdate = useCallback(
-    (message: any) => {
-      if (started.current) return;
-      started.current = true;
-
-      const userFromMessage = message.data.user;
-      const element = message.data.element;
-      const points = message.data.points;
-
+  const handleGameUpdate = useCallback((message: any) => {
+    const userFromMessage: IUser = message.data.user;
+    const element = message.data.element;
+    const points = message.data.points;
+  
+    const elementId = `${userFromMessage.email}-${element.name}`;
+    
+    if(!toast.isActive(elementId)) {
       toast(
         `${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
         {
+          toastId: elementId,
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
-
           closeButton: false,
           progress: undefined,
           theme: "dark",
         }
-      );
-
-      const user = users.find((user) => user.id === userFromMessage.id);
-      if (!user) return;
-
-      user.activations.forEach((activation) => {
-        if (activation.name === ActivationType.GAME) {
-          activation.quantity = points;
+      ); 
+    }
+  
+    setUsers((prevUsers) => {
+      const updatedUsers = prevUsers.map((user) => {
+        if (user.id === userFromMessage.id) {
+          const updatedActivations = user.activations.map((activation) => {
+            if (activation.name === ActivationType.GAME) {
+              return { ...activation, quantity: points };
+            }
+            return activation;
+          });
+          return { ...user, activations: updatedActivations };
         }
+        return user;
       });
-
-      setUsersToNewState(user);
-    },
-    [users]
-  );
+  
+      // Update balls state and ballsRef in a single operation
+      const updatedBalls = ballsRef.current.map((ball) => {
+        if (ball.user.id === userFromMessage.id) {
+          const updatedUser = updatedUsers.find(u => u.id === userFromMessage.id)!;
+          return { ...ball, user: updatedUser };
+        }
+        return ball;
+      });
+  
+      ballsRef.current = updatedBalls;
+      setBalls(updatedBalls);
+  
+      return updatedUsers;
+    });
+  }, []); // Remove dependencies
 
   function handleParticipantStatusChange(userId: string, isOnline: boolean) {
-    const user = users.find((user) => user.id === userId);
-    if (!user) return;
-
-    user.isOnline = isOnline;
+    setUsers((prevUsers) => {
+      const updatedUsers = prevUsers.map((u) => 
+        u.id === userId ? { ...u, isOnline } : u
+      );
+  
+      const updatedBalls = ballsRef.current.map((ball) => {
+        if (ball.user.id === userId) {
+          const updatedUser = updatedUsers.find(u => u.id === userId)!;
+          return { ...ball, user: updatedUser };
+        }
+        return ball;
+      });
+  
+      ballsRef.current = updatedBalls;
+      setBalls(updatedBalls);
+  
+      return updatedUsers;
+    });
   }
 
   function handleActivationStart(message: any) {
@@ -376,16 +372,25 @@ export default function UsersDashboard() {
     completeActivation(userId, activationName, true);
   }
 
-  function handleParticipantUpdate(message: any) {
+  const handleParticipantUpdate = useCallback((message: { data: IUser }) => {
     const userExists = users.some((user) => message.data?.id === user?.id);
 
     if (!userExists) {
-      createUser(message.data);
+      createUser({
+        ...message.data,
+        activations: message.data?.activations ?? [],
+      });
       setUsers((previous) => {
         return [...previous, message.data];
       });
     }
-  }
+
+    const user = message.data;
+    
+    setUsers(prevUsers => prevUsers.map(u => u.id === user.id ? user : u));
+    setBalls(prevBalls => prevBalls.map(ball => ball.user.id === user.id ? { ...ball, user } : ball));
+    ballsRef.current = ballsRef.current.map(ball => ball.user.id === user.id ? { ...ball, user } : ball);
+  }, [users, balls, ballsRef])
 
   function createUser(user: IUser) {
     const ball = createBall(user);
@@ -410,32 +415,37 @@ export default function UsersDashboard() {
               };
             }
           );
-
+  
           return {
             id: user.id,
             name: user.name,
             email: user.email,
             discordUser: user.discordUser,
             activations: activations,
+            isOnline: false, 
           };
         });
-        setUsers(users);
+        
+        return users;
       })
-      .then(() => {
-        getOnlineUsersIds().then((onlineUsersIds: string[]) => {
-          if (onlineUsersIds.length === 0) return;
-          users.forEach((user) => {
-            if (onlineUsersIds.includes(user.id)) {
-              user.isOnline = true;
-            }
-          });
+      .then((users) => {
+        return getOnlineUsersIds().then((onlineUsersIds: string[]) => {
+          if (onlineUsersIds.length === 0) return users;
+          
+          return users.map(user => ({
+            ...user,
+            isOnline: onlineUsersIds.includes(user.id)
+          }));
         });
+      })
+      .then((updatedUsers) => {
+        setUsers(updatedUsers); 
+        initialize();
       });
   }
 
   useEffect(() => {
     fetchUsers();
-    initialize();
 
     subscribe("activation.start", handleActivationStart);
     subscribe("activation.complete", handleActivationComplete);

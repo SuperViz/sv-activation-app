@@ -26,7 +26,6 @@ async function combineElements(
       headers: {
         "Content-Type": "application/json",
         "api-key": AZURE_OPEN_AI,
-        cache: "no-store",
       },
       body: JSON.stringify({
         messages: [
@@ -227,3 +226,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 }
+
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
