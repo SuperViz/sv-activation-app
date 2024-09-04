@@ -47,19 +47,19 @@ export default function UsersDashboard() {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
     const userActivationDiameter = 194;
-  
+
     const size = windowWidth > 3000 ? userActivationDiameter / 2 : userActivationDiameter / 4;
-    
+
     // Calculate the inner area (80% of the container)
     const innerWidth = containerWidth * 1;
     const innerHeight = containerHeight * 1;
     const offsetX = (containerWidth - innerWidth) / 2;
     const offsetY = (containerHeight - innerHeight) / 2;
-  
+
     // Adjust the position calculation to ensure the ball is within the inner walls
     const x = offsetX + size + Math.random() * (innerWidth - size * 2);
     const y = offsetY + size + Math.random() * (innerHeight - size * 2);
-    
+
     const ball = Matter.Bodies.circle(
       x,
       y,
@@ -71,17 +71,17 @@ export default function UsersDashboard() {
         mass: 1,
       }
     );
-  
+
     Matter.World.add(engineRef.current!.world, ball);
-  
+
     const direction = Math.random() * Math.PI * 2;
     const speed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
-  
+
     Matter.Body.setVelocity(ball, {
       x: Math.sin(direction) * speed,
       y: Math.cos(direction) * speed
     });
-  
+
     return {
       id: ball.id,
       size: size * 2,
@@ -107,7 +107,7 @@ export default function UsersDashboard() {
     const offsetY = (containerHeight - innerHeight) / 2;
 
     const wallThickness = 10; // Increased thickness for visibility
-    const wallOptions = { 
+    const wallOptions = {
       isStatic: true,
       render: {
         fillStyle: 'rgba(255, 255, 255, 0.5)' // Semi-transparent white
@@ -126,7 +126,7 @@ export default function UsersDashboard() {
     ];
 
     Matter.World.add(engine.world, walls);
-  
+
     // Create balls
     const newBalls: Ball[] = [];
     for (const user of users) {
@@ -137,33 +137,30 @@ export default function UsersDashboard() {
       const pairs = event.pairs;
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
-        
         const normal = pair.collision.normal;
         const relativeVelocity = {
           x: pair.bodyB.velocity.x - pair.bodyA.velocity.x,
           y: pair.bodyB.velocity.y - pair.bodyA.velocity.y
         };
-        
         const dotProduct = relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
-        
+
         const restitution = 0.8 + Math.random() * 0.4; // Random restitution between 0.8 and 1.2
         const impulseScalar = -(1 + restitution) * dotProduct / (pair.bodyA.inverseMass + pair.bodyB.inverseMass);
-        
         const impulse = {
           x: normal.x * impulseScalar,
           y: normal.y * impulseScalar
         };
-        
+
         Matter.Body.setVelocity(pair.bodyA, {
           x: pair.bodyA.velocity.x - impulse.x * pair.bodyA.inverseMass,
           y: pair.bodyA.velocity.y - impulse.y * pair.bodyA.inverseMass
         });
-        
+
         Matter.Body.setVelocity(pair.bodyB, {
           x: pair.bodyB.velocity.x + impulse.x * pair.bodyB.inverseMass,
           y: pair.bodyB.velocity.y + impulse.y * pair.bodyB.inverseMass
         });
-        
+
         const perturbation = 3 + Math.random() * 2; // Random perturbation between 3 and 5
         Matter.Body.setVelocity(pair.bodyA, {
           x: pair.bodyA.velocity.x + (Math.random() - 0.5) * perturbation,
@@ -422,8 +419,18 @@ export default function UsersDashboard() {
   }, [hasJoinedRoom]);
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden w-full h-full">
-      {balls.sort(ball => ball.user.isOnline ? 1 : 0).filter((_, index) => index < 75).map((ball) => (
+    <div ref={containerRef} className="walls relative overflow-hidden w-full h-full">
+      {balls.sort((a, b) => {
+        if (a.user.isOnline && !b.user.isOnline) return -1;
+        if (!a.user.isOnline && b.user.isOnline) return 1;
+
+        const aIncompleteActivations = a.user.activations.filter(activation => !activation.completed).length;
+        const bIncompleteActivations = b.user.activations.filter(activation => !activation.completed).length;
+
+        if (aIncompleteActivations >= 2 && bIncompleteActivations < 2) return 1;
+        if (aIncompleteActivations < 2 && bIncompleteActivations >= 2) return -1;
+        return 0;
+      }).filter((_, index) => index < 75).map((ball) => (
         <div
           key={ball.id}
           className="absolute"

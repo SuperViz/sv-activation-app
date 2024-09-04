@@ -8,7 +8,7 @@ export const InitialElements: IElement[] = [
 	},
 	{
 		emoji: "🍃",
-		name: "Vento",
+		name: "Ar",
 		id: 'c8e405ae-6352-474f-8bce-032682a1cf1f',
 	},
 	{
@@ -29,6 +29,11 @@ export const InitialElements: IElement[] = [
 	{
 		emoji: "☕",
 		name: "Café",
+		id: '1127fd9a-287d-4cce-9257-5e5df4fde10e',
+	},
+	{
+		emoji: "🧑",
+		name: "Desenvolvedor",
 		id: '1127fd9a-287d-4cce-9257-5e5df4fde10e',
 	}
 ]

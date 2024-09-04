@@ -1,30 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './GameActivationOnboardLayout.scss'
 import Button from '@/components/Button'
 import Image from 'next/image'
 import { InitialElements } from '@/data/elementsData'
 import { ActivationTypePage } from '@/global/global.types'
 import ActivationLayout from './ActivationLayout'
+import { set } from 'zod'
 
 export default function GameOnboarding({ setPage }: { setPage: (page: ActivationTypePage) => void }) {
 	const [currentStep, setCurrentStep] = useState(0)
+	const [isOnboardingFinished, setIsOnboardingFinished] = useState(false)
 
 	const moveToGame = () => {
 		setPage(ActivationTypePage.GAME_PLAY)
 	}
+
+	useEffect(() => {
+		if (localStorage.getItem('onboarding-finished')) {
+			setIsOnboardingFinished(true)
+		}
+	}, [])
 
 	const moveNext = () => {
 		let existingSave = localStorage.getItem("saved_game");
 		if (!existingSave)
 			localStorage.setItem("saved_game", JSON.stringify(InitialElements));
 
-		if (localStorage.getItem('onboarding-finished'))
-			moveToGame()
-		else
-			setCurrentStep(currentStep + 1)
-
+		setCurrentStep(currentStep + 1)
 		if (currentStep === 2)
 			localStorage.setItem('onboarding-finished', 'true')
 	}
@@ -37,10 +41,18 @@ export default function GameOnboarding({ setPage }: { setPage: (page: Activation
 						<div className='game-title'>
 							<h1>Super<span>{'<Craft>'}</span></h1>
 							<p>Combine e crie elementos</p>
-							<p>🔥 💧 🍃 🌎</p>
-						</div>
+							<p>🔥 💧 🍃 🌎 💩 ☕ 🙍</p>
 
-						<Button text={'Jogar'} type={'button'} onClick={moveNext} />
+							{isOnboardingFinished && (
+								<button onClick={moveNext}>Visualizar como jogar novamente</button>
+							)}
+						</div>
+						{isOnboardingFinished && (
+							<Button text={'Jogar'} type={'button'} onClick={moveToGame} />
+						)}
+						{!isOnboardingFinished && (
+							<Button text={'Próximo'} type={'button'} onClick={moveNext} />
+						)}
 					</div>
 				)}
 
@@ -54,7 +66,7 @@ export default function GameOnboarding({ setPage }: { setPage: (page: Activation
 
 						<div className='step-description'>
 							<h2>Como jogar</h2>
-							<p>Todos os jogadores começam com elementos básicos como Água, Vento, Terra e Fogo. Arraste os elementos e os combine para criar novos.</p>
+							<p>Todos os jogadores começam com elementos básicos como Água, Vento, Terra, Fogo, Café, JavaScript e Desenvolvedor. Arraste os elementos e os combine para criar novos.</p>
 						</div>
 
 						<Button text={'Próximo'} type={'button'} onClick={moveNext} />

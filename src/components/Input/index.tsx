@@ -6,13 +6,15 @@ interface IInputProps {
   onChange: React.ChangeEventHandler<HTMLInputElement>
   value: string
   type?: string
+  description?: string
 }
-export default function Input({ label, id, onChange, value, type = 'text' }: IInputProps) {
+export default function Input({ label, id, onChange, value, description, type = 'text' }: IInputProps) {
   return (
     <div className="w-full px-1 flex flex-col align-center">
       <label htmlFor={id} className="font-black text-white text-4xl text-center flex flex-col justify-center items-center w-full mb-5">
         {label}
       </label>
+      {description && <p className="text-white text-center text-lg mb-5">{description}</p>}
       <input
         required
         type={type}
