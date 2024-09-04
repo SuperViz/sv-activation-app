@@ -107,7 +107,7 @@ export default function GameActivationPlayLayout({
   const combineElements = (elementA: IElement, elementB: IElement) => {
     const indexB = elements.findIndex((el) => el.id === elementB.id);
 
-    fetch("/api/game", {
+    const fetchPromise = fetch("/api/game", {
       headers: { cache: "no-store" },
       method: "POST",
       body: JSON.stringify({
@@ -125,11 +125,21 @@ export default function GameActivationPlayLayout({
 
         if (data.element) {
           addNewElement(indexB, data.element, data.isNew);
+          return data.element.name;
         }
       })
       .catch((err) => {
         console.error(err);
       });
+
+    toast.promise(fetchPromise, {
+      pending: "Combining elements",
+      success: {
+        render({ data }) {
+          return `Você descobriu ${data}!`;
+        },
+      },
+    });
   };
 
   function onDragEnd(result: any) {
