@@ -20,7 +20,7 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
 
   const finishGame = () => {
     console.log('Game over!');
-    localStorage.addItem('game_completed', 'true');
+    localStorage.setItem('game_completed', 'true');
     setGameOver(true);
   }
 
@@ -41,14 +41,15 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
 
   const addNewElement = (index: number, element: IElement, isNew: boolean) => {
     if (elements.find(el => el.name === element.name)) return;
+    if (elements.find(el => el.id === element.id)) return;
 
     const newElements = [...elements];
-    newElements.splice(index + 1, 0, {
+    newElements.push({
       emoji: element.emoji,
       name: element.name,
       id: element.id,
       isNew: isNew,
-    });
+    })
 
     setElements(newElements);
     saveNewElements(newElements);
@@ -65,11 +66,14 @@ export default function GameActivationPlayLayout({ setPage }: { setPage: (page: 
         email: JSON.parse(localStorage.getItem(USERDATA_KEY) as string),
       })
     }).then(res => res.json()).then(data => {
-      if (data.points >= 10)
+      console.log('new element', data);
+      if (data.points >= 10) {
         finishGame();
+      }
 
-      if (data.element)
+      if (data.element) {
         addNewElement(indexB, data.element, data.isNew);
+      }
     }).catch(err => {
       console.error(err);
     });

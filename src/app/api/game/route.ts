@@ -7,6 +7,7 @@ import { IElement } from '../../../../types.game';
 import { createHash } from 'crypto';
 import { publishEvent } from '@/app/services/publishEvent';
 import { ActivationType } from '@/global/global.types';
+import { InitialElements } from '@/data/elementsData';
 
 function getUniqueID(elementA: string, elementB: string): string {
   let id = [elementA, elementB].sort().join("").trim();
@@ -61,6 +62,10 @@ async function checkForExistingCombination(elementA: string, elementB: string): 
 }
 
 async function checkForExistingName(elementName: string): Promise<boolean> {
+  if (InitialElements.some(el => el.name === elementName)) {
+    return true;
+  }
+
   const element = await db.element.findFirst({
     where: {
       name: elementName
@@ -177,7 +182,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         element: element,
         isNew: true,
         isOver: quantity >= 10,
-        points: activation.quantity
+        points: quantity
       })
     }
   } catch (error) {
