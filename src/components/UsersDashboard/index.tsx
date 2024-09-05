@@ -380,6 +380,7 @@ export default function UsersDashboard() {
         ...message.data,
         activations: message.data?.activations ?? [],
       });
+
       setUsers((previous) => {
         return [...previous, message.data];
       });
@@ -387,15 +388,15 @@ export default function UsersDashboard() {
 
     const user = message.data;
     
-    setUsers(prevUsers => prevUsers.map(u => u.id === user.id ? user : u));
-    setBalls(prevBalls => prevBalls.map(ball => ball.user.id === user.id ? { ...ball, user } : ball));
-    ballsRef.current = ballsRef.current.map(ball => ball.user.id === user.id ? { ...ball, user } : ball);
+    setUsers(prevUsers => prevUsers.map(u => u.id === user?.id ? user : u));
+    setBalls(prevBalls => prevBalls.map(ball => ball.user?.id === user?.id ? { ...ball, user } : ball));
+    ballsRef.current = ballsRef.current.map(ball => ball.user?.id === user?.id ? { ...ball, user } : ball);
   }, [users, balls, ballsRef])
 
   function createUser(user: IUser) {
     const ball = createBall(user);
 
-    if (ballsRef.current?.some((ball) => ball.user.id === user.id)) return;
+    if (ballsRef.current?.some((ball) => ball.user.id === user?.id)) return;
 
     ballsRef.current = [...ballsRef.current, ball];
     setBalls((previous) => [...previous, ball]);
