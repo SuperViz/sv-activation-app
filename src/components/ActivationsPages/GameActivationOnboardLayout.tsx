@@ -41,7 +41,7 @@ export default function GameOnboarding({ setPage }: { setPage: (page: Activation
 						<div className='game-title'>
 							<h1>Super<span>{'<Craft>'}</span></h1>
 							<p>Combine e crie elementos</p>
-							<p>🔥 💧 🍃 🌎 💩 ☕ 🙍</p>
+							<p>🔥  💧  🌎   🌬️</p>
 
 							{isOnboardingFinished && (
 								<button onClick={moveNext}>Visualizar como jogar novamente</button>
@@ -62,12 +62,15 @@ export default function GameOnboarding({ setPage }: { setPage: (page: Activation
 							<div className='step-circle active'></div>
 							<div className='step-circle'></div>
 							<div className='step-circle'></div>
+							<div className='step-circle'></div>
 						</div>
 
 						<div className='step-description'>
 							<h2>Como jogar</h2>
 							<p>Todos os jogadores começam com elementos básicos como Água, Vento, Terra, Fogo, Café, JavaScript e Desenvolvedor. Arraste os elementos e os combine para criar novos.</p>
 						</div>
+						
+						<Image src={`/passo-1.gif`} alt={`Mouse clicando sobre o elemento fogo e o arrastando sobre o elemento Javascript. Surge um novo elemento chamado firebase.`} width={375} height={220}/>
 
 						<Button text={'Próximo'} type={'button'} onClick={moveNext} />
 					</div>
@@ -79,20 +82,47 @@ export default function GameOnboarding({ setPage }: { setPage: (page: Activation
 							<div className='step-circle active'></div>
 							<div className='step-circle active'></div>
 							<div className='step-circle'></div>
+							<div className='step-circle'></div>
 						</div>
 
 						<div className='step-description'>
 							<h2>Como jogar</h2>
-							<p>Ao descobrir elementos inéditos que nenhum jogador jamais encontrou, ganhe +1 ponto para concorrer ao prêmio!</p>
+							<p>Ao descobrir elementos inéditos que nenhum jogador jamais encontrou, ganhe +1 ponto para concorrer ao
+								prêmio!</p>
 						</div>
 
-						<Button text={'Próximo'} type={'button'} onClick={moveNext} />
+						<Image src={`/passo-2.gif`} alt={`Mouse clicando sobre o elemento café e o arrastando sobre o elemento Javascript. Surge um novo elemento chamado coffeescript, com o sinal de +1.`}
+										 width={375} height={175}/>
+
+						<Button text={'Próximo'} type={'button'} onClick={moveNext}/>
 					</div>
 				)}
 
 				{currentStep === 3 && (
 					<div className='step'>
 						<div className='step-counter'>
+							<div className='step-circle active'></div>
+							<div className='step-circle active'></div>
+							<div className='step-circle active'></div>
+							<div className='step-circle'></div>
+						</div>
+
+						<div className='step-description'>
+							<h2>Como jogar</h2>
+							<p>Clique duas vezes para combinar dois elementos iguais.</p>
+						</div>
+
+						<Image src={`/passo-3.gif`} alt={`Mouse clicando sobre o elemento javascript duas vezes. Surge um novo elemento chamado typescriptbase.`}  width={375} height={175}/>
+						
+
+						<Button text={'Próximo'} type={'button'} onClick={moveNext} />
+					</div>
+				)}
+
+				{currentStep === 4 && (
+					<div className='step'>
+						<div className='step-counter'>
+							<div className='step-circle active'></div>
 							<div className='step-circle active'></div>
 							<div className='step-circle active'></div>
 							<div className='step-circle active'></div>
@@ -103,7 +133,7 @@ export default function GameOnboarding({ setPage }: { setPage: (page: Activation
 							<p>Você pode conseguir até 10 pontos e aumentar suas chances de levar o prêmio!</p>
 						</div>
 
-						<Image src={'/game-you.png'} alt={'Você'} width={101} height={141} />
+						<Image src={'/passo-4.gif'} alt={'Você'} width={375} height={175} />
 
 						<Button text={'Próximo'} type={'button'} onClick={moveToGame} />
 					</div>

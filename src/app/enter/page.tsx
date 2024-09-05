@@ -37,7 +37,7 @@ export default function Enter() {
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fieldName = event.target.getAttribute("id") as string;
-    const fieldValidity = event.target.validity.valid;
+    const fieldValidity = event.target.validity?.valid ?? true;
     const value = event.target.value;
     setFormData({
       ...formData,
