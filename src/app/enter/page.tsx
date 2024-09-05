@@ -37,15 +37,16 @@ export default function Enter() {
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fieldName = event.target.getAttribute("id") as string;
-    const fieldValidity = event.target.validity?.valid ?? true;
+
     const value = event.target.value;
+    const isValidEmail = fieldName === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) : true;
+  
     setFormData({
       ...formData,
       [fieldName]: value,
     });
-    if (fieldValidity !== validField) {
-      setValidField(fieldValidity);
-    }
+
+    setValidField(isValidEmail);
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -92,7 +93,6 @@ export default function Enter() {
             <Input
               label={question.question}
               id={question.id}
-              setValidField={setValidField}
               onChange={handleChangeInput}
               value={formData[question.id]}
               onKeyDown={onKeyDown}
