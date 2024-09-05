@@ -160,20 +160,26 @@ export default function UsersDashboard() {
       newBalls.push(createBall(user));
     }
 
-    Matter.Events.on(engine, 'collisionStart', (event) => {
+    Matter.Events.on(engine, "collisionStart", (event) => {
       const pairs = event.pairs;
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
         const randomAngle = (Math.random() - 0.5) * Math.PI;
-        const velocityA = Matter.Vector.rotate(pair.bodyA.velocity, randomAngle);
-        const velocityB = Matter.Vector.rotate(pair.bodyB.velocity, randomAngle);
+        const velocityA = Matter.Vector.rotate(
+          pair.bodyA.velocity,
+          randomAngle
+        );
+        const velocityB = Matter.Vector.rotate(
+          pair.bodyB.velocity,
+          randomAngle
+        );
         Matter.Body.setVelocity(pair.bodyA, {
           x: velocityA.x * -1,
-          y: velocityA.y * -1
+          y: velocityA.y * -1,
         });
         Matter.Body.setVelocity(pair.bodyB, {
           x: velocityB.x * -1,
-          y: velocityB.y * -1
+          y: velocityB.y * -1,
         });
       }
     });
@@ -208,7 +214,7 @@ export default function UsersDashboard() {
 
       Matter.Body.setVelocity(body, {
         x: body.velocity.x * SPEED_MULTIPLIER,
-        y: body.velocity.y * SPEED_MULTIPLIER
+        y: body.velocity.y * SPEED_MULTIPLIER,
       });
 
       // Occasionally add a small random force
@@ -260,12 +266,19 @@ export default function UsersDashboard() {
     setUsers(newUsers);
   };
 
-  function completeActivation(userId: string, activationName: ActivationType, completed: boolean) {
-    const user = { ...users.find(user => user.id === userId) } as IUser;
+  function completeActivation(
+    userId: string,
+    activationName: ActivationType,
+    completed: boolean
+  ) {
+    const user = { ...users.find((user) => user.id === userId) } as IUser;
 
     if (!user) return;
 
-    if (!completed && !user.activations.some(activation => activation.name === activationName)) {
+    if (
+      !completed &&
+      !user.activations.some((activation) => activation.name === activationName)
+    ) {
       const activation: IUserActivation = {
         name: activationName,
         completed: completed,
@@ -274,9 +287,10 @@ export default function UsersDashboard() {
 
       user.activations.push(activation);
     } else {
-      const activation = user.activations.find(activation => activation.name === activationName);
-      if (activation)
-        activation.completed = true;
+      const activation = user.activations.find(
+        (activation) => activation.name === activationName
+      );
+      if (activation) activation.completed = true;
     }
 
     setUsersToNewState(user);
@@ -286,12 +300,14 @@ export default function UsersDashboard() {
     const userFromMessage: IUser = message.data.user;
     const element = message.data.element;
     const points = message.data.points;
-  
+
     const elementId = `${userFromMessage.email}-${element.name}`;
-    
-    if(!toast.isActive(elementId)) {
+
+    if (!toast.isActive(elementId)) {
       toast(
-        `${element.emoji} ${userFromMessage?.name} acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
+        `${element.emoji} ${
+          userFromMessage?.name
+        } acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
         {
           toastId: elementId,
           position: "top-right",
@@ -303,10 +319,15 @@ export default function UsersDashboard() {
           closeButton: false,
           progress: undefined,
           theme: "dark",
+          style: {
+            transform: "scale(2)",
+            top: "15px",
+            right: "150px",
+          },
         }
-      ); 
+      );
     }
-  
+
     setUsers((prevUsers) => {
       const updatedUsers = prevUsers.map((user) => {
         if (user.id === userFromMessage.id) {
@@ -320,40 +341,42 @@ export default function UsersDashboard() {
         }
         return user;
       });
-  
+
       // Update balls state and ballsRef in a single operation
       const updatedBalls = ballsRef.current.map((ball) => {
         if (ball.user.id === userFromMessage.id) {
-          const updatedUser = updatedUsers.find(u => u.id === userFromMessage.id)!;
+          const updatedUser = updatedUsers.find(
+            (u) => u.id === userFromMessage.id
+          )!;
           return { ...ball, user: updatedUser };
         }
         return ball;
       });
-  
+
       ballsRef.current = updatedBalls;
       setBalls(updatedBalls);
-  
+
       return updatedUsers;
     });
   }, []); // Remove dependencies
 
   function handleParticipantStatusChange(userId: string, isOnline: boolean) {
     setUsers((prevUsers) => {
-      const updatedUsers = prevUsers.map((u) => 
+      const updatedUsers = prevUsers.map((u) =>
         u.id === userId ? { ...u, isOnline } : u
       );
-  
+
       const updatedBalls = ballsRef.current.map((ball) => {
         if (ball.user.id === userId) {
-          const updatedUser = updatedUsers.find(u => u.id === userId)!;
+          const updatedUser = updatedUsers.find((u) => u.id === userId)!;
           return { ...ball, user: updatedUser };
         }
         return ball;
       });
-  
+
       ballsRef.current = updatedBalls;
       setBalls(updatedBalls);
-  
+
       return updatedUsers;
     });
   }
@@ -372,26 +395,36 @@ export default function UsersDashboard() {
     completeActivation(userId, activationName, true);
   }
 
-  const handleParticipantUpdate = useCallback((message: { data: IUser }) => {
-    const userExists = users.some((user) => message.data?.id === user?.id);
+  const handleParticipantUpdate = useCallback(
+    (message: { data: IUser }) => {
+      const userExists = users.some((user) => message.data?.id === user?.id);
 
-    if (!userExists) {
-      createUser({
-        ...message.data,
-        activations: message.data?.activations ?? [],
-      });
+      if (!userExists) {
+        createUser({
+          ...message.data,
+          activations: message.data?.activations ?? [],
+        });
+        setUsers((previous) => {
+          return [...previous, message.data];
+        });
+      }
 
-      setUsers((previous) => {
-        return [...previous, message.data];
-      });
-    }
+      const user = message.data;
 
-    const user = message.data;
-    
-    setUsers(prevUsers => prevUsers.map(u => u.id === user?.id ? user : u));
-    setBalls(prevBalls => prevBalls.map(ball => ball.user?.id === user?.id ? { ...ball, user } : ball));
-    ballsRef.current = ballsRef.current.map(ball => ball.user?.id === user?.id ? { ...ball, user } : ball);
-  }, [users, balls, ballsRef])
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => (u.id === user.id ? user : u))
+      );
+      setBalls((prevBalls) =>
+        prevBalls.map((ball) =>
+          ball.user.id === user.id ? { ...ball, user } : ball
+        )
+      );
+      ballsRef.current = ballsRef.current.map((ball) =>
+        ball.user.id === user.id ? { ...ball, user } : ball
+      );
+    },
+    [users, balls, ballsRef]
+  );
 
   function createUser(user: IUser) {
     const ball = createBall(user);
@@ -416,31 +449,31 @@ export default function UsersDashboard() {
               };
             }
           );
-  
+
           return {
             id: user.id,
             name: user.name,
             email: user.email,
             discordUser: user.discordUser,
             activations: activations,
-            isOnline: false, 
+            isOnline: false,
           };
         });
-        
+
         return users;
       })
       .then((users) => {
         return getOnlineUsersIds().then((onlineUsersIds: string[]) => {
           if (onlineUsersIds.length === 0) return users;
-          
-          return users.map(user => ({
+
+          return users.map((user) => ({
             ...user,
-            isOnline: onlineUsersIds.includes(user.id)
+            isOnline: onlineUsersIds.includes(user.id),
           }));
         });
       })
       .then((updatedUsers) => {
-        setUsers(updatedUsers); 
+        setUsers(updatedUsers);
         initialize();
       });
   }
