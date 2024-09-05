@@ -320,7 +320,9 @@ export default function UsersDashboard() {
           progress: undefined,
           theme: "dark",
           style: {
-            transform: "scale(10)",
+            transform: "scale(2)",
+            top: "15px",
+            right: "150px",
           },
         }
       );
