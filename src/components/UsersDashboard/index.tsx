@@ -429,7 +429,7 @@ export default function UsersDashboard() {
   function createUser(user: IUser) {
     const ball = createBall(user);
 
-    if (ballsRef.current?.some((ball) => ball.user.id === user.id)) return;
+    if (ballsRef.current?.some((ball) => ball.user.id === user?.id)) return;
 
     ballsRef.current = [...ballsRef.current, ball];
     setBalls((previous) => [...previous, ball]);
