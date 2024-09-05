@@ -31,20 +31,24 @@ export default function CardLink({
       userEmail: user.email,
     }).then(() => {
       if (page === ActivationTypePage.HACKATHON) {
-        const link = 'https://47xzvrbdgjk.typeform.com/to/cqzci1gD';
-        const a = document.createElement("a");
-        a.setAttribute('href', link);
-        a.setAttribute('target', '_blank');
-        a.click();
+        const url = "https://47xzvrbdgjk.typeform.com/to/cqzci1gD"
+        const newWindow = window.open(url, "_blank");
+
+        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+          window.location.href = url;
+        }
+
         return;
       }
 
       if (page === ActivationTypePage.NEWSLETTER) {
-        const link = 'https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah';
-        const a = document.createElement("a");
-        a.setAttribute('href', link);
-        a.setAttribute('target', '_blank');
-        a.click();
+        const url = "https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah"
+        const newWindow = window.open(url, "_blank");
+
+        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+          window.location.href = url;
+        }
+
         return;
       }
 
