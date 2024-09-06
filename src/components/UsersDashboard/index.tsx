@@ -395,8 +395,8 @@ export default function UsersDashboard() {
           theme: "dark",
           style: {
             transform: "scale(3)",
-            top: "50px",
-            right: "350px",
+            top: "150px",
+            right: "400px",
           },
         }
       );
