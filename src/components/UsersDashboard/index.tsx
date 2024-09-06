@@ -33,6 +33,7 @@ export default function UsersDashboard() {
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+  const [ballsFiltered, setBallsFiltered] = useState<Ball[]>([])
   const started = useRef<boolean>(false);
 
   useEffect(() => {
@@ -47,6 +48,64 @@ export default function UsersDashboard() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      filterBalls()
+    }, 10 * 1000);
+  
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const filterBalls = () => {
+    const filtered = ballsRef.current
+    .sort((a, b) => {
+      if (a?.user?.isOnline && !b?.user?.isOnline) return -1;
+      if (!a.user?.isOnline && b.user?.isOnline) return 1;
+
+      const aIncompleteActivations = a.user.activations.filter(
+        (activation) => !activation.completed
+      ).length;
+      const bIncompleteActivations = b.user.activations.filter(
+        (activation) => !activation.completed
+      ).length;
+
+      if (aIncompleteActivations >= 2 && bIncompleteActivations < 2) return 1;
+      if (aIncompleteActivations < 2 && bIncompleteActivations >= 2) return -1;
+      return 0;
+    })
+    .filter((ball, index) => index < 80 && ball.user);
+
+
+    ballsRef.current.forEach((ball) => {
+      const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
+      if (!filtered.some((filteredBall) => filteredBall.id === ball.id) && body) {
+        Matter.Composite.remove(engineRef.current!.world, body);
+      }
+    });
+
+    
+    filtered.forEach((ball) => {
+      const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
+      if (!body) {
+        const newBody = Matter.Bodies.circle(ball.position.x, ball.position.y, ball.size / 2, {
+          restitution: 0.8,
+          friction: 0,
+          frictionAir: 0,
+          mass: 1,
+        });
+        Matter.Body.set(newBody, 'id', ball.id);
+        Matter.Composite.add(engineRef.current!.world, newBody);
+      }
+    });
+
+    ballsRef.current = filtered;
+    setBallsFiltered(filtered);
+
+    console.log('Filtering...')
+  }
 
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
@@ -86,9 +145,8 @@ export default function UsersDashboard() {
     });
 
     return {
-      id: ball.id,
       size: size * 2,
-      position: ball.position,
+      ...ball,
       user,
     };
   };
@@ -109,7 +167,7 @@ export default function UsersDashboard() {
     const offsetX = (containerWidth - innerWidth) / 2;
     const offsetY = (containerHeight - innerHeight) / 2;
 
-    const wallThickness = 10; // Increased thickness for visibility
+    const wallThickness = 30; // Increased thickness for visibility
     const wallOptions = {
       isStatic: true,
       render: {
@@ -188,6 +246,7 @@ export default function UsersDashboard() {
     setBalls(newBalls);
     Matter.Runner.run(engine);
     animate();
+    filterBalls()
   };
 
   // Set up animation loop
@@ -252,7 +311,7 @@ export default function UsersDashboard() {
     });
 
     const balls = ballsRef.current.map((ball) => {
-      if (ball.user.id === user.id) {
+      if (ball?.user.id === user.id) {
         return {
           ...ball,
           user,
@@ -297,7 +356,7 @@ export default function UsersDashboard() {
   }
 
   const handleGameUpdate = useCallback((message: any) => {
-    const userFromMessage: IUser = message.data.user;
+    const userFromMessage: IUser = message?.data?.user;
     const element = message.data.element;
     const points = message.data.points;
 
@@ -344,10 +403,8 @@ export default function UsersDashboard() {
 
       // Update balls state and ballsRef in a single operation
       const updatedBalls = ballsRef.current.map((ball) => {
-        if (ball.user.id === userFromMessage.id) {
-          const updatedUser = updatedUsers.find(
-            (u) => u.id === userFromMessage.id
-          )!;
+        if (ball?.user?.id === userFromMessage?.id) {
+          const updatedUser = updatedUsers.find(u => u.id === userFromMessage.id)!;
           return { ...ball, user: updatedUser };
         }
         return ball;
@@ -367,8 +424,8 @@ export default function UsersDashboard() {
       );
 
       const updatedBalls = ballsRef.current.map((ball) => {
-        if (ball.user.id === userId) {
-          const updatedUser = updatedUsers.find((u) => u.id === userId)!;
+        if (ball?.user?.id === userId) {
+          const updatedUser = updatedUsers.find(u => u.id === userId)!;
           return { ...ball, user: updatedUser };
         }
         return ball;
@@ -382,14 +439,14 @@ export default function UsersDashboard() {
   }
 
   function handleActivationStart(message: any) {
-    const userId = message.data.userId;
+    const userId = message.data?.userId;
     const activationName = message.data.activation;
 
     completeActivation(userId, activationName, false);
   }
 
   function handleActivationComplete(message: any) {
-    const userId = message.data.userId;
+    const userId = message.data?.userId;
     const activationName = message.data.activation;
 
     completeActivation(userId, activationName, true);
@@ -409,27 +466,17 @@ export default function UsersDashboard() {
         });
       }
 
-      const user = message.data;
-
-      setUsers((prevUsers) =>
-        prevUsers.map((u) => (u.id === user.id ? user : u))
-      );
-      setBalls((prevBalls) =>
-        prevBalls.map((ball) =>
-          ball.user.id === user.id ? { ...ball, user } : ball
-        )
-      );
-      ballsRef.current = ballsRef.current.map((ball) =>
-        ball.user.id === user.id ? { ...ball, user } : ball
-      );
-    },
-    [users, balls, ballsRef]
-  );
+    const user = message?.data;
+    
+    setUsers(prevUsers => prevUsers.map(u => u.id === user?.id ? user : u));
+    setBalls(prevBalls => prevBalls.map(ball => ball?.user?.id === user?.id ? { ...ball, user } : ball));
+    ballsRef.current = ballsRef.current.map(ball => ball?.user?.id === user?.id ? { ...ball, user } : ball);
+  }, [users, balls, ballsRef])
 
   function createUser(user: IUser) {
     const ball = createBall(user);
 
-    if (ballsRef.current?.some((ball) => ball.user.id === user?.id)) return;
+    if (ballsRef.current?.some((ball) => ball?.user.id === user?.id)) return;
 
     ballsRef.current = [...ballsRef.current, ball];
     setBalls((previous) => [...previous, ball]);
@@ -517,24 +564,7 @@ export default function UsersDashboard() {
       className="walls relative overflow-hidden w-full h-full"
     >
       {balls
-        .sort((a, b) => {
-          if (a.user.isOnline && !b.user.isOnline) return -1;
-          if (!a.user.isOnline && b.user.isOnline) return 1;
-
-          const aIncompleteActivations = a.user.activations.filter(
-            (activation) => !activation.completed
-          ).length;
-          const bIncompleteActivations = b.user.activations.filter(
-            (activation) => !activation.completed
-          ).length;
-
-          if (aIncompleteActivations >= 2 && bIncompleteActivations < 2)
-            return 1;
-          if (aIncompleteActivations < 2 && bIncompleteActivations >= 2)
-            return -1;
-          return 0;
-        })
-        .filter((_, index) => index < 75)
+        .filter(ball => ballsFiltered.some(ballVisible => ballVisible.id === ball.id))
         .map((ball) => (
           <div
             key={ball.id}
@@ -549,6 +579,7 @@ export default function UsersDashboard() {
             <TVUser user={ball.user} />
           </div>
         ))}
+
     </div>
   );
 }
