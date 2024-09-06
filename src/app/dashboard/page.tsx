@@ -63,7 +63,7 @@ export default function Dashboard() {
           </div>
           <Image
             src={qrcode}
-            width={145}
+            width={500}
             height={145}
             alt="QR Code para ativação"
             className="mt-[3.125rem] tv:w-[18.125rem] tv:mt-[6.25rem]"
