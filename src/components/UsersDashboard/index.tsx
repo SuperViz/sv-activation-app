@@ -109,7 +109,7 @@ export default function UsersDashboard() {
     const offsetX = (containerWidth - innerWidth) / 2;
     const offsetY = (containerHeight - innerHeight) / 2;
 
-    const wallThickness = 10; // Increased thickness for visibility
+    const wallThickness = 50; // Increased thickness for visibility
     const wallOptions = {
       isStatic: true,
       render: {
