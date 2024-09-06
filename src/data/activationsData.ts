@@ -36,7 +36,7 @@ export const activations: IActivation[] = [
   {
     id: ActivationType.HACKATHON,
     description: 'Inscreva-se no',
-    activationWord: 'Hackathon',
+    activationWord: 'Hackathon Online',
     link: 'https://47xzvrbdgjk.typeform.com/to/cqzci1gD#ativacao=true',
     page: ActivationTypePage.HACKATHON,
     color: ActivationColor.HACKATHON,

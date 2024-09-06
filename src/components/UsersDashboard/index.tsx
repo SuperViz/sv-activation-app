@@ -33,6 +33,7 @@ export default function UsersDashboard() {
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Ball[]>([]);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+  const [ballsFiltered, setBallsFiltered] = useState<Ball[]>([])
   const started = useRef<boolean>(false);
 
   useEffect(() => {
@@ -45,6 +46,60 @@ export default function UsersDashboard() {
     // Cleanup listener on component unmount
     return () => {
       window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const filtered = ballsRef.current
+        .sort((a, b) => {
+          if (a?.user?.isOnline && !b?.user?.isOnline) return -1;
+          if (!a.user?.isOnline && b.user?.isOnline) return 1;
+  
+          const aIncompleteActivations = a.user.activations.filter(
+            (activation) => !activation.completed
+          ).length;
+          const bIncompleteActivations = b.user.activations.filter(
+            (activation) => !activation.completed
+          ).length;
+  
+          if (aIncompleteActivations >= 2 && bIncompleteActivations < 2) return 1;
+          if (aIncompleteActivations < 2 && bIncompleteActivations >= 2) return -1;
+          return 0;
+        })
+        .filter((ball, index) => index < 50 && ball.user);
+  
+      // Remove balls from Matter.js that are not in the filtered list
+      ballsRef.current.forEach((ball) => {
+        const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
+        if (!filtered.some((filteredBall) => filteredBall.id === ball.id) && body) {
+          Matter.Composite.remove(engineRef.current!.world, body);
+        }
+      });
+  
+      // Add balls to Matter.js that are in the filtered list but not in the world
+      filtered.forEach((ball) => {
+        const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
+        if (!body) {
+          const newBody = Matter.Bodies.circle(ball.position.x, ball.position.y, ball.size / 2, {
+            restitution: 0.8,
+            friction: 0,
+            frictionAir: 0,
+            mass: 1,
+          });
+          Matter.Body.set(newBody, 'id', ball.id);
+          Matter.Composite.add(engineRef.current!.world, newBody);
+        }
+      });
+  
+      // Update ballsRef and state
+      ballsRef.current = filtered;
+      setBalls(filtered);
+      setBallsFiltered(filtered);
+    }, 2000);
+  
+    return () => {
+      clearInterval(interval);
     };
   }, []);
 
@@ -86,9 +141,8 @@ export default function UsersDashboard() {
     });
 
     return {
-      id: ball.id,
       size: size * 2,
-      position: ball.position,
+      ...ball,
       user,
     };
   };
@@ -109,7 +163,7 @@ export default function UsersDashboard() {
     const offsetX = (containerWidth - innerWidth) / 2;
     const offsetY = (containerHeight - innerHeight) / 2;
 
-    const wallThickness = 0; // Increased thickness for visibility
+    const wallThickness = 10; // Increased thickness for visibility
     const wallOptions = {
       isStatic: true,
       render: {
@@ -505,24 +559,7 @@ export default function UsersDashboard() {
       className="walls relative overflow-hidden w-full h-full"
     >
       {balls
-        .filter(balls => balls.user)
-        .sort((a, b) => {
-          if (a?.user?.isOnline && !b?.user?.isOnline) return -1;
-          if (!a.user?.isOnline && b.user?.isOnline) return 1;
-
-          const aIncompleteActivations = a.user.activations.filter(
-            (activation) => !activation.completed
-          ).length;
-          const bIncompleteActivations = b.user.activations.filter(
-            (activation) => !activation.completed
-          ).length;
-
-          if (aIncompleteActivations >= 2 && bIncompleteActivations < 2)
-            return 1;
-          if (aIncompleteActivations < 2 && bIncompleteActivations >= 2)
-            return -1;
-          return 0;
-        })
+        .filter(ball => ballsFiltered.some(ballVisible => ballVisible.id === ball.id))
         .map((ball) => (
           <div
             key={ball.id}
@@ -537,6 +574,7 @@ export default function UsersDashboard() {
             <TVUser user={ball.user} />
           </div>
         ))}
+
     </div>
   );
 }
