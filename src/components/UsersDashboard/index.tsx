@@ -311,7 +311,7 @@ export default function UsersDashboard() {
         {
           toastId: elementId,
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 15000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
@@ -320,9 +320,9 @@ export default function UsersDashboard() {
           progress: undefined,
           theme: "dark",
           style: {
-            transform: "scale(2)",
-            top: "15px",
-            right: "150px",
+            transform: "scale(3)",
+            top: "50px",
+            right: "250px",
           },
         }
       );
