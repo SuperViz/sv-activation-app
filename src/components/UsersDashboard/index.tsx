@@ -109,7 +109,7 @@ export default function UsersDashboard() {
     const offsetX = (containerWidth - innerWidth) / 2;
     const offsetY = (containerHeight - innerHeight) / 2;
 
-    const wallThickness = 50; // Increased thickness for visibility
+    const wallThickness = 300; // Increased thickness for visibility
     const wallOptions = {
       isStatic: true,
       render: {
@@ -523,7 +523,6 @@ export default function UsersDashboard() {
             return -1;
           return 0;
         })
-        .filter((_, index) => index < 75)
         .map((ball) => (
           <div
             key={ball.id}
