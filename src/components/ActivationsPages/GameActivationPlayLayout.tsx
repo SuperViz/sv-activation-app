@@ -67,7 +67,6 @@ export default function GameActivationPlayLayout({
       repeatedTries.current += 1;
 
       if (randomTimes.includes(repeatedTries.current)) {
-        console.log("includes", randomTimes, repeatedTries.current);
         try {
           const user = await getUserData(
             JSON.parse(localStorage.getItem(USERDATA_KEY) as string)
@@ -78,21 +77,20 @@ export default function GameActivationPlayLayout({
               timesRevoked: user?.timesRevoked! + 1,
             });
 
-            // const response = await fetch(
-            //   "https://codecodes-api-78be231ef650.herokuapp.com/token/partner",
-            //   {
-            //     method: "POST",
-            //     headers: {
-            //       "x-partnerApiKey": "aa7da574-3ab2-4911-b2af-73afc22df46f",
-            //     },
-            //   }
-            // );
+            const response = await fetch(
+              "https://codecodes-api-78be231ef650.herokuapp.com/token/partner",
+              {
+                method: "POST",
+                headers: {
+                  "x-partnerApiKey": "aa7da574-3ab2-4911-b2af-73afc22df46f",
+                },
+              }
+            );
 
-            // const {
-            //   data: { code },
-            // } = await response.json();
+            const {
+              data: { code },
+            } = await response.json();
 
-            const code = "123456";
             toast(`Você descobriu um Code-Code! Anote: ${code}`, {
               autoClose: 15000,
               position: "top-center",
