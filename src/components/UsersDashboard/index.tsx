@@ -246,7 +246,7 @@ export default function UsersDashboard() {
     });
 
     const balls = ballsRef.current.map((ball) => {
-      if (ball.user.id === user.id) {
+      if (ball?.user.id === user.id) {
         return {
           ...ball,
           user,
@@ -283,7 +283,7 @@ export default function UsersDashboard() {
   }
 
   const handleGameUpdate = useCallback((message: any) => {
-    const userFromMessage: IUser = message.data.user;
+    const userFromMessage: IUser = message?.data?.user;
     const element = message.data.element;
     const points = message.data.points;
   
@@ -323,7 +323,7 @@ export default function UsersDashboard() {
   
       // Update balls state and ballsRef in a single operation
       const updatedBalls = ballsRef.current.map((ball) => {
-        if (ball.user.id === userFromMessage.id) {
+        if (ball?.user?.id === userFromMessage?.id) {
           const updatedUser = updatedUsers.find(u => u.id === userFromMessage.id)!;
           return { ...ball, user: updatedUser };
         }
@@ -344,7 +344,7 @@ export default function UsersDashboard() {
       );
   
       const updatedBalls = ballsRef.current.map((ball) => {
-        if (ball.user.id === userId) {
+        if (ball?.user?.id === userId) {
           const updatedUser = updatedUsers.find(u => u.id === userId)!;
           return { ...ball, user: updatedUser };
         }
@@ -359,14 +359,14 @@ export default function UsersDashboard() {
   }
 
   function handleActivationStart(message: any) {
-    const userId = message.data.userId;
+    const userId = message.data?.userId;
     const activationName = message.data.activation;
 
     completeActivation(userId, activationName, false);
   }
 
   function handleActivationComplete(message: any) {
-    const userId = message.data.userId;
+    const userId = message.data?.userId;
     const activationName = message.data.activation;
 
     completeActivation(userId, activationName, true);
@@ -389,14 +389,14 @@ export default function UsersDashboard() {
     const user = message.data;
     
     setUsers(prevUsers => prevUsers.map(u => u.id === user?.id ? user : u));
-    setBalls(prevBalls => prevBalls.map(ball => ball.user?.id === user?.id ? { ...ball, user } : ball));
-    ballsRef.current = ballsRef.current.map(ball => ball.user?.id === user?.id ? { ...ball, user } : ball);
+    setBalls(prevBalls => prevBalls.map(ball => ball?.user?.id === user?.id ? { ...ball, user } : ball));
+    ballsRef.current = ballsRef.current.map(ball => ball?.user?.id === user?.id ? { ...ball, user } : ball);
   }, [users, balls, ballsRef])
 
   function createUser(user: IUser) {
     const ball = createBall(user);
 
-    if (ballsRef.current?.some((ball) => ball.user.id === user?.id)) return;
+    if (ballsRef.current?.some((ball) => ball?.user.id === user?.id)) return;
 
     ballsRef.current = [...ballsRef.current, ball];
     setBalls((previous) => [...previous, ball]);
