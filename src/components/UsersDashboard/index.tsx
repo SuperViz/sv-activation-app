@@ -67,9 +67,9 @@ export default function UsersDashboard() {
           if (aIncompleteActivations < 2 && bIncompleteActivations >= 2) return -1;
           return 0;
         })
-        .filter((ball, index) => index < 50 && ball.user);
+        .filter((ball, index) => index < 120 && ball.user);
   
-      // Remove balls from Matter.js that are not in the filtered list
+
       ballsRef.current.forEach((ball) => {
         const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
         if (!filtered.some((filteredBall) => filteredBall.id === ball.id) && body) {
@@ -77,7 +77,7 @@ export default function UsersDashboard() {
         }
       });
   
-      // Add balls to Matter.js that are in the filtered list but not in the world
+      
       filtered.forEach((ball) => {
         const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
         if (!body) {
@@ -92,9 +92,7 @@ export default function UsersDashboard() {
         }
       });
   
-      // Update ballsRef and state
       ballsRef.current = filtered;
-      setBalls(filtered);
       setBallsFiltered(filtered);
     }, 2000);
   
@@ -163,7 +161,7 @@ export default function UsersDashboard() {
     const offsetX = (containerWidth - innerWidth) / 2;
     const offsetY = (containerHeight - innerHeight) / 2;
 
-    const wallThickness = 10; // Increased thickness for visibility
+    const wallThickness = 30; // Increased thickness for visibility
     const wallOptions = {
       isStatic: true,
       render: {
