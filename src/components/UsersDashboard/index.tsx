@@ -505,9 +505,10 @@ export default function UsersDashboard() {
       className="walls relative overflow-hidden w-full h-full"
     >
       {balls
+        .filter(balls => balls.user)
         .sort((a, b) => {
-          if (a.user.isOnline && !b.user.isOnline) return -1;
-          if (!a.user.isOnline && b.user.isOnline) return 1;
+          if (a?.user?.isOnline && !b?.user?.isOnline) return -1;
+          if (!a.user?.isOnline && b.user?.isOnline) return 1;
 
           const aIncompleteActivations = a.user.activations.filter(
             (activation) => !activation.completed
