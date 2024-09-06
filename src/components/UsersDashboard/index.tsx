@@ -51,55 +51,61 @@ export default function UsersDashboard() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const filtered = ballsRef.current
-        .sort((a, b) => {
-          if (a?.user?.isOnline && !b?.user?.isOnline) return -1;
-          if (!a.user?.isOnline && b.user?.isOnline) return 1;
-  
-          const aIncompleteActivations = a.user.activations.filter(
-            (activation) => !activation.completed
-          ).length;
-          const bIncompleteActivations = b.user.activations.filter(
-            (activation) => !activation.completed
-          ).length;
-  
-          if (aIncompleteActivations >= 2 && bIncompleteActivations < 2) return 1;
-          if (aIncompleteActivations < 2 && bIncompleteActivations >= 2) return -1;
-          return 0;
-        })
-        .filter((ball, index) => index < 120 && ball.user);
-  
-
-      ballsRef.current.forEach((ball) => {
-        const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
-        if (!filtered.some((filteredBall) => filteredBall.id === ball.id) && body) {
-          Matter.Composite.remove(engineRef.current!.world, body);
-        }
-      });
-  
-      
-      filtered.forEach((ball) => {
-        const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
-        if (!body) {
-          const newBody = Matter.Bodies.circle(ball.position.x, ball.position.y, ball.size / 2, {
-            restitution: 0.8,
-            friction: 0,
-            frictionAir: 0,
-            mass: 1,
-          });
-          Matter.Body.set(newBody, 'id', ball.id);
-          Matter.Composite.add(engineRef.current!.world, newBody);
-        }
-      });
-  
-      ballsRef.current = filtered;
-      setBallsFiltered(filtered);
-    }, 2000);
+      filterBalls()
+    }, 10 * 1000);
   
     return () => {
       clearInterval(interval);
     };
   }, []);
+
+  const filterBalls = () => {
+    const filtered = ballsRef.current
+    .sort((a, b) => {
+      if (a?.user?.isOnline && !b?.user?.isOnline) return -1;
+      if (!a.user?.isOnline && b.user?.isOnline) return 1;
+
+      const aIncompleteActivations = a.user.activations.filter(
+        (activation) => !activation.completed
+      ).length;
+      const bIncompleteActivations = b.user.activations.filter(
+        (activation) => !activation.completed
+      ).length;
+
+      if (aIncompleteActivations >= 2 && bIncompleteActivations < 2) return 1;
+      if (aIncompleteActivations < 2 && bIncompleteActivations >= 2) return -1;
+      return 0;
+    })
+    .filter((ball, index) => index < 80 && ball.user);
+
+
+    ballsRef.current.forEach((ball) => {
+      const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
+      if (!filtered.some((filteredBall) => filteredBall.id === ball.id) && body) {
+        Matter.Composite.remove(engineRef.current!.world, body);
+      }
+    });
+
+    
+    filtered.forEach((ball) => {
+      const body = Matter.Composite.get(engineRef.current!.world, ball.id, 'body') as Matter.Body;
+      if (!body) {
+        const newBody = Matter.Bodies.circle(ball.position.x, ball.position.y, ball.size / 2, {
+          restitution: 0.8,
+          friction: 0,
+          frictionAir: 0,
+          mass: 1,
+        });
+        Matter.Body.set(newBody, 'id', ball.id);
+        Matter.Composite.add(engineRef.current!.world, newBody);
+      }
+    });
+
+    ballsRef.current = filtered;
+    setBallsFiltered(filtered);
+
+    console.log('Filtering...')
+  }
 
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
@@ -240,6 +246,7 @@ export default function UsersDashboard() {
     setBalls(newBalls);
     Matter.Runner.run(engine);
     animate();
+    filterBalls()
   };
 
   // Set up animation loop
