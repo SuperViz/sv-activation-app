@@ -40,13 +40,13 @@ export default function Sorter() {
       <div className={`col-span-1 h-screen flex flex-col relative justify-center items-center`}>
         <Image src="/logo-sm.svg" width={108} height={20} alt="Logo Superviz" className="w-[13.5rem] object-contain absolute top-[7.5rem] left-[7.5rem]" />
       {giveAway !== giveAwayStatus.SORTED && (
-        <div className={`flex flex-col justify-center items-center`}>
+        <div className={`flex flex-col justify-center items-center giveawayButton`}>
           <h1 className="font-black text-[12.25rem] leading-[13.5rem] mb-[10rem] text-center">
             Sorteio <br/>LEGO<span className="text-[6rem] leading-[13.5rem] align-super">®  </span>
             Fender<span className="text-[6rem] leading-[13.5rem] align-super">®</span>
           </h1>
           {giveAway === giveAwayStatus.UNSORTED && (
-            <Button text={`Sortear`} type={`button`} classes={`text-[4.5rem] py-[5rem] leading-[5.75rem]`}
+            <Button text={`Sortear`} type={`button`}
                     onClick={handleClick}/>
           )}
           {giveAway === giveAwayStatus.SORTING && (

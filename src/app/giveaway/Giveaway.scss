@@ -2,6 +2,15 @@
   animation: grow 1s linear;
 }
 
+.giveawayButton {
+  button {
+    font-size: 4.5rem;
+    line-height: 5.75rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
 @keyframes grow {
   from {
     transform: scale(0);
