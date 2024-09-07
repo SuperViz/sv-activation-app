@@ -6,14 +6,15 @@ interface IButtonProps {
   disabled?: boolean
   linkTo?: string
   onClick?: () => void
+  classes?: string
 }
 
-export default function Button({ text, linkTo, disabled, type, onClick }: IButtonProps) {
+export default function Button({ text, linkTo, disabled, type, onClick, classes }: IButtonProps) {
   if (type === 'link' && linkTo) {
     return (
       <Link
         href={linkTo}
-        className="w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl"
+        className={`w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl ${classes}`}
       >
         {text}
       </Link>
@@ -26,7 +27,7 @@ export default function Button({ text, linkTo, disabled, type, onClick }: IButto
       disabled={disabled}
       type="button"
       onClick={onClick}
-      className="w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl disabled:opacity-50 stick bottom-3"
+      className={`w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl disabled:opacity-50 stick bottom-3 ${classes}`}
     >
       {text}
     </button>

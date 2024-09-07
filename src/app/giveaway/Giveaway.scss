@@ -1,0 +1,12 @@
+.giveaway {
+  animation: grow 1s linear;
+}
+
+@keyframes grow {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
