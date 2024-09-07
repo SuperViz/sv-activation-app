@@ -13,7 +13,7 @@ export default function Button({ text, linkTo, disabled, type, onClick }: IButto
     return (
       <Link
         href={linkTo}
-        className="w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl"
+        className={`w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl`}
       >
         {text}
       </Link>
@@ -26,7 +26,7 @@ export default function Button({ text, linkTo, disabled, type, onClick }: IButto
       disabled={disabled}
       type="button"
       onClick={onClick}
-      className="w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl disabled:opacity-50 stick bottom-3"
+      className={`w-full py-5 rounded-full bg-[#6210CC] text-white font-bold flex justify-center text-xl disabled:opacity-50 stick bottom-3`}
     >
       {text}
     </button>

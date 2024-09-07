@@ -12,8 +12,8 @@
   transform: translate(-50%, -50%);
 
   @media screen and (min-width: 1080px) {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
   }
 }
 
@@ -32,8 +32,8 @@
 
   @media screen and (min-width: 1080px) {
     border-width: 10px;
-    width: 98px;
-    height: 98px;
+    width: 88px;
+    height: 88px;
   }
 
   &.incomplete, &.GAME {
@@ -43,7 +43,7 @@
 
     @media screen and (min-width: 1080px) {
       $t: 10;
-      $w: 98;
+      $w: 88;
       clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
     }
   }
@@ -63,8 +63,8 @@
 
   @media screen and (min-width: 1080px) {
     border-width: 10px;
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 120px;
   }
   
   &.incomplete, &.GAME {
@@ -74,7 +74,7 @@
 
     @media screen and (min-width: 1080px) {
       $t: 10;
-      $w: 130;
+      $w: 120;
       clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
     }
   }
@@ -93,8 +93,8 @@
 
   @media screen and (min-width: 1080px) {
     border-width: 10px;
-    width: 162px;
-    height: 162px;
+    width: 152px;
+    height: 152px;
   }
 
   &.incomplete, &.GAME {
@@ -104,7 +104,7 @@
 
     @media screen and (min-width: 1080px) {
       $t: 10;
-      $w: 162;
+      $w: 152;
       clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
     }
   }
@@ -125,8 +125,8 @@
 
   @media screen and (min-width: 1080px) {
     border-width: 10px;
-    width: 194px;
-    height: 194px;
+    width: 184px;
+    height: 184px;
   }
 
   &.incomplete, &.GAME {
@@ -136,7 +136,7 @@
 
     @media screen and (min-width: 1080px) {
       $t: 10;
-      $w: 194;
+      $w: 184;
       clip-path: path("M 0, #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 #{$w} #{$w*0.5} L #{$w - $t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$t} #{$w*0.5} A #{($w - $t*2) *.5} #{($w - $t*2) *.5} 0 0 0 #{$w - $t} #{$w*0.5} L #{$w} #{$w*0.5} A #{$w*0.5} #{$w*0.5} 0 0 1 0 #{$w*0.5} Z");
     }
   }

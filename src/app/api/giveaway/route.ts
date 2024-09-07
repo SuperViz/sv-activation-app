@@ -20,6 +20,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         ]
       }
     })
+
+    console.log(activations)
+    
     
     activations.forEach((activation) => {
       // Each point is a coupon
@@ -49,6 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         id: winnerCoupon?.userId
       }
     })
+    
 
     return NextResponse.json({ user: winnerUser, coupon: winnerCoupon }, { status: 200 })
   } catch (error) {
