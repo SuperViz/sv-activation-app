@@ -51,7 +51,7 @@ export default function UsersDashboard() {
   const createBall = (user: IUser) => {
     const containerWidth = containerRef.current!.clientWidth;
     const containerHeight = containerRef.current!.clientHeight;
-    const userActivationDiameter = 194;
+    const userActivationDiameter = 184;
 
     const size =
       windowWidth > 3000

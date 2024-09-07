@@ -12,7 +12,7 @@ export function TVUser({ user }: { user: IUser }) {
   return (
     <div className={`flex flex-col items-center justify-center ${user.isOnline ? 'opacity-100' : 'opacity-20'}`} >
       {userHasStar && <p className="mb-1 tv:text-[1.75rem]">⭐️</p>}
-      <div className={`relative w-[12.125rem] h-[12.125rem]`}>
+      <div className={`relative w-[11.5rem] h-[11.5rem]`}>
         <TVActivations userActivations={user.activations} />
         <div
           className="baseUser">
