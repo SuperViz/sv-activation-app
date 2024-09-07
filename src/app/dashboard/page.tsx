@@ -8,10 +8,10 @@ import Activations from "@/components/Activations";
 import UsersDashboard from "@/components/UsersDashboard";
 import { activations } from "@/data/activationsData";
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
-import { ToastContainer } from 'react-toastify';
-import { v4 as uuid } from 'uuid'
-import './UserDashboard.scss'
-import {useRouter} from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import { v4 as uuid } from "uuid";
+import "./UserDashboard.scss";
+import { useRouter } from "next/navigation";
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string;
@@ -24,11 +24,11 @@ const DASHBOARD_PARTICIPANT_NAME = process.env
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string;
 
 export default function Dashboard() {
-  const router = useRouter()
-  
+  const router = useRouter();
+
   const handleQRCodeClick = () => {
-    router.push('/giveaway')
-  }
+    router.push("/giveaway");
+  };
 
   return (
     <SuperVizRoomProvider
@@ -69,8 +69,13 @@ export default function Dashboard() {
             </p>
           </div>
           <button onClick={handleQRCodeClick}>
-            <Image src={qrcode} width={500}
-            height={145} alt="QR Code para ativação" className="mt-[3.125rem] tv:mt-[6.25rem]" />
+            <Image
+              src={qrcode}
+              width={500}
+              height={145}
+              alt="QR Code para ativação"
+              className="mt-[3.125rem] w-[150%] tv:mt-[6.25rem]"
+            />
           </button>
         </div>
         <Image
