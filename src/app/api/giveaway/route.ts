@@ -19,10 +19,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           { quantity: { gt: 0 } }
         ]
       }
-    })
-
-    console.log(activations)
-    
+    })    
     
     activations.forEach((activation) => {
       // Each point is a coupon
