@@ -4,18 +4,18 @@ import { ActivationType, ActivationTypePage } from "@/global/global.types";
 export enum ActivationColor {
   GAME = '957AFF',
   DISCORD = '0077FF',
-  NEWSLETTER = 'DB6583',
+  GITHUB = 'DB6583',
   HACKATHON = '56E29E'
 }
 
 export const activations: IActivation[] = [
   {
-    id: ActivationType.NEWSLETTER,
-    description: 'Cadastre na nossa',
-    activationWord: 'Newsletter',
-    link: 'https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah',
-    page: ActivationTypePage.NEWSLETTER,
-    color: ActivationColor.NEWSLETTER
+    id: ActivationType.GITHUB,
+    description: 'Dê uma estrela no',
+    activationWord: 'GitHub',
+    link: 'https://github.com/SuperViz/superviz',
+    page: ActivationTypePage.GITHUB,
+    color: ActivationColor.GITHUB
   },
   {
     id: ActivationType.DISCORD,
@@ -24,14 +24,6 @@ export const activations: IActivation[] = [
     link: 'https://discord.com/invite/Zb2arax9nn',
     page: ActivationTypePage.DISCORD,
     color: ActivationColor.DISCORD
-  },
-  {
-    id: ActivationType.GAME,
-    description: 'Ganhe pontos no',
-    activationWord: 'Super Game',
-    link: '/activations/game',
-    page: ActivationTypePage.GAME_ONBOARDING,
-    color: ActivationColor.GAME
   },
   {
     id: ActivationType.HACKATHON,
@@ -45,4 +37,13 @@ export const activations: IActivation[] = [
       activationWord: '$5.000',
     }
   },
+  {
+    id: ActivationType.GAME,
+    description: 'Ganhe pontos no',
+    activationWord: 'Super Game',
+    link: '/activations/game',
+    page: ActivationTypePage.GAME_ONBOARDING,
+    color: ActivationColor.GAME
+  },
+
 ]

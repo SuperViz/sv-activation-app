@@ -41,17 +41,6 @@ export default function CardLink({
         return;
       }
 
-      if (page === ActivationTypePage.NEWSLETTER) {
-        const url = "https://47xzvrbdgjk.typeform.com/to/eGJ6c0Ah"
-        const newWindow = window.open(url, "_blank");
-
-        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-          window.location.href = url;
-        }
-
-        return;
-      }
-
       setPage(activation.page);
     });
   };
@@ -81,14 +70,12 @@ export default function CardLink({
   return (
     <button
       onClick={handleClick}
-      className={`mt-5 p-5 w-full rounded-2xl flex justify-between items-center ${
-        userCompletedActivation ? "bg-[#C9C4D108]" : "bg-[#C9C4D11A]"
-      }`}
+      className={`mt-5 p-5 w-full rounded-2xl flex justify-between items-center ${userCompletedActivation ? "bg-[#C9C4D108]" : "bg-[#C9C4D11A]"
+        }`}
     >
       <div
-        className={`${
-          userCompletedActivation ? "opacity-15" : "opacity-1"
-        } text-left`}
+        className={`${userCompletedActivation ? "opacity-15" : "opacity-1"
+          } text-left`}
       >
         <p className="text-white text-2xl font-bold">
           {activation.description}

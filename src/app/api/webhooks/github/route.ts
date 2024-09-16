@@ -8,16 +8,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const body = await request.text()
     const parsed = JSON.parse(body)
 
-    const field = parsed.form_response.definition.fields.find((field: any) => field.type === 'email')
-    const anwser = parsed.form_response.answers.find((anwser: any) => anwser.field.ref === field.ref)
-
-    if (!anwser.email) {
-      return NextResponse.json({ message: 'E-mail field not found' }, { status: 200 })
-    }
+    const githubUser = parsed.sender.login
+    const completed = parsed.action === 'created'
 
     const user = await db.user.findFirst({
       where: {
-        email: anwser.email
+        githubUser
       }
     })
 
@@ -27,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const activation = await db.activation.findFirst({
       where: {
-        name: ActivationType.NEWSLETTER,
+        name: ActivationType.GITHUB,
         userId: user.id
       }
     })
@@ -38,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     await db.activation.update({
       data: {
-        completed: true
+        completed
       },
       where: {
         id: activation.id
@@ -47,7 +43,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     await publishEvent('default', 'activation.complete', {
       userId: user.id,
-      activation: ActivationType.NEWSLETTER
+      activation: ActivationType.GITHUB
     })
 
     return NextResponse.json({ message: 'Success' }, { status: 200 })
