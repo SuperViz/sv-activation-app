@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserData } from "../services/getUserData";
 import { ActivationTypePage } from "@/global/global.types";
 import DiscordActivation from "@/components/ActivationsPages/DiscordActivation";
+import GitHubActivation from "@/components/ActivationsPages/GitHubActivation";
 import GameOnboarding from "@/components/ActivationsPages/GameActivationOnboardLayout";
 import GameActivationPlayLayout from "@/components/ActivationsPages/GameActivationPlayLayout";
 
@@ -83,6 +84,9 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
       )}
       {page === ActivationTypePage.DISCORD && (
         <DiscordActivation setPage={setPage} />
+      )}
+      {page === ActivationTypePage.GITHUB && (
+        <GitHubActivation setPage={setPage} />
       )}
       {page === ActivationTypePage.GAME_ONBOARDING && (
         <GameOnboarding setPage={setPage} />

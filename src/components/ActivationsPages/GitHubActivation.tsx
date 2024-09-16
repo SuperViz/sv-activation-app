@@ -1,28 +1,24 @@
 "use client";
 
-import Input from "@/components/Input";
-import Button from "@/components/Button";
-import React from "react";
-import { addUserDiscord } from "@/app/services/addUserDiscord";
-import { useRouter } from "next/navigation";
-import ActivationLayout from "./ActivationLayout";
 import { ActivationTypePage } from "@/global/global.types";
+import ActivationLayout from "./ActivationLayout";
+import Input from '../Input';
+import Button from '../Button';
+import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { addUserGitHub } from '@/app/services/addUserGitHub';
 
-const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
+export default function GitHubActivation({ setPage }: { setPage: (page: ActivationTypePage) => void }) {
+  const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
 
-export default function DiscordActivation({
-  setPage,
-}: {
-  setPage: (page: ActivationTypePage) => void;
-}) {
   const router = useRouter();
-  const [discordUser, setDiscordUser] = React.useState<string>("");
-  const [validField, setValidField] = React.useState<boolean>(false);
+  const [githubUser, setGitHubUser] = useState<string>("");
+  const [validField, setValidField] = useState<boolean>(false);
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fieldValidity = event.target.validity.valid;
     const value = event.target.value;
-    setDiscordUser(value);
+    setGitHubUser(value);
     if (fieldValidity !== validField) {
       setValidField(fieldValidity);
     }
@@ -31,9 +27,9 @@ export default function DiscordActivation({
   const handleSubmit = async () => {
     const email = JSON.parse(localStorage.getItem(USERDATA_KEY)!) as string;
 
-    await addUserDiscord({ discordUser, email });
+    await addUserGitHub({ githubUser: githubUser, email });
 
-    router.push("https://discord.com/invite/Zb2arax9nn");
+    router.push("https://github.com/SuperViz/superviz");
   };
 
   return (
@@ -43,15 +39,15 @@ export default function DiscordActivation({
           className={`absolute bottom-[40%] left-0 w-full transition-all duration-700 ease-in-out transform`}
         >
           <Input
-            label={`Qual seu nome de usuário no Discord?`}
+            label={`Qual seu user no GitHub?`}
             id={`discord`}
             onChange={handleChangeInput}
-            value={discordUser}
+            value={githubUser}
             type={`text`}
           />
         </div>
         <Button
-          text="Começar"
+          text="Dar estrela"
           onClick={handleSubmit}
           type="button"
           disabled={!validField}

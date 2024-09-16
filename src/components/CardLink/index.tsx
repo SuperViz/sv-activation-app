@@ -41,17 +41,6 @@ export default function CardLink({
         return;
       }
 
-      if (page === ActivationTypePage.GITHUB) {
-        const url = "https://github.com/SuperViz/superviz"
-        const newWindow = window.open(url, "_blank");
-
-        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-          window.location.href = url;
-        }
-
-        return;
-      }
-
       setPage(activation.page);
     });
   };
