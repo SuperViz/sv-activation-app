@@ -4,6 +4,6 @@ POST http://localhost:3000/api/user/activation
 Content-Type: application/json
 
 {
-  "name": "NEWSLETTER",
+  "name": "GITHUB",
   "userEmail": "dani@dani.com"
 }

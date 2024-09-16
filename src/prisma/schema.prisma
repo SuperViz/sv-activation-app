@@ -49,6 +49,6 @@ model Element {
 enum ActivationTypes {
   GAME
   DISCORD
-  NEWSLETTER
+  GITHUB
   HACKATHON
 }

@@ -9,6 +9,7 @@ import { EditUserDTO } from "@/app/api/user/dto/edit-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+
   try {
     const body = await request.text();
     const parsedBody = validateRequestBody<z.infer<typeof CreateUserDTO>>(

@@ -1,7 +1,7 @@
 export enum ActivationType {
   GAME = 'GAME',
   DISCORD = 'DISCORD',
-  NEWSLETTER = 'NEWSLETTER',
+  GITHUB = 'GITHUB',
   HACKATHON = 'HACKATHON'
 }
 
@@ -9,7 +9,7 @@ export enum ActivationTypePage {
   GAME_ONBOARDING = 'GAME.ONBOARDING',
   GAME_PLAY = 'GAME.PLAY',
   DISCORD = 'DISCORD',
-  NEWSLETTER = 'NEWSLETTER',
+  GITHUB = 'GITHUB',
   HACKATHON = 'HACKATHON',
   LINKS = 'LINKS'
 }

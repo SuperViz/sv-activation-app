@@ -27,7 +27,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const activation = await db.activation.findFirst({
       where: {
-        name: ActivationType.NEWSLETTER,
+        name: ActivationType.GITHUB,
         userId: user.id
       }
     })
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     await publishEvent('default', 'activation.complete', {
       userId: user.id,
-      activation: ActivationType.NEWSLETTER
+      activation: ActivationType.GITHUB
     })
 
     return NextResponse.json({ message: 'Success' }, { status: 200 })
