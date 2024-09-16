@@ -121,21 +121,39 @@ export async function PATCH(request: NextRequest) {
       return parsedBody.response;
     }
 
-    const { email, discordUser } = parsedBody.response;
+    const { email, discordUser, githubUser } = parsedBody.response;
 
-    const user = await db.user.update({
-      where: {
-        email,
-      },
-      data: {
-        discordUser,
-      },
-    });
+    if (discordUser) {
+      const user = await db.user.update({
+        where: {
+          email,
+        },
+        data: {
+          discordUser,
+        },
+      });
 
-    return NextResponse.json(
-      { message: "Discord Added", data: { user } },
-      { status: 201 }
-    );
+      return NextResponse.json(
+        { message: "Discord Added", data: { user } },
+        { status: 201 }
+      );
+    }
+
+    if (githubUser) {
+      const user = await db.user.update({
+        where: {
+          email,
+        },
+        data: {
+          githubUser,
+        },
+      });
+
+      return NextResponse.json(
+        { message: "GitHub Added", data: { user } },
+        { status: 201 }
+      );
+    }
   } catch (error) {
     console.log(error);
 
