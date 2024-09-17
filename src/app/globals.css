@@ -76,3 +76,32 @@ html, body {
   }
 
 }
+
+.atari {
+  position: absolute;
+  z-index: 0;
+  left: -2rem;
+  width: 50rem;
+  top: -30rem;
+}
+
+@media screen and (max-width: 990px) {
+  .atari {
+    position: absolute;
+    z-index: 0;
+    left: -2rem;
+    top: 0
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .title-lego{
+    font-size:3rem;
+  }
+  .atari {
+    position: absolute;
+    z-index: 0;
+    left: -2rem;
+    top: 1rem
+  }
+}

@@ -1,4 +1,4 @@
-import { IActivation, IUser } from "../../types";
+import { IActivation } from "../../types";
 import { ActivationType, ActivationTypePage } from "@/global/global.types";
 
 export enum ActivationColor {
@@ -19,7 +19,7 @@ export const activations: IActivation[] = [
   },
   {
     id: ActivationType.DISCORD,
-    description: 'Junte-se ao nosso',
+    description: 'Junte-se ao',
     activationWord: 'Discord',
     link: 'https://discord.com/invite/Zb2arax9nn',
     page: ActivationTypePage.DISCORD,
