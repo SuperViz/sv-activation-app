@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
-import fenderImg from "../../../public/fender-lego-tv.png";
+import atariImg from "../../../public/atari-user.png";
 import qrcode from "../../../public/qrcode_events.superviz.com.png";
 import Activations from "@/components/Activations";
 import UsersDashboard from "@/components/UsersDashboard";
 import { activations } from "@/data/activationsData";
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
-import { ToastContainer } from "react-toastify";
-import { v4 as uuid } from "uuid";
-import "./UserDashboard.scss";
+import { ToastContainer } from 'react-toastify';
+import { v4 as uuid } from 'uuid'
+import './UserDashboard.scss'
 import { useRouter } from "next/navigation";
 
 const DEVELOPER_KEY = process.env.NEXT_PUBLIC_DEVELOPER_KEY as string;
@@ -57,7 +57,7 @@ export default function Dashboard() {
             <span className="text-3xl tv:text-[5rem] tv:leading-[6rem] align-top">
               ®{" "}
             </span>
-            da Fender
+            do Atari
             <span className="text-3xl tv:text-[5rem] tv:leading-[6rem] align-top">
               ®
             </span>
@@ -69,17 +69,11 @@ export default function Dashboard() {
             </p>
           </div>
           <button onClick={handleQRCodeClick}>
-            <Image
-              src={qrcode}
-              width={500}
-              height={145}
-              alt="QR Code para ativação"
-              className="mt-[3.125rem] w-[150%] tv:mt-[6.25rem]"
-            />
+            <Image src={qrcode} alt="QR Code para ativação" className="mt-[3.125rem] tv:mt-[6.25rem]" />
           </button>
         </div>
         <Image
-          src={fenderImg}
+          src={atariImg}
           alt="Imagem de um Lego da Fender"
           className="z-0 absolute bottom-[2.5rem] tv:bottom-[5rem] left-0 max-w-[27vw] object-contain"
         />
