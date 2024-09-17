@@ -24,11 +24,11 @@ const DASHBOARD_PARTICIPANT_NAME = process.env
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string;
 
 export default function Dashboard() {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleQRCodeClick = () => {
-    router.push('/giveaway')
-  }
+    router.push("/giveaway");
+  };
 
   return (
     <SuperVizRoomProvider
