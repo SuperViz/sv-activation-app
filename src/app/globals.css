@@ -16,6 +16,14 @@ html, body {
   background: linear-gradient(90deg, #4cd964, #5ac8fa, #007aff, #34aadc, #6210CC, #ff2d55) !important;
 }
 
+.user-page input {
+  border: 3px solid #666;
+}
+
+.user-page input:focus {
+    border: 3px solid #6210CC;
+  }
+
 @layer components {
   .activations {
     .pinpoint{

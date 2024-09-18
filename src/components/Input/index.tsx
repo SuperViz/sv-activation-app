@@ -22,13 +22,11 @@ export default function Input({
     <div className="w-full px-1 flex flex-col align-center">
       <label
         htmlFor={id}
-        className="font-black text-white text-4xl text-center flex flex-col justify-center items-center w-full mb-5"
+        className="font-black text-white text-3xl text-center flex flex-col justify-center items-center w-full mb-5"
       >
         {label}
       </label>
-      {description && (
-        <p className="text-white text-center text-lg mb-5">{description}</p>
-      )}
+
       <input
         required
         type={type}
@@ -38,7 +36,10 @@ export default function Input({
         onChange={(event) => onChange(event)}
         onKeyDown={onKeyDown}
         value={value}
-      />
+      /> <br />
+      {description && (
+        <p className="text-white text-center text-md mb-5">{description}</p>
+      )}
     </div>
   );
 }

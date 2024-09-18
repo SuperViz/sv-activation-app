@@ -49,7 +49,9 @@ export default function Enter() {
   };
 
   return (
-    <form className="w-full h-full relative overflow-hidden flex flex-col pt-20">
+    <form className="user-page w-full h-full relative overflow-hidden flex flex-col" style={{
+      paddingTop: '2rem'
+    }}>
       <Input
         label={'Como gostaria de ser chamado(a)?'}
         id={'name'}
@@ -57,8 +59,6 @@ export default function Enter() {
         value={formData['name']}
         type={'text'}
       />
-      <br />
-      <br />
       <Input
         label={'Qual seu email?'}
         id={'email'}
