@@ -67,7 +67,7 @@ export default function UsersDashboard() {
       }
 
       const filtered = ballsRef.current
-        .filter((ball) => ball && ball.user) // Ensure ball and user exist
+        .filter((ball) => ball && !!ball.user && !!ball.user?.name) // Ensure ball and user exist
         .sort((a, b) => {
           if (a.user.isOnline && !b.user.isOnline) return -1;
           if (!a.user.isOnline && b.user.isOnline) return 1;

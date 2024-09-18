@@ -5,6 +5,8 @@ import { ActivationType } from "@/global/global.types";
 import "./user.scss";
 
 export function TVUser({ user }: { user: IUser }) {
+  if(!user?.name) return null
+
   const firstLetter = user.name.at(0) ?? "U";
   const activationsNumber = user.activations.length;
   const userHasStar =
