@@ -29,7 +29,7 @@ export default function Activations({ activations }: IActivationsProps) {
 
   return (
     <div className="bg-[#201E21]/90 flex items-center px-[2.25rem] py-[1rem] rounded-2xl tv:px-[4.5rem] tv:py-[1.875rem] tv:rounded-[2rem]">
-      <p className="text-xl tv:text-[2.75rem] tv:leading-[3.2rem]">Ativações</p>
+      <p className="text-xl tv:text-[2.75rem] tv:leading-[3.2rem]">Junte pontos participando das ativações abaixo</p>
       {activations.map((act) => (
         <Activation key={act.color} activation={act} />
       ))}
