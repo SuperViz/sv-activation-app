@@ -34,7 +34,7 @@ export default function UsersDashboard() {
   const ballsRef = useRef<Ball[]>([]);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [ballsFiltered, setBallsFiltered] = useState<Ball[]>([]);
-  const started = useRef<boolean>(false);
+  const initialized = useRef(false)
 
   useEffect(() => {
     const handleResize = () => {
@@ -178,12 +178,16 @@ export default function UsersDashboard() {
     };
   };
 
-  const initialize = () => {
+  const initialize = (users: IUser[]) => {
+    console.log('call', users)
+
     if (!containerRef.current) return;
 
     const engine = Matter.Engine.create();
     engineRef.current = engine;
     engine.gravity.y = 0;
+
+    initialized.current = true
 
     const containerWidth = containerRef.current.clientWidth;
     const containerHeight = containerRef.current.clientHeight;
@@ -482,17 +486,15 @@ export default function UsersDashboard() {
   }
 
   const handleParticipantUpdate = useCallback(
-    (message: { data: IUser }) => {
+    async (message: { data: IUser }) => {
       const userExists = users.some((user) => message.data?.id === user?.id);
 
       if (!userExists) {
-        createUser({
-          ...message.data,
-          activations: message.data?.activations ?? [],
-        });
-        setUsers((previous) => {
-          return [...previous, message.data];
-        });
+        const users = await fetchUsers()
+        const user = users.find(user => user.id === message.data.id)
+
+        user && createUser(user)
+        filterBalls()
       }
 
       const user = message?.data;
@@ -521,47 +523,49 @@ export default function UsersDashboard() {
     setBalls((previous) => [...previous, ball]);
   }
 
-  function fetchUsers() {
-    getUsers()
-      .then((fetchedUsers: IUserResponse[]) => {
-        const users: IUser[] = fetchedUsers.map((user) => {
-          const activations: IUserActivation[] = user.activations.map(
-            (activation) => {
-              return {
-                name: activation.name,
-                completed: activation.completed,
-                quantity: activation.quantity,
-                color: ActivationColor[activation.name],
-              };
-            }
-          );
+  async function fetchUsers() {
+    const fetchedUsers = await getUsers()
 
+    const users: IUser[] = fetchedUsers.map((user) => {
+      const activations: IUserActivation[] = user.activations.map(
+        (activation) => {
           return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            discordUser: user.discordUser,
-            activations: activations,
-            isOnline: false,
+            name: activation.name,
+            completed: activation.completed,
+            quantity: activation.quantity,
+            color: ActivationColor[activation.name],
           };
-        });
+        }
+      );
 
-        return users;
-      })
-      .then((users) => {
-        return getOnlineUsersIds().then((onlineUsersIds: string[]) => {
-          if (onlineUsersIds.length === 0) return users;
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        discordUser: user.discordUser,
+        activations: activations,
+        isOnline: false,
+      };
+    });
 
-          return users.map((user) => ({
-            ...user,
-            isOnline: onlineUsersIds.includes(user.id),
-          }));
-        });
-      })
-      .then((updatedUsers) => {
-        setUsers(updatedUsers);
-        initialize();
-      });
+    const onlineUsersIds = await getOnlineUsersIds()
+
+    if (!onlineUsersIds.length) {
+      setUsers(users)
+    }
+
+    const updatedUsers = users.map((user) => ({
+      ...user,
+      isOnline: onlineUsersIds.includes(user.id),
+    }));
+
+    setUsers(updatedUsers)
+
+    if(!initialized.current) {
+      initialize(!onlineUsersIds.length ? users : updatedUsers);
+    }
+
+    return !onlineUsersIds.length ? users : updatedUsers
   }
 
   useEffect(() => {

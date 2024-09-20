@@ -69,7 +69,7 @@ export default function Dashboard() {
             </p>
           </div>
           <button onClick={handleQRCodeClick}>
-            <Image src={qrcode} alt="QR Code para ativação" className="mt-[3.125rem] w-[50%] tv:mt-[6.25rem]" />
+            <Image src={qrcode} alt="QR Code para ativação" className="mt-[3.125rem] w-[70%] tv:mt-[6.25rem]" />
           </button>
         </div>
         <Image
