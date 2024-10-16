@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import atariImg from "../../../public/atari-user.png";
+import atariImg from "../../../public/alexa-user.png";
 import qrcode from "../../../public/qrcode_events.superviz.com.png";
 import Activations from "@/components/Activations";
 import UsersDashboard from "@/components/UsersDashboard";
@@ -53,14 +53,7 @@ export default function Dashboard() {
             className="tv:w-[13.5rem] object-contain"
           />
           <h1 className="font-black mt-[2rem] text-7xl tv:mt-[4rem] tv:text-[9.5rem] tv:leading-[10.5rem]">
-            Ganhe um LEGO
-            <span className="text-3xl tv:text-[5rem] tv:leading-[6rem] align-top">
-              ®{" "}
-            </span>
-            do Atari
-            <span className="text-3xl tv:text-[5rem] tv:leading-[6rem] align-top">
-              ®
-            </span>
+            Ganhe um Echo Dot 5ª Geração
           </h1>
           <div className="text-3xl mt-[3.125rem] tv:mt-[6.25rem] tv:text-[4rem] tv:leading-[5.5rem]">
             <p>Participe de qualquer ativação e ganhe pontos para concorrer.</p>
@@ -74,7 +67,7 @@ export default function Dashboard() {
         </div>
         <Image
           src={atariImg}
-          alt="Imagem de um Lego da Fender"
+          alt="Imagem de um Echo Dot 5ª Geração"
           className="z-0 absolute bottom-[2.5rem] tv:bottom-[5rem] left-0 max-w-[27vw] object-contain"
         />
         <div className="user-canva flex flex-col bg-[#C9C4D114] py-10 rounded-[2rem] min-w-[100.375rem] tv:py-20 tv:rounded-[4rem] tv:min-w-[75%] grow">
