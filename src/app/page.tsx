@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from "next/image";
-import atariImg from '../../public/atari-user.png'
+import img from '../../public/alexa-user.png'
 import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
 
@@ -26,14 +26,13 @@ export default function App() {
         <div className="flex flex-col items-center">
           <Image src="./logo-sm.svg" width={109} height={80} alt="Logo Superviz" />
           <h1 className="title-lego mt-6 text-[64px]/[70px] font-black text-center">
-            Ganhe um LEGO<span className="text-3xl align-top">® </span>
-            da Atari<span className="text-3xl align-top">®</span>
+            Ganhe um Echo Dot 5ª Geração
           </h1>
         </div>
         <Button text="Participar" onClick={handleParticipate} type="button" />
 
       </div>
-      <Image src={atariImg} alt="Imagem de um Lego do Atari" className="atari" />
+      <Image src={img} alt="Imagem de um Echo Dot 5ª Geração" className='atari' />
     </div>
   );
 };
