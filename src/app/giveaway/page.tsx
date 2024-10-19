@@ -4,7 +4,7 @@ import Button from "@/components/Button";
 import React, { useMemo } from "react";
 import { sortWinner } from "@/app/services/sortWinner";
 import Image from "next/image";
-import fenderImg from "../../../public/fender-lego-right.png";
+import fenderImg from "../../../public/alexa-user.png";
 import winnerBadge from "../../../public/winner-badge.png";
 // @ts-ignore
 import Confetti from 'react-confetti'
