@@ -84,7 +84,7 @@ export default function Sorter() {
           )}
         </div>
         <div className={`bg-[#957AFF] col-span-1 m-10 rounded-[4rem] relative`}>
-          <Image src={fenderImg} alt="Imagem de um Echo Dot 5ª Geração" className="absolute top-0 right-0 object-contain" />
+          <Image src={fenderImg} alt="Imagem de um Echo Dot 5ª Geração" className="absolute top-1 left-0 object-contain" />
         </div>
       </div>
     </>
