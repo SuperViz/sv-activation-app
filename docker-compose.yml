@@ -4,6 +4,6 @@ services:
     environment:
       POSTGRES_DB: activation-app
       POSTGRES_USER: superviz
-      POSTGRES_PASSWORD: uyg@xvp5WGD8wvd7pea
+      POSTGRES_PASSWORD: superviz
     ports:
       - "5432:5432"

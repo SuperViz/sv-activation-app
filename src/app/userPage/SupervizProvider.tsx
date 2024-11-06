@@ -1,4 +1,4 @@
-import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
+import { SuperVizRoomProvider } from "@superviz/react-sdk";
 import UserPageContent from "@/components/ActivationsPages/UserPageContent";
 import React, { useState } from "react";
 import { IActivationResponse, IUser, IUserActivation } from "../../../types";
@@ -78,7 +78,6 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
       }}
       roomId={DASHBOARD_ROOM_ID}
     >
-      <Realtime />
       {page === ActivationTypePage.LINKS && (
         <UserPageContent setUser={setUser} user={user} setPage={setPage} />
       )}

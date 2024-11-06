@@ -14,7 +14,7 @@ import ActivationLayout from "./ActivationLayout";
 import { useRealtime } from "@superviz/react-sdk";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getUserData, updateUser } from "@/app/services/getUserData";
+import { getUserData } from "@/app/services/getUserData";
 
 const randomTimes = [2, 5, 8];
 
@@ -213,8 +213,7 @@ export default function GameActivationPlayLayout({
       return;
 
     toast(
-      `${element.emoji} ${
-        userFromMessage?.name
+      `${element.emoji} ${userFromMessage?.name
       } acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
       {
         position: "bottom-left",
@@ -271,16 +270,16 @@ export default function GameActivationPlayLayout({
               >
                 {gameOver
                   ? elements
-                      .slice()
-                      .sort((a, b) =>
-                        a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
-                      )
-                      .map((element, index) =>
-                        renderElement(element, index, provided)
-                      )
-                  : elements.map((element, index) =>
+                    .slice()
+                    .sort((a, b) =>
+                      a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
+                    )
+                    .map((element, index) =>
                       renderElement(element, index, provided)
-                    )}
+                    )
+                  : elements.map((element, index) =>
+                    renderElement(element, index, provided)
+                  )}
               </div>
             )}
           </Droppable>

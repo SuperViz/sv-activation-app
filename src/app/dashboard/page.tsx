@@ -7,7 +7,7 @@ import qrcode from "../../../public/qrcode_events.superviz.com.png";
 import Activations from "@/components/Activations";
 import UsersDashboard from "@/components/UsersDashboard";
 import { activations } from "@/data/activationsData";
-import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
+import { SuperVizRoomProvider } from "@superviz/react-sdk";
 import { ToastContainer } from 'react-toastify';
 import { v4 as uuid } from 'uuid'
 import './UserDashboard.scss'
@@ -77,7 +77,6 @@ export default function Dashboard() {
             </p>
           </div>
           <div className="grow">
-            <Realtime />
             <UsersDashboard />
           </div>
           <div className="flex justify-between mt-9 px-10 tv:px-20">
