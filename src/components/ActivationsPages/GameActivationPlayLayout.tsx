@@ -11,10 +11,10 @@ import "./GameActivationPlayLayout.scss";
 import { IElement } from "../../../types.game";
 import { ActivationTypePage } from "@/global/global.types";
 import ActivationLayout from "./ActivationLayout";
-import { useRealtime } from "@superviz/react-sdk";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserData } from "@/app/services/getUserData";
+import { useRealtime } from "@/hooks/useRealtime";
 
 const randomTimes = [2, 5, 8];
 
@@ -24,16 +24,17 @@ export default function GameActivationPlayLayout({
   setPage: (page: ActivationTypePage) => void;
 }) {
   const USERDATA_KEY = process.env.NEXT_PUBLIC_USERDATA_KEY as string;
-
+  const { gameChannel } = useRealtime();
   const [elements, setElements] = useState<IElement[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [selectedElements, setSelectedElements] = useState<IElement[]>([]);
   const repeatedTries = useRef(0);
-
-  const { subscribe } = useRealtime("game");
+  const [combining, setCombining] = useState(false);
 
   useEffect(() => {
-    if (selectedElements.length === 2) {
+    if (combining) return;
+    if (selectedElements.length >= 2) {
+      setCombining(true);
       combineElements(selectedElements[0], selectedElements[1]);
     }
   }, [selectedElements]);
@@ -138,6 +139,7 @@ export default function GameActivationPlayLayout({
     })
       .then((res) => res.json())
       .then((data) => {
+        setCombining(false);
         setSelectedElements([]);
         if (data.points >= 10) {
           finishGame();
@@ -213,7 +215,8 @@ export default function GameActivationPlayLayout({
       return;
 
     toast(
-      `${element.emoji} ${userFromMessage?.name
+      `${element.emoji} ${
+        userFromMessage?.name
       } acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
       {
         position: "bottom-left",
@@ -232,8 +235,12 @@ export default function GameActivationPlayLayout({
   resetServerContext();
 
   useEffect(() => {
-    subscribe("new.element", handleGameUpdate);
+    gameChannel?.subscribe("new.element", handleGameUpdate);
     getSavedElements();
+
+    return () => {
+      gameChannel?.unsubscribe("new.element", handleGameUpdate);
+    };
   }, []);
 
   function mapAndInvoke(onDragEnd: (result: any) => void) {
@@ -270,16 +277,16 @@ export default function GameActivationPlayLayout({
               >
                 {gameOver
                   ? elements
-                    .slice()
-                    .sort((a, b) =>
-                      a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
-                    )
-                    .map((element, index) =>
-                      renderElement(element, index, provided)
-                    )
+                      .slice()
+                      .sort((a, b) =>
+                        a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
+                      )
+                      .map((element, index) =>
+                        renderElement(element, index, provided)
+                      )
                   : elements.map((element, index) =>
-                    renderElement(element, index, provided)
-                  )}
+                      renderElement(element, index, provided)
+                    )}
               </div>
             )}
           </Droppable>

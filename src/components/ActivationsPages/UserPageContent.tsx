@@ -4,11 +4,11 @@ import { MobileUser } from "@/components/User";
 import { ActivationColor, activations } from "@/data/activationsData";
 import CardLink from "@/components/CardLink";
 import React, { useCallback } from "react";
-import { useRealtime, useRealtimeParticipant } from "@superviz/react-sdk";
 import { IUser, IUserActivation } from "../../../types";
 import { ActivationType, ActivationTypePage } from "@/global/global.types";
 import Link from "next/link";
 import Image from "next/image";
+import { useRealtime } from "@/hooks/useRealtime";
 
 export default function UserPageContent({
   user,
@@ -19,8 +19,8 @@ export default function UserPageContent({
   setUser: any;
   setPage: (page: ActivationTypePage) => void;
 }) {
-  const { subscribe } = useRealtime("default");
-  const { update, isReady } = useRealtimeParticipant("default");
+  const { defaultChannel } = useRealtime();
+
   function completeActivation(
     activationName: ActivationType,
     completed: boolean
@@ -82,14 +82,22 @@ export default function UserPageContent({
   }, []);
 
   React.useEffect(() => {
-    subscribe("activation.start", handleActivationStart);
-    subscribe("activation.game.update", handleGameUpdate);
-    subscribe("activation.complete", handleActivationClick);
-  }, []);
+    if (!defaultChannel) return;
+    defaultChannel.subscribe("activation.start", handleActivationStart);
+    defaultChannel.subscribe("activation.game.update", handleGameUpdate);
+    defaultChannel.subscribe("activation.complete", handleActivationClick);
+
+    return () => {
+      defaultChannel.unsubscribe("activation.start", handleActivationStart);
+      defaultChannel.unsubscribe("activation.game.update", handleGameUpdate);
+      defaultChannel.unsubscribe("activation.complete", handleActivationClick);
+    };
+  }, [defaultChannel]);
 
   React.useEffect(() => {
-    update(user);
-  }, [user, isReady]);
+    if (!defaultChannel) return;
+    defaultChannel.participant.update(user);
+  }, [user, defaultChannel]);
 
   return (
     <div className="flex flex-col w-full h-dvh mobileBg">
