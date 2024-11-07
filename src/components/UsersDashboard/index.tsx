@@ -3,17 +3,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import { TVUser } from "@/components/User";
-import { IUser, IUserActivation, IUserResponse } from "../../../types";
+import { IUser, IUserActivation } from "../../../types";
 import { ActivationColor } from "@/data/activationsData";
-import {
-  useRealtime,
-  useRealtimeParticipant,
-  useSuperviz,
-} from "@superviz/react-sdk";
+import { useSuperviz } from "@superviz/react-sdk";
 import { ActivationType } from "@/global/global.types";
 import { getOnlineUsersIds, getUsers } from "@/app/services/getUserData";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRealtime } from "@/hooks/useRealtime";
 
 const BASE_SPEED = 0.5;
 const MAX_SPEED = 1;
@@ -34,7 +31,8 @@ export default function UsersDashboard() {
   const ballsRef = useRef<Ball[]>([]);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [ballsFiltered, setBallsFiltered] = useState<Ball[]>([]);
-  const initialized = useRef(false)
+  const initialized = useRef(false);
+  const { defaultChannel, gameChannel } = useRealtime();
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,7 +77,8 @@ export default function UsersDashboard() {
             (activation) => !activation.completed
           ).length;
 
-          if (hasIncompleteActivations >= 2 && bIncompleteActivations < 2) return 1;
+          if (hasIncompleteActivations >= 2 && bIncompleteActivations < 2)
+            return 1;
           if (hasIncompleteActivations < 2 && bIncompleteActivations >= 2)
             return -1;
           return 0;
@@ -179,15 +178,13 @@ export default function UsersDashboard() {
   };
 
   const initialize = (users: IUser[]) => {
-    console.log('call', users)
-
     if (!containerRef.current) return;
 
     const engine = Matter.Engine.create();
     engineRef.current = engine;
     engine.gravity.y = 0;
 
-    initialized.current = true
+    initialized.current = true;
 
     const containerWidth = containerRef.current.clientWidth;
     const containerHeight = containerRef.current.clientHeight;
@@ -329,9 +326,6 @@ export default function UsersDashboard() {
   };
 
   const { stopRoom, hasJoinedRoom } = useSuperviz();
-  const { subscribe } = useRealtime("default");
-  const { subscribe: gameSubscribe } = useRealtime("game");
-  const { subscribe: participantSubscribe } = useRealtimeParticipant("default");
 
   const setUsersToNewState = (user: IUser) => {
     const newUsers = users.map((u) => {
@@ -490,11 +484,11 @@ export default function UsersDashboard() {
       const userExists = users.some((user) => message.data?.id === user?.id);
 
       if (!userExists) {
-        const users = await fetchUsers()
-        const user = users.find(user => user.id === message.data.id)
+        const users = await fetchUsers();
+        const user = users.find((user) => user.id === message.data.id);
 
-        user && createUser(user)
-        filterBalls()
+        user && createUser(user);
+        filterBalls();
       }
 
       const user = message?.data;
@@ -524,8 +518,7 @@ export default function UsersDashboard() {
   }
 
   async function fetchUsers() {
-    const fetchedUsers = await getUsers()
-
+    const fetchedUsers = await getUsers();
     const users: IUser[] = fetchedUsers.map((user) => {
       const activations: IUserActivation[] = user.activations.map(
         (activation) => {
@@ -547,11 +540,9 @@ export default function UsersDashboard() {
         isOnline: false,
       };
     });
-
-    const onlineUsersIds = await getOnlineUsersIds()
-
+    const onlineUsersIds = await getOnlineUsersIds();
     if (!onlineUsersIds.length) {
-      setUsers(users)
+      setUsers(users);
     }
 
     const updatedUsers = users.map((user) => ({
@@ -559,29 +550,31 @@ export default function UsersDashboard() {
       isOnline: onlineUsersIds.includes(user.id),
     }));
 
-    setUsers(updatedUsers)
+    setUsers(updatedUsers);
 
-    if(!initialized.current) {
+    if (!initialized.current) {
       initialize(!onlineUsersIds.length ? users : updatedUsers);
     }
 
-    return !onlineUsersIds.length ? users : updatedUsers
+    return !onlineUsersIds.length ? users : updatedUsers;
   }
 
   useEffect(() => {
+    if (!defaultChannel || !gameChannel) return;
     fetchUsers();
 
-    subscribe("activation.start", handleActivationStart);
-    subscribe("activation.complete", handleActivationComplete);
-    gameSubscribe("new.element", handleGameUpdate);
+    defaultChannel.subscribe("activation.start", handleActivationStart);
+    defaultChannel.subscribe("activation.start", handleActivationStart);
+    defaultChannel.subscribe("activation.complete", handleActivationComplete);
+    gameChannel.subscribe("new.element", handleGameUpdate);
 
-    participantSubscribe("presence.leave", (message) =>
+    defaultChannel.participant.subscribe("presence.leave", (message) =>
       handleParticipantStatusChange(message.id, false)
     );
-    participantSubscribe("presence.joined-room", (message) =>
+    defaultChannel.participant.subscribe("presence.joined-room", (message) =>
       handleParticipantStatusChange(message.id, true)
     );
-    participantSubscribe("presence.update", (message) =>
+    defaultChannel.participant.subscribe<IUser>("presence.update", (message) =>
       handleParticipantUpdate(message)
     );
 
@@ -594,12 +587,24 @@ export default function UsersDashboard() {
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
+      // defaultChannel.unsubscribe("activation.start", handleActivationStart);
+      // defaultChannel.unsubscribe("activation.start", handleActivationStart);
+      // defaultChannel.unsubscribe(
+      //   "activation.complete",
+      //   handleActivationComplete
+      // );
+      // gameChannel.unsubscribe("new.element", handleGameUpdate);
+
+      // defaultChannel.participant.unsubscribe("presence.leave");
+      // defaultChannel.participant.unsubscribe("presence.joined-room");
+      // defaultChannel.participant.unsubscribe("presence.update");
+
       window.removeEventListener("beforeunload", handleBeforeUnload);
       if (!engineRef.current) return;
 
       Matter.Engine.clear(engineRef.current);
     };
-  }, [hasJoinedRoom]);
+  }, [defaultChannel, gameChannel]);
 
   return (
     <div
