@@ -10,6 +10,7 @@ import DiscordActivation from "@/components/ActivationsPages/DiscordActivation";
 import GitHubActivation from "@/components/ActivationsPages/GitHubActivation";
 import GameOnboarding from "@/components/ActivationsPages/GameActivationOnboardLayout";
 import GameActivationPlayLayout from "@/components/ActivationsPages/GameActivationPlayLayout";
+import { useRealtime } from "@/hooks/useRealtime";
 
 const DASHBOARD_ROOM_ID = process.env.NEXT_PUBLIC_DASHBOARD_ROOM_ID as string;
 const DASHBOARD_GROUP_ID = process.env.NEXT_PUBLIC_DASHBOARD_GROUP_ID as string;
@@ -26,6 +27,7 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
   const [page, setPage] = useState<ActivationTypePage>(
     ActivationTypePage.LINKS
   );
+  const { startRealtime } = useRealtime();
 
   React.useEffect(() => {
     if (data) {
@@ -40,6 +42,7 @@ export default function SupervizProvider({ userEmail }: { userEmail: string }) {
         isOnline: true,
       };
       setUser(parsedUser);
+      startRealtime(id, name);
     }
   }, [data]);
 
