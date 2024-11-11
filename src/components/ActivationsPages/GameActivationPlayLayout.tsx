@@ -215,8 +215,7 @@ export default function GameActivationPlayLayout({
       return;
 
     toast(
-      `${element.emoji} ${
-        userFromMessage?.name
+      `${element.emoji} ${userFromMessage?.name
       } acabou de descobrir ${element.name.toUpperCase()} e tem mais chance de ganhar!`,
       {
         position: "bottom-left",
@@ -277,16 +276,16 @@ export default function GameActivationPlayLayout({
               >
                 {gameOver
                   ? elements
-                      .slice()
-                      .sort((a, b) =>
-                        a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
-                      )
-                      .map((element, index) =>
-                        renderElement(element, index, provided)
-                      )
-                  : elements.map((element, index) =>
+                    .slice()
+                    .sort((a, b) =>
+                      a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
+                    )
+                    .map((element, index) =>
                       renderElement(element, index, provided)
-                    )}
+                    )
+                  : elements.map((element, index) =>
+                    renderElement(element, index, provided)
+                  )}
               </div>
             )}
           </Droppable>
