@@ -4,7 +4,7 @@ This project showcases the power of SuperViz's Realtime library combined with AI
 
 This Next.js application demonstrates real-time collaboration using SuperViz's Realtime library and OpenAI for element generation. Players combine elements to create new ones, competing for points in a shared game space.
 
-For a detailed explanation of the project and its implementation, please refer to our blog post: ["Realtime meets AI: How we used gaming to showcase our new library"](https://dev.to/superviz/realtime-meets-ai-how-we-used-gaming-to-showcase-our-new-library-3ndl).
+For a detailed explanation of the project and its implementation, please refer to our blog post: ["Realtime meets AI: How we used gaming to showcase our new library"](https://dev.to/superviz/realtime-meets-ai-how-we-used-gaming-to-showcase-our-new-library-now-open-souce-3fgm).
 
 ## Prerequisites
 
